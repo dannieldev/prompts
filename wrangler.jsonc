@@ -1,0 +1,33 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "prompts",
+  "main": "./worker.js",
+  "compatibility_date": "2026-09-15",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application",
+    "binding": "ASSETS"
+  },
+  "routes": [
+    {
+      "pattern": "prompts.dannieldev.com",
+      "custom_domain": true
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "prompts",
+      "database_id": "8c5441f8-0f3e-4fa6-b319-3412507d88f4",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    "APP_ENV": "production"
+  }
+}

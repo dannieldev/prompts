@@ -1,0 +1,432 @@
+import React, { useState, useEffect } from "react";
+import {
+  X,
+  Save,
+  Star,
+  Plus,
+  Tag as TagIcon,
+  Bot,
+  Zap,
+  Eye,
+  Code2,
+  HelpCircle,
+} from "lucide-react";
+import { AIModelTag, PromptCategory, PromptInput, PromptItem } from "../types";
+import { CATEGORIES, CATEGORY_ICONS, AI_MODELS } from "../lib/constants";
+import { extractVariables } from "../lib/variableUtils";
+
+interface PromptEditorModalProps {
+  isOpen: boolean;
+  initialPrompt?: PromptItem | null;
+  onClose: () => void;
+  onSave: (data: PromptInput, existingId?: string) => Promise<void>;
+}
+
+export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
+  isOpen,
+  initialPrompt,
+  onClose,
+  onSave,
+}) => {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [content, setContent] = useState("");
+  const [category, setCategory] = useState<PromptCategory>("Desarrollo");
+  const [selectedModels, setSelectedModels] = useState<AIModelTag[]>(["Claude 3.5 Sonnet", "GPT-4o"]);
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState("");
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (initialPrompt) {
+      setTitle(initialPrompt.title);
+      setDescription(initialPrompt.description);
+      setContent(initialPrompt.content);
+      setCategory(initialPrompt.category);
+      setSelectedModels(initialPrompt.models || []);
+      setTags(initialPrompt.tags || []);
+      setIsFavorite(initialPrompt.is_favorite);
+    } else {
+      // New prompt defaults
+      setTitle("");
+      setDescription("");
+      setContent("");
+      setCategory("Desarrollo");
+      setSelectedModels(["Claude 3.5 Sonnet", "GPT-4o"]);
+      setTags([]);
+      setIsFavorite(false);
+    }
+    setTagInput("");
+    setActiveTab("edit");
+    setError(null);
+  }, [initialPrompt, isOpen]);
+
+  // Handle ESC key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  const detectedVars = extractVariables(content);
+
+  const handleAddTag = () => {
+    const trimmed = tagInput.trim().toLowerCase().replace(/^#/, "");
+    if (trimmed && !tags.includes(trimmed)) {
+      setTags([...tags, trimmed]);
+      setTagInput("");
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove: string) => {
+    setTags(tags.filter((t) => t !== tagToRemove));
+  };
+
+  const toggleModel = (model: AIModelTag) => {
+    if (selectedModels.includes(model)) {
+      setSelectedModels(selectedModels.filter((m) => m !== model));
+    } else {
+      setSelectedModels([...selectedModels, model]);
+    }
+  };
+
+  const insertVariablePlaceholder = (varName: string = "variable") => {
+    const placeholder = `{{${varName}}}`;
+    setContent((prev) => prev + placeholder);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title.trim()) {
+      setError("Por favor ingresa un título para el prompt.");
+      return;
+    }
+    if (!content.trim()) {
+      setError("El contenido del prompt no puede estar vacío.");
+      return;
+    }
+
+    setSaving(true);
+    setError(null);
+
+    try {
+      await onSave(
+        {
+          title: title.trim(),
+          description: description.trim(),
+          content: content.trim(),
+          category,
+          tags,
+          models: selectedModels,
+          is_favorite: isFavorite,
+        },
+        initialPrompt ? initialPrompt.id : undefined
+      );
+      onClose();
+    } catch (err: any) {
+      setError(err?.message || "Ocurrió un error al guardar el prompt.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-sm animate-fade-in">
+      <div className="relative w-full max-w-4xl max-h-[92vh] bg-[#111827] border border-[#223352] rounded-3xl shadow-2xl flex flex-col overflow-hidden">
+        {/* Header */}
+        <div className="px-6 py-4 border-b border-[#1f2d47] flex items-center justify-between bg-[#131c2e]">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold shadow-md shadow-indigo-600/30">
+              {initialPrompt ? "✏️" : "✨"}
+            </div>
+            <div>
+              <h2 className="text-base font-bold text-white">
+                {initialPrompt ? "Editar Prompt Célebre" : "Nuevo Prompt Célebre"}
+              </h2>
+              <p className="text-xs text-gray-400">
+                Configura variables dinámicas con <code className="text-indigo-300">{"{{variable}}"}</code>
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="p-2 text-gray-400 hover:text-gray-200 hover:bg-gray-800 rounded-xl transition"
+            title="Cerrar modal (Esc)"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Form Body */}
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 flex flex-col gap-5">
+          {error && (
+            <div className="p-3 bg-rose-950/60 border border-rose-500/40 rounded-xl text-rose-200 text-xs font-medium">
+              {error}
+            </div>
+          )}
+
+          {/* Title and Category */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="md:col-span-2 flex flex-col gap-1.5">
+              <label className="text-xs font-semibold text-gray-300">
+                Título del Prompt <span className="text-rose-400">*</span>
+              </label>
+              <input
+                type="text"
+                required
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Ej: Arquitecto de Software & Refactorización Limpia"
+                className="w-full bg-[#0b0f17] text-gray-100 placeholder-gray-600 text-sm rounded-xl px-3.5 py-2.5 border border-[#1f2d47] focus:outline-none focus:border-indigo-500 transition"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-semibold text-gray-300">
+                Categoría <span className="text-rose-400">*</span>
+              </label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value as PromptCategory)}
+                className="w-full bg-[#0b0f17] text-gray-100 text-sm rounded-xl px-3.5 py-2.5 border border-[#1f2d47] focus:outline-none focus:border-indigo-500 transition cursor-pointer"
+              >
+                {CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {CATEGORY_ICONS[cat]} {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Short Description */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-semibold text-gray-300">
+              Descripción Corta (Propósito o caso de uso)
+            </label>
+            <input
+              type="text"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Ej: Diseñado para auditar arquitectura de software y proponer refactors paso a paso"
+              className="w-full bg-[#0b0f17] text-gray-100 placeholder-gray-600 text-sm rounded-xl px-3.5 py-2 border border-[#1f2d47] focus:outline-none focus:border-indigo-500 transition"
+            />
+          </div>
+
+          {/* AI Models Selector */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-semibold text-gray-300 flex items-center gap-1.5">
+              <Bot className="w-3.5 h-3.5 text-indigo-400" />
+              Modelos de IA Recomendados
+            </label>
+            <div className="flex items-center gap-2 flex-wrap">
+              {AI_MODELS.map((m) => {
+                const isSelected = selectedModels.includes(m);
+                return (
+                  <button
+                    type="button"
+                    key={m}
+                    onClick={() => toggleModel(m)}
+                    className={`px-3 py-1 rounded-lg text-xs font-medium border transition-all ${
+                      isSelected
+                        ? "bg-indigo-600/30 border-indigo-500 text-indigo-200"
+                        : "bg-[#0b0f17] border-[#1f2d47] text-gray-400 hover:text-gray-300"
+                    }`}
+                  >
+                    {m}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Content with Tabs: Edit / Preview */}
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <div className="flex items-center gap-2">
+                <label className="text-xs font-semibold text-gray-300">
+                  Instrucciones del Prompt <span className="text-rose-400">*</span>
+                </label>
+                {detectedVars.length > 0 && (
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-950 text-indigo-300 border border-indigo-500/30 flex items-center gap-1">
+                    <Zap className="w-3 h-3 text-indigo-400" />
+                    {detectedVars.length} variables detectadas
+                  </span>
+                )}
+              </div>
+
+              {/* Tab selector and placeholder insert button */}
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => insertVariablePlaceholder()}
+                  className="text-[11px] text-indigo-300 hover:text-white bg-indigo-950/60 hover:bg-indigo-900/60 px-2.5 py-1 rounded-lg border border-indigo-500/30 transition flex items-center gap-1"
+                  title="Insertar {{variable}}"
+                >
+                  <Plus className="w-3 h-3" />
+                  <span>Insertar {"{{variable}}"}</span>
+                </button>
+
+                <div className="flex items-center bg-[#0b0f17] rounded-lg p-0.5 border border-[#1f2d47]">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("edit")}
+                    className={`px-2.5 py-1 rounded-md text-xs font-medium transition flex items-center gap-1 ${
+                      activeTab === "edit"
+                        ? "bg-indigo-600 text-white"
+                        : "text-gray-400 hover:text-gray-200"
+                    }`}
+                  >
+                    <Code2 className="w-3 h-3" />
+                    <span>Editor</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("preview")}
+                    className={`px-2.5 py-1 rounded-md text-xs font-medium transition flex items-center gap-1 ${
+                      activeTab === "preview"
+                        ? "bg-indigo-600 text-white"
+                        : "text-gray-400 hover:text-gray-200"
+                    }`}
+                  >
+                    <Eye className="w-3 h-3" />
+                    <span>Vista Previa</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Helper info bar */}
+            <div className="flex items-center gap-1.5 text-[11px] text-gray-500 bg-[#0b0f17]/50 px-3 py-1.5 rounded-lg border border-[#1a2333]">
+              <HelpCircle className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+              <span>
+                Tip: Escribe placeholders como <code className="text-indigo-400 font-mono">{"{{codigo}}"}</code> o{" "}
+                <code className="text-indigo-400 font-mono">{"{{lenguaje}}"}</code> para habilitar el formulario dinámico.
+              </span>
+            </div>
+
+            {/* Textarea or Preview */}
+            {activeTab === "edit" ? (
+              <textarea
+                required
+                rows={11}
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder="Actúa como un Senior Staff Engineer...
+
+Contexto: {{contexto}}
+Código:
+```{{lenguaje}}
+{{codigo}}
+```"
+                className="w-full bg-[#0b0f17] text-gray-100 placeholder-gray-600 text-xs rounded-xl p-3.5 border border-[#1f2d47] focus:outline-none focus:border-indigo-500 font-mono-code leading-relaxed transition resize-y"
+              />
+            ) : (
+              <div className="w-full bg-[#0b0f17] border border-[#1f2d47] rounded-xl p-4 font-mono-code text-xs text-gray-200 leading-relaxed overflow-y-auto max-h-[300px] whitespace-pre-wrap">
+                {content || <span className="text-gray-600 italic">No hay contenido aún...</span>}
+              </div>
+            )}
+          </div>
+
+          {/* Tags and Favorites */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+            {/* Tags input */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-semibold text-gray-300 flex items-center gap-1.5">
+                <TagIcon className="w-3.5 h-3.5 text-indigo-400" />
+                Etiquetas (Tags)
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === ",") {
+                      e.preventDefault();
+                      handleAddTag();
+                    }
+                  }}
+                  placeholder="Escribe un tag y presiona Enter..."
+                  className="flex-1 bg-[#0b0f17] text-gray-100 placeholder-gray-600 text-xs rounded-xl px-3 py-2 border border-[#1f2d47] focus:outline-none focus:border-indigo-500 transition"
+                />
+                <button
+                  type="button"
+                  onClick={handleAddTag}
+                  className="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-xs text-gray-200 rounded-xl transition"
+                >
+                  Agregar
+                </button>
+              </div>
+
+              {tags.length > 0 && (
+                <div className="flex items-center gap-1.5 flex-wrap mt-1">
+                  {tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-flex items-center gap-1 text-[11px] bg-gray-800 text-gray-300 px-2 py-0.5 rounded-md border border-gray-700"
+                    >
+                      #{tag}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveTag(tag)}
+                        className="hover:text-rose-400 transition"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Favorite toggle checkbox */}
+            <div className="flex items-center gap-3 bg-[#0b0f17] border border-[#1f2d47] rounded-xl p-3.5 self-start">
+              <input
+                id="is-fav"
+                type="checkbox"
+                checked={isFavorite}
+                onChange={(e) => setIsFavorite(e.target.checked)}
+                className="w-4 h-4 rounded text-amber-500 focus:ring-amber-400 cursor-pointer"
+              />
+              <label htmlFor="is-fav" className="text-xs text-gray-200 cursor-pointer flex items-center gap-1.5">
+                <Star className={`w-4 h-4 ${isFavorite ? "text-amber-400 fill-amber-400" : "text-gray-400"}`} />
+                <span>Marcar como <strong>Célebre / Favorito ⭐</strong> (Fijar arriba)</span>
+              </label>
+            </div>
+          </div>
+        </form>
+
+        {/* Footer */}
+        <div className="px-6 py-4 bg-[#131c2e] border-t border-[#1f2d47] flex items-center justify-between">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 text-xs font-medium text-gray-400 hover:text-gray-200 hover:bg-gray-800 rounded-xl transition"
+          >
+            Cancelar
+          </button>
+
+          <button
+            onClick={handleSubmit}
+            disabled={saving}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] transition shadow-lg shadow-indigo-600/30 disabled:opacity-50"
+          >
+            <Save className="w-4 h-4" />
+            <span>{saving ? "Guardando..." : initialPrompt ? "Actualizar Prompt" : "Guardar Prompt"}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
