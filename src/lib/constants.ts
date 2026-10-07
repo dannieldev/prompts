@@ -2,6 +2,7 @@ import { AIModelTag, PromptCategory } from "../types";
 
 export const CATEGORIES: PromptCategory[] = [
   "Desarrollo",
+  "Diseño Web IA",
   "Marketing",
   "Automatización",
   "Redacción",
@@ -12,6 +13,7 @@ export const CATEGORIES: PromptCategory[] = [
 
 export const CATEGORY_ICONS: Record<PromptCategory, string> = {
   Desarrollo: "💻",
+  "Diseño Web IA": "🎨",
   Marketing: "📈",
   Automatización: "⚡",
   Redacción: "✍️",

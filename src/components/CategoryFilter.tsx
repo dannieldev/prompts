@@ -44,17 +44,17 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-3 py-4 max-w-7xl mx-auto px-4 lg:px-8">
+    <div className="flex flex-col gap-3 py-3.5 max-w-7xl mx-auto px-4 lg:px-8">
       {/* Primary Category Row + Favorites Toggle */}
       <div className="flex items-center justify-between flex-wrap gap-2.5">
         {/* Category Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none no-scrollbar">
           <button
             onClick={() => onSelectCategory("Todas")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
               selectedCategory === "Todas"
-                ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-semibold"
-                : "bg-[#111827] text-gray-400 hover:text-gray-200 hover:bg-[#161f30] border border-[#1f293d]"
+                ? "bg-indigo-600 text-white shadow-sm shadow-indigo-600/30 font-semibold border border-indigo-400/40"
+                : "bg-white/[0.03] text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] border border-white/[0.07]"
             }`}
           >
             <span>✨</span>
@@ -67,10 +67,10 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
               <button
                 key={cat}
                 onClick={() => onSelectCategory(cat)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap flex items-center gap-1.5 ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
                   isSelected
-                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-semibold"
-                    : "bg-[#111827] text-gray-400 hover:text-gray-200 hover:bg-[#161f30] border border-[#1f293d]"
+                    ? "bg-indigo-600 text-white shadow-sm shadow-indigo-600/30 font-semibold border border-indigo-400/40"
+                    : "bg-white/[0.03] text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] border border-white/[0.07]"
                 }`}
               >
                 <span>{CATEGORY_ICONS[cat]}</span>
@@ -84,20 +84,20 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
         <div className="flex items-center gap-2 ml-auto">
           <button
             onClick={onToggleFavorites}
-            className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all flex items-center gap-1.5 border ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all flex items-center gap-1.5 border active:scale-95 ${
               showFavoritesOnly
-                ? "bg-amber-500/15 border-amber-500/40 text-amber-300 font-semibold shadow-sm"
-                : "bg-[#111827] border-[#1f293d] text-gray-400 hover:text-gray-200 hover:bg-[#161f30]"
+                ? "bg-amber-500/15 border-amber-500/40 text-amber-300 font-semibold shadow-xs"
+                : "bg-white/[0.03] border-white/[0.07] text-slate-400 hover:text-slate-200 hover:bg-white/[0.06]"
             }`}
             title="Mostrar solo prompts célebres favoritos"
           >
             <Star
               className={`w-3.5 h-3.5 ${
-                showFavoritesOnly ? "text-amber-400 fill-amber-400" : "text-gray-400"
+                showFavoritesOnly ? "text-amber-400 fill-amber-400" : "text-slate-400"
               }`}
             />
             <span>Célebres</span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300">
+            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 font-bold">
               {favoritesCount}
             </span>
           </button>
@@ -105,7 +105,7 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
           {isAnyFilterActive && (
             <button
               onClick={handleResetFilters}
-              className="px-2.5 py-1.5 rounded-xl text-xs text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 transition flex items-center gap-1"
+              className="px-2.5 py-1.5 rounded-xl text-xs text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 transition-all active:scale-95 flex items-center gap-1"
               title="Restablecer todos los filtros"
             >
               <X className="w-3.5 h-3.5" />

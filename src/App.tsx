@@ -192,7 +192,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0b0f17] text-gray-100 flex flex-col selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col selection:bg-indigo-500 selection:text-white font-sans">
       {/* Top Navigation */}
       <Header
         searchQuery={searchQuery}
@@ -225,7 +225,7 @@ export function App() {
       {/* Main Grid View */}
       <main className="flex-1 max-w-7xl mx-auto px-4 lg:px-8 py-4 w-full">
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-24 text-gray-400 gap-3">
+          <div className="flex flex-col items-center justify-center py-24 text-slate-400 gap-3">
             <RefreshCw className="w-8 h-8 text-indigo-500 animate-spin" />
             <p className="text-sm font-medium">Cargando prompts célebres...</p>
           </div>
@@ -251,13 +251,13 @@ export function App() {
         ) : (
           /* Empty Search / Filter State */
           <div className="flex flex-col items-center justify-center py-20 px-4 text-center max-w-md mx-auto">
-            <div className="w-16 h-16 rounded-3xl bg-[#131c2e] border border-[#223352] flex items-center justify-center text-gray-400 mb-4 shadow-lg">
+            <div className="w-16 h-16 rounded-3xl bg-[#0c101d] border border-white/[0.08] flex items-center justify-center text-slate-400 mb-4 shadow-xl">
               <SearchX className="w-8 h-8 text-indigo-400" />
             </div>
             <h3 className="text-base font-bold text-white mb-1">
               No se encontraron prompts
             </h3>
-            <p className="text-xs text-gray-400 mb-5 leading-relaxed">
+            <p className="text-xs text-slate-400 mb-5 leading-relaxed">
               No hay resultados que coincidan con tus criterios de búsqueda o filtros activos.
             </p>
             <div className="flex items-center gap-2">
@@ -269,7 +269,7 @@ export function App() {
                   setShowFavoritesOnly(false);
                   setSelectedTag(null);
                 }}
-                className="px-4 py-2 text-xs font-semibold text-gray-300 bg-gray-800 hover:bg-gray-700 rounded-xl transition"
+                className="px-4 py-2 text-xs font-semibold text-slate-300 bg-white/[0.05] hover:bg-white/[0.1] rounded-xl active:scale-95 transition"
               >
                 Limpiar filtros
               </button>
@@ -278,7 +278,7 @@ export function App() {
                   setEditorPrompt(null);
                   setIsEditorOpen(true);
                 }}
-                className="px-4 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl transition shadow-md shadow-indigo-600/30 flex items-center gap-1.5"
+                className="px-4 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl active:scale-95 transition shadow-md shadow-indigo-600/30 flex items-center gap-1.5"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Crear nuevo</span>
@@ -289,17 +289,17 @@ export function App() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-[#1a2333] py-6 px-4 text-center text-xs text-gray-500 mt-auto">
+      <footer className="border-t border-white/[0.06] py-6 px-4 text-center text-xs text-slate-500 mt-auto bg-[#07090e]/60">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-gray-400">⚡ Prompts Célebres</span>
+            <span className="font-semibold text-slate-300">⚡ Prompts Célebres</span>
             <span>·</span>
             <span>Colección personal de @dannieldev</span>
           </div>
-          <div className="flex items-center gap-4 text-gray-400 text-[11px]">
+          <div className="flex items-center gap-4 text-slate-400 text-[11px]">
             <span>Cloudflare Workers + D1</span>
             <span>·</span>
-            <span>Atajo: Presiona <kbd className="font-mono bg-gray-800 px-1 py-0.5 rounded text-gray-300">/</kbd> para buscar</span>
+            <span>Atajo: Presiona <kbd className="font-mono bg-white/[0.08] px-1.5 py-0.5 rounded text-slate-300 border border-white/[0.06]">/</kbd> para buscar</span>
           </div>
         </div>
       </footer>

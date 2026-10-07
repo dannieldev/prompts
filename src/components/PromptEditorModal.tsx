@@ -140,8 +140,8 @@ export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-4xl max-h-[92vh] bg-[#111827] border border-[#223352] rounded-3xl shadow-2xl flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/75 backdrop-blur-md">
+      <div className="relative w-full max-w-4xl max-h-[92vh] bg-[#0c101d] border border-white/[0.1] rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-modal-enter">
         {/* Header */}
         <div className="px-6 py-4 border-b border-[#1f2d47] flex items-center justify-between bg-[#131c2e]">
           <div className="flex items-center gap-3">

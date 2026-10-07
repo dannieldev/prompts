@@ -22,23 +22,23 @@ export const ToastContainer: React.FC<ToastProps> = ({ toasts, onDismiss }) => {
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className={`pointer-events-auto flex items-center justify-between p-3.5 rounded-xl shadow-2xl border backdrop-blur-md transition-all duration-300 animate-slide-in ${
+          className={`pointer-events-auto flex items-center justify-between p-3.5 rounded-xl shadow-2xl border backdrop-blur-xl transition-all duration-200 animate-toast-slide ${
             toast.type === "success"
-              ? "bg-emerald-950/90 border-emerald-500/40 text-emerald-200"
+              ? "bg-emerald-950/85 border-emerald-500/35 text-emerald-200"
               : toast.type === "error"
-              ? "bg-rose-950/90 border-rose-500/40 text-rose-200"
-              : "bg-blue-950/90 border-blue-500/40 text-blue-200"
+              ? "bg-rose-950/85 border-rose-500/35 text-rose-200"
+              : "bg-[#0d121f]/90 border-indigo-500/35 text-indigo-200"
           }`}
         >
           <div className="flex items-center gap-2.5">
             {toast.type === "success" && <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />}
             {toast.type === "error" && <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />}
-            {toast.type === "info" && <Info className="w-5 h-5 text-blue-400 shrink-0" />}
-            <span className="text-sm font-medium">{toast.text}</span>
+            {toast.type === "info" && <Info className="w-5 h-5 text-indigo-400 shrink-0" />}
+            <span className="text-xs font-semibold">{toast.text}</span>
           </div>
           <button
             onClick={() => onDismiss(toast.id)}
-            className="p-1 rounded-md opacity-70 hover:opacity-100 transition-opacity ml-3"
+            className="p-1 rounded-md opacity-70 hover:opacity-100 active:scale-90 transition-all ml-3"
             aria-label="Cerrar notificación"
           >
             <X className="w-4 h-4" />

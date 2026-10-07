@@ -14,6 +14,7 @@ const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "X-Robots-Tag": "noindex, nofollow, noarchive",
 };
 
 function jsonResponse(data, status = 200) {
@@ -103,9 +104,19 @@ export default {
     // Only intercept /api routes; all others are served by Cloudflare Static Assets
     if (!url.pathname.startsWith("/api/")) {
       if (env.ASSETS) {
-        return env.ASSETS.fetch(request);
+        const assetRes = await env.ASSETS.fetch(request);
+        const headers = new Headers(assetRes.headers);
+        headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
+        return new Response(assetRes.body, {
+          status: assetRes.status,
+          statusText: assetRes.statusText,
+          headers,
+        });
       }
-      return new Response("Not found", { status: 404 });
+      return new Response("Not found", {
+        status: 404,
+        headers: { "X-Robots-Tag": "noindex, nofollow, noarchive" },
+      });
     }
 
     const db = env.DB;

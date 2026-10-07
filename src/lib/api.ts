@@ -12,7 +12,17 @@ function getLocalPrompts(): PromptItem[] {
       return SEED_PROMPTS;
     }
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : SEED_PROMPTS;
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      const existingIds = new Set(parsed.map((p) => p.id));
+      const missingSeeds = SEED_PROMPTS.filter((s) => !existingIds.has(s.id));
+      if (missingSeeds.length > 0) {
+        const merged = [...parsed, ...missingSeeds];
+        saveLocalPrompts(merged);
+        return merged;
+      }
+      return parsed;
+    }
+    return SEED_PROMPTS;
   } catch {
     return SEED_PROMPTS;
   }

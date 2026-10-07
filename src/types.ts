@@ -1,5 +1,6 @@
 export type PromptCategory =
   | "Desarrollo"
+  | "Diseño Web IA"
   | "Marketing"
   | "Automatización"
   | "Redacción"
