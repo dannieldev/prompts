@@ -249,7 +249,7 @@ Contexto del proyecto:
 - Tipo de sitio: {{tipo_sitio}}
 - Audiencia objetivo: {{audiencia}}
 - Vibe / Sensación deseada: {{tono_estetico}}
-- Referencias de marcas o competidores: {{referencias_visuales}}
+- Referencias de marcas o galerías UX/UI (curated.design, landing.love, cta.gallery, component.gallery): {{referencias_visuales}}
 
 Sigue estas reglas estrictas:
 1. **Design Read Obligatorio**: Comienza tu respuesta con una sola línea:

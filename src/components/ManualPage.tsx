@@ -21,6 +21,8 @@ import {
   Code2,
   BookmarkCheck,
   ArrowUpRight,
+  Compass,
+  ExternalLink,
 } from "lucide-react";
 
 interface ManualPageProps {
@@ -69,15 +71,16 @@ interface NavSection {
 const SECTIONS: NavSection[] = [
   { id: "filosofia", title: "1. Filosofía Anti-Slop", group: "Estrategia & Dirección", icon: <Sparkles className="w-4 h-4 text-amber-400" /> },
   { id: "fases", title: "2. Flujo en 7 Fases", group: "Estrategia & Dirección", icon: <Layers className="w-4 h-4 text-indigo-400" /> },
-  { id: "herramientas", title: "3. Catálogo de Skills", group: "Herramientas & Tokens", icon: <Terminal className="w-4 h-4 text-emerald-400" /> },
-  { id: "design-spec", title: "4. Tokens & DESIGN.md", group: "Herramientas & Tokens", icon: <Palette className="w-4 h-4 text-pink-400" /> },
-  { id: "emil-motion", title: "5. Motion Emil Kowalski", group: "Físicas, Ergonomía & Código", icon: <Zap className="w-4 h-4 text-sky-400" /> },
-  { id: "apple-hig", title: "6. Ergonomía Apple HIG", group: "Físicas, Ergonomía & Código", icon: <Eye className="w-4 h-4 text-indigo-300" /> },
-  { id: "ponytail", title: "7. Código Ponytail Zero-Bloat", group: "Físicas, Ergonomía & Código", icon: <Scissors className="w-4 h-4 text-amber-300" /> },
-  { id: "impeccable", title: "8. Pulido Impeccable & Vercel", group: "Físicas, Ergonomía & Código", icon: <ShieldCheck className="w-4 h-4 text-rose-400" /> },
-  { id: "playwright", title: "9. Pruebas Playwright E2E", group: "Validación & Despliegue", icon: <Code2 className="w-4 h-4 text-violet-400" /> },
-  { id: "checklist", title: "10. Checklist de 20 Puntos", group: "Validación & Despliegue", icon: <CheckCircle2 className="w-4 h-4 text-emerald-400" /> },
-  { id: "deploy", title: "11. Despliegue Cloudflare", group: "Validación & Despliegue", icon: <Cloud className="w-4 h-4 text-orange-400" /> },
+  { id: "inspiracion", title: "3. Inspiración & Galerías UX/UI", group: "Estrategia & Dirección", icon: <Compass className="w-4 h-4 text-purple-400" /> },
+  { id: "herramientas", title: "4. Catálogo de Skills", group: "Herramientas & Tokens", icon: <Terminal className="w-4 h-4 text-emerald-400" /> },
+  { id: "design-spec", title: "5. Tokens & DESIGN.md", group: "Herramientas & Tokens", icon: <Palette className="w-4 h-4 text-pink-400" /> },
+  { id: "emil-motion", title: "6. Motion Emil Kowalski", group: "Físicas, Ergonomía & Código", icon: <Zap className="w-4 h-4 text-sky-400" /> },
+  { id: "apple-hig", title: "7. Ergonomía Apple HIG", group: "Físicas, Ergonomía & Código", icon: <Eye className="w-4 h-4 text-indigo-300" /> },
+  { id: "ponytail", title: "8. Código Ponytail Zero-Bloat", group: "Físicas, Ergonomía & Código", icon: <Scissors className="w-4 h-4 text-amber-300" /> },
+  { id: "impeccable", title: "9. Pulido Impeccable & Vercel", group: "Físicas, Ergonomía & Código", icon: <ShieldCheck className="w-4 h-4 text-rose-400" /> },
+  { id: "playwright", title: "10. Pruebas Playwright E2E", group: "Validación & Despliegue", icon: <Code2 className="w-4 h-4 text-violet-400" /> },
+  { id: "checklist", title: "11. Checklist de 20 Puntos", group: "Validación & Despliegue", icon: <CheckCircle2 className="w-4 h-4 text-emerald-400" /> },
+  { id: "deploy", title: "12. Despliegue Cloudflare", group: "Validación & Despliegue", icon: <Cloud className="w-4 h-4 text-orange-400" /> },
 ];
 
 export const ManualPage: React.FC<ManualPageProps> = ({
@@ -218,7 +221,7 @@ export const ManualPage: React.FC<ManualPageProps> = ({
               Estándar de Ingeniería @dannieldev
             </span>
             <span className="text-slate-600 hidden sm:inline">·</span>
-            <span className="text-slate-400 hidden sm:inline">11 Módulos Prácticos</span>
+            <span className="text-slate-400 hidden sm:inline">12 Capítulos Prácticos & 4 Galerías UX/UI</span>
           </div>
 
           <div className="max-w-4xl space-y-3">
@@ -237,14 +240,20 @@ export const ManualPage: React.FC<ManualPageProps> = ({
           {/* Quick Metrics & Pillars */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4">
             <div className="p-4 rounded-2xl bg-[#0d121f]/80 border border-white/[0.08] flex flex-col gap-1">
-              <span className="text-2xl font-black text-indigo-400 font-mono">11</span>
+              <span className="text-2xl font-black text-indigo-400 font-mono">12</span>
               <span className="text-xs font-semibold text-slate-200">Capítulos Maestros</span>
               <span className="text-[11px] text-slate-400">Guía técnica integral</span>
             </div>
 
             <div className="p-4 rounded-2xl bg-[#0d121f]/80 border border-white/[0.08] flex flex-col gap-1">
+              <span className="text-2xl font-black text-purple-400 font-mono">4</span>
+              <span className="text-xs font-semibold text-slate-200">Galerías de Élite</span>
+              <span className="text-[11px] text-slate-400">Inspiración UX/UI</span>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-[#0d121f]/80 border border-white/[0.08] flex flex-col gap-1">
               <span className="text-2xl font-black text-emerald-400 font-mono">20</span>
-              <span className="text-xs font-semibold text-slate-200">Puntos Pre-Lanzamiento</span>
+              <span className="text-xs font-semibold text-slate-200">Puntos Pre-Launch</span>
               <span className="text-[11px] text-slate-400">Auditoría no negociable</span>
             </div>
 
@@ -524,12 +533,115 @@ export const ManualPage: React.FC<ManualPageProps> = ({
             </div>
           </section>
 
-          {/* SECTION 3: CATÁLOGO DE HERRAMIENTAS */}
+          {/* SECTION 3: BÓVEDA DE INSPIRACIÓN UX/UI */}
+          <section id="inspiracion" className="scroll-mt-24 space-y-6 pt-6 border-t border-white/[0.06]">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <div className="flex items-center gap-2 text-purple-400 text-xs font-bold uppercase tracking-wider">
+                <Compass className="w-4 h-4" />
+                <span>Capítulo 3 · Referencias Visuales</span>
+              </div>
+              <span className="text-[11px] font-mono text-slate-400">4 Fuentes Oficiales</span>
+            </div>
+
+            <div className="space-y-2">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                Bóveda de Inspiración & Galerías UX/UI de Élite
+              </h2>
+              <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+                El diseño de nivel mundial nunca comienza desde el vacío ni inventa patrones a ciegas.
+                Utiliza estas cuatro fuentes de inspiración para extraer referencias visuales, tipografías,
+                animaciones y componentes antes de escribir código:
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[
+                {
+                  title: "Curated Design",
+                  url: "https://curated.design/",
+                  badge: "Dirección de Arte & Estilo",
+                  badgeColor: "bg-purple-500/15 text-purple-300 border-purple-500/25",
+                  description: "Catálogo editorial y directorio de élite con los mejores sitios web contemporáneos. Filtra por estética (SaaS, editorial, brutalismo refinado, minimalismo, lujo).",
+                  usage: "Fase 0: Ideal para definir el 'vibe' visual, combinaciones tipográficas y paletas cromáticas antes de crear DESIGN.md.",
+                },
+                {
+                  title: "Landing Love",
+                  url: "https://www.landing.love/",
+                  badge: "Animación & Storytelling",
+                  badgeColor: "bg-pink-500/15 text-pink-300 border-pink-500/25",
+                  description: "La mayor vitrina del mundo de landing pages interactivas y animadas. Filtrable por animaciones, categorías de producto y micro-interacciones.",
+                  usage: "Fase 2 & 3: Estructuración de narrativa visual, secciones hero inmersivas y efectos de scroll en modo Persuade.",
+                },
+                {
+                  title: "CTA Gallery",
+                  url: "https://www.cta.gallery/",
+                  badge: "Conversión & Botones",
+                  badgeColor: "bg-amber-500/15 text-amber-300 border-amber-500/25",
+                  description: "Colección curada de los mejores Call To Action (CTAs), botones y bloques de cierre de alta conversión en la web.",
+                  usage: "Fase 2 & 5: Diseño de llamadas a la acción irresistibles, formularios compactos y áreas táctiles de 44px con alto contraste.",
+                },
+                {
+                  title: "The Component Gallery",
+                  url: "https://component.gallery/",
+                  badge: "Design Systems & Anatomía",
+                  badgeColor: "bg-emerald-500/15 text-emerald-300 border-emerald-500/25",
+                  description: "Índice y repositorio exhaustivo de componentes reales de interfaz extraídos de Design Systems de empresas globales (Shopify, Apple, IBM, etc.).",
+                  usage: "Fase 2: Verificación de la anatomía, variantes, jerarquía y accesibilidad en modales, acordeones, tablas y menús.",
+                },
+              ].map((site, idx) => (
+                <div
+                  key={idx}
+                  className="p-5 rounded-3xl bg-[#0c101d] border border-white/[0.08] hover:border-indigo-500/30 transition-all flex flex-col justify-between gap-4 shadow-sm group"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-indigo-400 group-hover:scale-125 transition-transform" />
+                        <h3 className="font-bold text-white text-base">{site.title}</h3>
+                      </div>
+                      <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${site.badgeColor}`}>
+                        {site.badge}
+                      </span>
+                    </div>
+
+                    <a
+                      href={site.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-indigo-400 hover:text-indigo-300 font-mono flex items-center gap-1.5 transition break-all"
+                    >
+                      <span>{site.url}</span>
+                      <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                    </a>
+
+                    <p className="text-xs text-slate-300 leading-relaxed">{site.description}</p>
+                  </div>
+
+                  <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between flex-wrap gap-2 text-[11px]">
+                    <span className="text-slate-400">
+                      <strong className="text-slate-300">Aplicación:</strong> {site.usage}
+                    </span>
+                    <a
+                      href={site.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] active:scale-95 text-slate-200 transition font-semibold"
+                    >
+                      <span>Explorar</span>
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* SECTION 4: CATÁLOGO DE HERRAMIENTAS */}
           <section id="herramientas" className="scroll-mt-24 space-y-6 pt-6 border-t border-white/[0.06]">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold uppercase tracking-wider">
                 <Terminal className="w-4 h-4" />
-                <span>Capítulo 3 · Arsenal de Habilidades</span>
+                <span>Capítulo 4 · Arsenal de Habilidades</span>
               </div>
               <span className="text-[11px] font-mono text-slate-400">Instalado en ~/.agents/skills</span>
             </div>
@@ -648,12 +760,12 @@ export const ManualPage: React.FC<ManualPageProps> = ({
             </div>
           </section>
 
-          {/* SECTION 4: TOKENS & DESIGN.MD */}
+          {/* SECTION 5: TOKENS & DESIGN.MD */}
           <section id="design-spec" className="scroll-mt-24 space-y-6 pt-6 border-t border-white/[0.06]">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2 text-pink-400 text-xs font-bold uppercase tracking-wider">
                 <Palette className="w-4 h-4" />
-                <span>Capítulo 4 · Sistema de Tokens</span>
+                <span>Capítulo 5 · Sistema de Tokens</span>
               </div>
               <span className="text-[11px] font-mono text-slate-400">Raíz del Proyecto</span>
             </div>
@@ -756,12 +868,12 @@ export const ManualPage: React.FC<ManualPageProps> = ({
             </div>
           </section>
 
-          {/* SECTION 5: EMIL KOWALSKI MOTION */}
+          {/* SECTION 6: EMIL KOWALSKI MOTION */}
           <section id="emil-motion" className="scroll-mt-24 space-y-6 pt-6 border-t border-white/[0.06]">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2 text-sky-400 text-xs font-bold uppercase tracking-wider">
                 <Zap className="w-4 h-4" />
-                <span>Capítulo 5 · Micro-Interacciones</span>
+                <span>Capítulo 6 · Micro-Interacciones</span>
               </div>
               <span className="text-[11px] font-mono text-slate-400">180ms – 250ms máx</span>
             </div>
@@ -834,12 +946,12 @@ export const ManualPage: React.FC<ManualPageProps> = ({
             </div>
           </section>
 
-          {/* SECTION 6: APPLE HIG */}
+          {/* SECTION 7: APPLE HIG */}
           <section id="apple-hig" className="scroll-mt-24 space-y-6 pt-6 border-t border-white/[0.06]">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2 text-indigo-300 text-xs font-bold uppercase tracking-wider">
                 <Eye className="w-4 h-4" />
-                <span>Capítulo 6 · Human Interface Guidelines</span>
+                <span>Capítulo 7 · Human Interface Guidelines</span>
               </div>
               <span className="text-[11px] font-mono text-slate-400">Apple HIG Ergonomics</span>
             </div>
@@ -889,12 +1001,12 @@ export const ManualPage: React.FC<ManualPageProps> = ({
             </div>
           </section>
 
-          {/* SECTION 7: PONYTAIL */}
+          {/* SECTION 8: PONYTAIL */}
           <section id="ponytail" className="scroll-mt-24 space-y-6 pt-6 border-t border-white/[0.06]">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2 text-amber-300 text-xs font-bold uppercase tracking-wider">
                 <Scissors className="w-4 h-4" />
-                <span>Capítulo 7 · The Lazy Senior Dev</span>
+                <span>Capítulo 8 · The Lazy Senior Dev</span>
               </div>
               <span className="text-[11px] font-mono text-slate-400">-50% a -80% Código</span>
             </div>
@@ -938,12 +1050,12 @@ export const ManualPage: React.FC<ManualPageProps> = ({
             </div>
           </section>
 
-          {/* SECTION 8: IMPECCABLE & VERCEL */}
+          {/* SECTION 9: IMPECCABLE & VERCEL */}
           <section id="impeccable" className="scroll-mt-24 space-y-6 pt-6 border-t border-white/[0.06]">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2 text-rose-400 text-xs font-bold uppercase tracking-wider">
                 <ShieldCheck className="w-4 h-4" />
-                <span>Capítulo 8 · Auditoría de Calidad</span>
+                <span>Capítulo 9 · Auditoría de Calidad</span>
               </div>
               <span className="text-[11px] font-mono text-slate-400">Vercel Labs & Impeccable</span>
             </div>
@@ -1004,12 +1116,12 @@ export const ManualPage: React.FC<ManualPageProps> = ({
             </div>
           </section>
 
-          {/* SECTION 9: PLAYWRIGHT */}
+          {/* SECTION 10: PLAYWRIGHT */}
           <section id="playwright" className="scroll-mt-24 space-y-6 pt-6 border-t border-white/[0.06]">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2 text-violet-400 text-xs font-bold uppercase tracking-wider">
                 <Code2 className="w-4 h-4" />
-                <span>Capítulo 9 · Testing Autónomo E2E</span>
+                <span>Capítulo 10 · Testing Autónomo E2E</span>
               </div>
               <span className="text-[11px] font-mono text-slate-400">Playwright Test Suite</span>
             </div>
@@ -1112,12 +1224,12 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
             </div>
           </section>
 
-          {/* SECTION 10: CHECKLIST INTERACTIVO */}
+          {/* SECTION 11: CHECKLIST INTERACTIVO */}
           <section id="checklist" className="scroll-mt-24 space-y-6 pt-6 border-t border-white/[0.06]">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold uppercase tracking-wider">
                 <CheckCircle2 className="w-4 h-4" />
-                <span>Capítulo 10 · Auditoría de Producción</span>
+                <span>Capítulo 11 · Auditoría de Producción</span>
               </div>
               <button
                 onClick={resetChecklist}
@@ -1234,12 +1346,12 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
             </div>
           </section>
 
-          {/* SECTION 11: DESPLIEGUE EN CLOUDFLARE */}
+          {/* SECTION 12: DESPLIEGUE EN CLOUDFLARE */}
           <section id="deploy" className="scroll-mt-24 space-y-6 pt-6 border-t border-white/[0.06]">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2 text-orange-400 text-xs font-bold uppercase tracking-wider">
                 <Cloud className="w-4 h-4" />
-                <span>Capítulo 11 · Infraestructura & Edge</span>
+                <span>Capítulo 12 · Infraestructura & Edge</span>
               </div>
               <span className="text-[11px] font-mono text-slate-400">Cloudflare Workers Assets</span>
             </div>
