@@ -141,19 +141,19 @@ export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md">
-      <div className="relative w-full max-w-4xl max-h-[92vh] bg-[#0c101d] border border-white/[0.1] rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-modal-enter">
+      <div className="relative w-full max-w-4xl max-h-[92vh] bg-surface border border-border rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-modal-enter">
         {/* Header */}
-        <div className="px-6 py-4.5 border-b border-white/[0.08] flex items-center justify-between bg-[#101626]">
+        <div className="px-6 py-4.5 border-b border-border flex items-center justify-between bg-surface-secondary/50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-600/30">
+            <div className="w-10 h-10 rounded-2xl bg-accent flex items-center justify-center text-white font-bold shadow-lg shadow-accent/25">
               {initialPrompt ? "✏️" : "✨"}
             </div>
             <div>
-              <h2 className="text-base font-bold text-white">
+              <h2 className="text-base font-bold text-foreground">
                 {initialPrompt ? "Editar Prompt Célebre" : "Nuevo Prompt Célebre"}
               </h2>
-              <p className="text-xs text-slate-400">
-                Configura variables dinámicas con <code className="text-indigo-300 font-mono">{"{{variable}}"}</code>
+              <p className="text-xs text-muted">
+                Configura variables dinámicas con <code className="text-accent font-mono">{"{{variable}}"}</code>
               </p>
             </div>
           </div>
@@ -163,7 +163,7 @@ export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
             size="sm"
             variant="ghost"
             onClick={onClose}
-            className="rounded-xl text-slate-400 hover:text-white"
+            className="rounded-xl text-muted hover:text-foreground"
             aria-label="Cerrar modal"
           >
             <X className="w-5 h-5" />
@@ -181,7 +181,7 @@ export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
           {/* Title and Category */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-2 flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-slate-300">
+              <label className="text-xs font-bold text-foreground/80">
                 Título del Prompt <span className="text-rose-400">*</span>
               </label>
               <input
@@ -190,18 +190,18 @@ export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Ej: Arquitecto de Software & Refactorización Limpia"
-                className="w-full bg-[#101626] text-slate-100 placeholder-slate-500 text-sm rounded-2xl px-4 py-2.5 border border-white/[0.08] focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/25 transition shadow-inner"
+                className="w-full bg-field text-foreground placeholder:text-muted/60 text-sm rounded-2xl px-4 py-2.5 border border-border focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/25 transition shadow-inner"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-slate-300">
+              <label className="text-xs font-bold text-foreground/80">
                 Categoría <span className="text-rose-400">*</span>
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as PromptCategory)}
-                className="w-full bg-[#101626] text-slate-100 text-sm rounded-2xl px-4 py-2.5 border border-white/[0.08] focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/25 transition cursor-pointer shadow-inner"
+                className="w-full bg-field text-foreground text-sm rounded-2xl px-4 py-2.5 border border-border focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/25 transition cursor-pointer shadow-inner"
               >
                 {CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
@@ -214,7 +214,7 @@ export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
 
           {/* Short Description */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-slate-300">
+            <label className="text-xs font-bold text-foreground/80">
               Descripción Corta (Propósito o caso de uso)
             </label>
             <input
@@ -222,14 +222,14 @@ export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Ej: Diseñado para auditar arquitectura de software y proponer refactors paso a paso"
-              className="w-full bg-[#101626] text-slate-100 placeholder-slate-500 text-sm rounded-2xl px-4 py-2.5 border border-white/[0.08] focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/25 transition shadow-inner"
+              className="w-full bg-field text-foreground placeholder:text-muted/60 text-sm rounded-2xl px-4 py-2.5 border border-border focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/25 transition shadow-inner"
             />
           </div>
 
           {/* AI Models Selector */}
           <div className="flex flex-col gap-2">
-            <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-              <Bot className="w-3.5 h-3.5 text-indigo-400" />
+            <label className="text-xs font-bold text-foreground/80 flex items-center gap-1.5">
+              <Bot className="w-3.5 h-3.5 text-accent" />
               Modelos de IA Recomendados
             </label>
             <div className="flex items-center gap-2 flex-wrap">
@@ -255,7 +255,7 @@ export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2">
-                <label className="text-xs font-bold text-slate-300">
+                <label className="text-xs font-bold text-foreground/80">
                   Instrucciones del Prompt <span className="text-rose-400">*</span>
                 </label>
                 {detectedVars.length > 0 && (
@@ -265,7 +265,7 @@ export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
                     size="sm"
                     className="font-mono text-[10px]"
                   >
-                    <Zap className="w-3 h-3 inline mr-1 text-indigo-400" />
+                    <Zap className="w-3 h-3 inline mr-1 text-accent" />
                     {detectedVars.length} variables detectadas
                   </Chip>
                 )}
@@ -278,14 +278,14 @@ export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
                   variant="outline"
                   size="sm"
                   onClick={() => insertVariablePlaceholder()}
-                  className="rounded-xl text-xs text-indigo-300 hover:text-white border-indigo-500/30"
+                  className="rounded-xl text-xs text-accent hover:text-foreground border-accent/30"
                   aria-label="Insertar variable"
                 >
                   <Plus className="w-3.5 h-3.5 mr-1" />
                   <span>Insertar {"{{variable}}"}</span>
                 </Button>
 
-                <div className="flex items-center bg-[#101626] rounded-xl p-1 border border-white/[0.08]">
+                <div className="flex items-center bg-surface-secondary rounded-xl p-1 border border-border">
                   <Button
                     type="button"
                     variant={activeTab === "edit" ? "primary" : "ghost"}
@@ -311,11 +311,11 @@ export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
             </div>
 
             {/* Helper info bar */}
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-400 bg-[#07090e] px-3.5 py-2 rounded-xl border border-white/[0.06]">
-              <HelpCircle className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+            <div className="flex items-center gap-1.5 text-[11px] text-muted bg-surface-secondary/70 px-3.5 py-2 rounded-xl border border-border/60">
+              <HelpCircle className="w-3.5 h-3.5 text-accent shrink-0" />
               <span>
-                Tip: Escribe placeholders como <code className="text-indigo-300 font-mono">{"{{codigo}}"}</code> o{" "}
-                <code className="text-indigo-300 font-mono">{"{{lenguaje}}"}</code> para habilitar el formulario interactivo.
+                Tip: Escribe placeholders como <code className="text-accent font-mono">{"{{codigo}}"}</code> o{" "}
+                <code className="text-accent font-mono">{"{{lenguaje}}"}</code> para habilitar el formulario interactivo.
               </span>
             </div>
 
@@ -333,11 +333,11 @@ Código:
 ```{{lenguaje}}
 {{codigo}}
 ```"
-                className="w-full bg-[#07090e] text-slate-100 placeholder-slate-600 text-xs rounded-2xl p-4 border border-white/[0.08] focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/25 font-mono-code leading-relaxed transition resize-y shadow-inner"
+                className="w-full bg-field text-foreground placeholder:text-muted/60 text-xs rounded-2xl p-4 border border-border focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/25 font-mono-code leading-relaxed transition resize-y shadow-inner"
               />
             ) : (
-              <div className="w-full bg-[#07090e] border border-white/[0.08] rounded-2xl p-5 font-mono-code text-xs text-slate-200 leading-relaxed overflow-y-auto max-h-[300px] whitespace-pre-wrap shadow-inner">
-                {content || <span className="text-slate-600 italic">No hay contenido aún...</span>}
+              <div className="w-full bg-field border border-border rounded-2xl p-5 font-mono-code text-xs text-foreground/90 leading-relaxed overflow-y-auto max-h-[300px] whitespace-pre-wrap shadow-inner">
+                {content || <span className="text-muted italic">No hay contenido aún...</span>}
               </div>
             )}
           </div>
@@ -346,8 +346,8 @@ Código:
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
             {/* Tags input */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-                <TagIcon className="w-3.5 h-3.5 text-indigo-400" />
+              <label className="text-xs font-bold text-foreground/80 flex items-center gap-1.5">
+                <TagIcon className="w-3.5 h-3.5 text-accent" />
                 Etiquetas (Tags)
               </label>
               <div className="flex items-center gap-2">
@@ -362,7 +362,7 @@ Código:
                     }
                   }}
                   placeholder="Escribe un tag y presiona Enter..."
-                  className="flex-1 bg-[#101626] text-slate-100 placeholder-slate-500 text-xs rounded-xl px-3.5 py-2.5 border border-white/[0.08] focus:outline-none focus:border-indigo-500 transition shadow-inner"
+                  className="flex-1 bg-field text-foreground placeholder:text-muted/60 text-xs rounded-xl px-3.5 py-2.5 border border-border focus:outline-none focus:border-accent transition shadow-inner"
                 />
                 <Button
                   type="button"
@@ -400,7 +400,7 @@ Código:
             </div>
 
             {/* Favorite toggle checkbox */}
-            <div className="flex items-center gap-3 bg-[#101626] border border-white/[0.08] rounded-2xl p-4 self-start shadow-inner">
+            <div className="flex items-center gap-3 bg-surface-secondary/70 border border-border rounded-2xl p-4 self-start shadow-inner">
               <input
                 id="is-fav"
                 type="checkbox"
@@ -408,8 +408,8 @@ Código:
                 onChange={(e) => setIsFavorite(e.target.checked)}
                 className="w-4 h-4 rounded text-amber-500 focus:ring-amber-400 cursor-pointer accent-amber-500"
               />
-              <label htmlFor="is-fav" className="text-xs text-slate-200 cursor-pointer flex items-center gap-1.5 font-medium">
-                <Star className={`w-4 h-4 ${isFavorite ? "text-amber-400 fill-amber-400" : "text-slate-400"}`} />
+              <label htmlFor="is-fav" className="text-xs text-foreground cursor-pointer flex items-center gap-1.5 font-medium">
+                <Star className={`w-4 h-4 ${isFavorite ? "text-amber-400 fill-amber-400" : "text-muted"}`} />
                 <span>Marcar como <strong>Célebre / Favorito ⭐</strong> (Fijar arriba)</span>
               </label>
             </div>
@@ -417,13 +417,13 @@ Código:
         </form>
 
         {/* Footer */}
-        <div className="px-6 py-4 bg-[#101626] border-t border-white/[0.08] flex items-center justify-between">
+        <div className="px-6 py-4 bg-surface-secondary/50 border-t border-border flex items-center justify-between">
           <Button
             type="button"
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="rounded-xl text-xs text-slate-400 hover:text-white"
+            className="rounded-xl text-xs text-muted hover:text-foreground"
           >
             Cancelar <Kbd className="ml-1 text-[9px]">Esc</Kbd>
           </Button>
@@ -433,7 +433,7 @@ Código:
             size="sm"
             onClick={handleSubmit}
             isDisabled={saving}
-            className="rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-600/30"
+            className="rounded-xl text-xs font-semibold shadow-lg shadow-accent/25"
           >
             <Save className="w-4 h-4 mr-1" />
             <span>{saving ? "Guardando..." : initialPrompt ? "Actualizar Prompt" : "Guardar Prompt"}</span>

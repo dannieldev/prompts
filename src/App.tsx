@@ -243,7 +243,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col selection:bg-indigo-500 selection:text-white font-sans">
+    <div className="min-h-screen bg-background text-foreground flex flex-col selection:bg-accent selection:text-white font-sans">
       {/* Top Navigation */}
       <Header
         currentView={currentView}
@@ -287,8 +287,8 @@ export function App() {
           {/* Main Grid View */}
           <main className="flex-1 max-w-7xl mx-auto px-4 lg:px-8 py-4 w-full">
             {loading ? (
-              <div className="flex flex-col items-center justify-center py-24 text-slate-400 gap-3">
-                <RefreshCw className="w-8 h-8 text-indigo-500 animate-spin" />
+              <div className="flex flex-col items-center justify-center py-24 text-muted gap-3">
+                <RefreshCw className="w-8 h-8 text-accent animate-spin" />
                 <p className="text-sm font-medium">Cargando prompts célebres...</p>
               </div>
             ) : filteredPrompts.length > 0 ? (
@@ -313,13 +313,13 @@ export function App() {
             ) : (
               /* Empty Search / Filter State with HeroUI components */
               <div className="flex flex-col items-center justify-center py-20 px-4 text-center max-w-md mx-auto">
-                <div className="w-16 h-16 rounded-3xl bg-[#0e1424] border border-white/[0.08] flex items-center justify-center text-slate-400 mb-4 shadow-xl">
-                  <SearchX className="w-8 h-8 text-indigo-400" />
+                <div className="w-16 h-16 rounded-3xl bg-default/40 border border-border flex items-center justify-center text-muted mb-4 shadow-xl">
+                  <SearchX className="w-8 h-8 text-accent" />
                 </div>
-                <h3 className="text-base font-bold text-white mb-1.5">
+                <h3 className="text-base font-bold text-foreground mb-1.5">
                   No se encontraron prompts
                 </h3>
-                <p className="text-xs text-slate-400 mb-6 leading-relaxed">
+                <p className="text-xs text-muted mb-6 leading-relaxed">
                   No hay resultados que coincidan con tus criterios de búsqueda o filtros activos.
                 </p>
                 <div className="flex items-center gap-2.5">
@@ -333,7 +333,7 @@ export function App() {
                       setShowFavoritesOnly(false);
                       setSelectedTag(null);
                     }}
-                    className="rounded-xl text-xs"
+                    className="rounded-2xl text-xs"
                   >
                     Limpiar filtros
                   </Button>
@@ -344,7 +344,7 @@ export function App() {
                       setEditorPrompt(null);
                       setIsEditorOpen(true);
                     }}
-                    className="rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 shadow-md shadow-indigo-600/30"
+                    className="rounded-2xl text-xs font-semibold shadow-md"
                   >
                     <Plus className="w-4 h-4 mr-1" />
                     <span>Crear nuevo</span>
@@ -355,14 +355,14 @@ export function App() {
           </main>
 
           {/* Prompts Footer with HeroUI components */}
-          <footer className="border-t border-white/[0.06] py-6 px-4 text-center text-xs text-slate-500 mt-auto bg-[#07090e]/80 backdrop-blur-md">
+          <footer className="border-t border-border/60 py-6 px-4 text-center text-xs text-muted mt-auto bg-surface/40 backdrop-blur-md">
             <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-slate-300">⚡ Prompts Célebres</span>
+                <span className="font-semibold text-foreground">⚡ Prompts Célebres</span>
                 <span>·</span>
                 <span>Colección personal de @dannieldev</span>
               </div>
-              <div className="flex items-center gap-3 text-slate-400 text-[11px]">
+              <div className="flex items-center gap-3 text-muted text-[11px]">
                 <Chip color="success" variant="soft" size="sm" className="text-[10px]">
                   Cloudflare Workers + D1
                 </Chip>
@@ -379,6 +379,7 @@ export function App() {
           </footer>
         </>
       )}
+
 
       {/* Interactive Variable Filling Modal */}
       <VariableModal

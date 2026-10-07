@@ -111,21 +111,21 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md">
-      <div className="relative w-full max-w-lg bg-[#0c101d] border border-white/[0.1] rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-modal-enter">
+      <div className="relative w-full max-w-lg bg-surface border border-border rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-modal-enter">
         {/* Header */}
-        <div className="px-6 py-4.5 border-b border-white/[0.08] flex items-center justify-between bg-[#101626]">
+        <div className="px-6 py-4.5 border-b border-border flex items-center justify-between bg-surface-secondary/50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+            <div className="w-10 h-10 rounded-2xl bg-accent/20 border border-accent/30 flex items-center justify-center text-accent">
               <FileJson className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold text-white">Respaldar e Importar</h2>
+                <h2 className="text-base font-bold text-foreground">Respaldar e Importar</h2>
                 <Chip color="accent" variant="soft" size="sm">
                   {prompts.length} prompts
                 </Chip>
               </div>
-              <p className="text-xs text-slate-400">Exporta o sincroniza tu colección en formato JSON</p>
+              <p className="text-xs text-muted">Exporta o sincroniza tu colección en formato JSON</p>
             </div>
           </div>
 
@@ -134,7 +134,7 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
             size="sm"
             variant="ghost"
             onClick={onClose}
-            className="rounded-xl text-slate-400 hover:text-white"
+            className="rounded-xl text-muted hover:text-foreground"
           >
             <X className="w-5 h-5" />
           </Button>
@@ -143,13 +143,13 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
         {/* Body */}
         <div className="p-6 flex flex-col gap-4">
           {/* Export card */}
-          <div className="bg-[#07090e] border border-white/[0.08] rounded-2xl p-4 flex items-center justify-between gap-4 shadow-inner">
+          <div className="bg-surface-secondary/60 border border-border rounded-2xl p-4 flex items-center justify-between gap-4 shadow-inner">
             <div>
-              <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
-                <Download className="w-4 h-4 text-indigo-400" />
+              <h3 className="text-sm font-bold text-foreground flex items-center gap-1.5">
+                <Download className="w-4 h-4 text-accent" />
                 <span>Exportar Respaldo</span>
               </h3>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-muted mt-1">
                 Descarga un archivo JSON con tus {prompts.length} prompts para guardarlo en local o moverlo de equipo.
               </p>
             </div>
@@ -157,7 +157,7 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
               variant="primary"
               size="sm"
               onClick={handleExportJson}
-              className="rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 shadow-md shadow-indigo-600/30 shrink-0"
+              className="rounded-xl text-xs font-semibold shadow-md shadow-accent/25 shrink-0"
             >
               <Download className="w-4 h-4 mr-1" />
               <span>Descargar</span>
@@ -165,13 +165,13 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
           </div>
 
           {/* Import card */}
-          <div className="bg-[#07090e] border border-white/[0.08] rounded-2xl p-4 flex items-center justify-between gap-4 shadow-inner">
+          <div className="bg-surface-secondary/60 border border-border rounded-2xl p-4 flex items-center justify-between gap-4 shadow-inner">
             <div>
-              <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
+              <h3 className="text-sm font-bold text-foreground flex items-center gap-1.5">
                 <Upload className="w-4 h-4 text-violet-400" />
                 <span>Importar JSON</span>
               </h3>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-muted mt-1">
                 Sube un respaldo previo para combinar o restaurar tus prompts célebres.
               </p>
             </div>
@@ -197,13 +197,13 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
           </div>
 
           {/* Seed reset card */}
-          <div className="bg-[#07090e] border border-white/[0.08] rounded-2xl p-4 flex items-center justify-between gap-4 shadow-inner">
+          <div className="bg-surface-secondary/60 border border-border rounded-2xl p-4 flex items-center justify-between gap-4 shadow-inner">
             <div>
-              <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
+              <h3 className="text-sm font-bold text-foreground flex items-center gap-1.5">
                 <Sparkles className="w-4 h-4 text-amber-400" />
                 <span>Restaurar Seeds Maestros</span>
               </h3>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-muted mt-1">
                 Recarga los prompts semilla iniciales de desarrollo web, marketing y arquitectura.
               </p>
             </div>
@@ -212,7 +212,7 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
               size="sm"
               onClick={handleRestoreDefaults}
               isDisabled={resetting}
-              className="rounded-xl text-xs text-slate-300 hover:text-white shrink-0"
+              className="rounded-xl text-xs text-muted hover:text-foreground shrink-0"
             >
               <RotateCcw className="w-3.5 h-3.5 mr-1" />
               <span>{resetting ? "Cargando..." : "Cargar Seeds"}</span>
@@ -221,7 +221,7 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 bg-[#101626] border-t border-white/[0.08] flex justify-end">
+        <div className="px-6 py-4 bg-surface-secondary/50 border-t border-border flex justify-end">
           <Button
             variant="ghost"
             size="sm"

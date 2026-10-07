@@ -79,7 +79,7 @@ export const PromptCard: React.FC<PromptCardProps> = ({
     <Card
       variant="default"
       onClick={() => onViewDetail(prompt)}
-      className="group relative flex flex-col justify-between bg-[#0e1320]/95 hover:bg-[#121929] border border-white/[0.08] hover:border-indigo-500/40 rounded-3xl p-5 transition-all duration-200 hover:-translate-y-1 shadow-md hover:shadow-2xl hover:shadow-black/50 cursor-pointer overflow-hidden"
+      className="group relative flex flex-col justify-between border border-border/80 hover:border-accent/60 rounded-3xl p-5 transition-all duration-200 hover:-translate-y-1.5 shadow-md hover:shadow-xl hover:shadow-accent/5 cursor-pointer overflow-hidden"
     >
       <div>
         {/* Card Header: Category & Controls */}
@@ -101,9 +101,9 @@ export const PromptCard: React.FC<PromptCardProps> = ({
                 key={m}
                 variant="secondary"
                 size="sm"
-                className="text-[10px] bg-white/[0.03] border border-white/[0.06] text-slate-300"
+                className="text-[10px]"
               >
-                <Bot className="w-2.5 h-2.5 inline mr-1 text-slate-400" />
+                <Bot className="w-2.5 h-2.5 inline mr-1 text-muted" />
                 <span>{m}</span>
               </Chip>
             ))}
@@ -120,8 +120,8 @@ export const PromptCard: React.FC<PromptCardProps> = ({
             }}
             className={`rounded-xl transition-all ${
               prompt.is_favorite
-                ? "text-amber-400 bg-amber-500/15 border border-amber-500/30"
-                : "text-slate-500 hover:text-amber-400 hover:bg-white/[0.06]"
+                ? "text-amber-400 bg-amber-500/15"
+                : "text-muted hover:text-amber-400 hover:bg-default/40"
             }`}
             aria-label={prompt.is_favorite ? "Quitar de célebres" : "Marcar como célebre"}
           >
@@ -131,12 +131,12 @@ export const PromptCard: React.FC<PromptCardProps> = ({
 
         {/* Card Content: Title, Description, Snippet */}
         <CardContent className="p-0 space-y-2.5">
-          <CardTitle className="text-base font-bold text-slate-100 group-hover:text-indigo-200 transition-colors line-clamp-1">
+          <CardTitle className="text-base font-bold text-foreground group-hover:text-accent transition-colors line-clamp-1">
             {prompt.title}
           </CardTitle>
 
           {prompt.description && (
-            <CardDescription className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
+            <CardDescription className="text-xs text-muted line-clamp-2 leading-relaxed">
               {prompt.description}
             </CardDescription>
           )}
@@ -150,11 +150,11 @@ export const PromptCard: React.FC<PromptCardProps> = ({
                 size="sm"
                 className="flex items-center gap-1.5 text-[11px] font-medium"
               >
-                <Zap className="w-3 h-3 inline mr-1 text-indigo-400" />
+                <Zap className="w-3 h-3 inline mr-1 text-accent" />
                 <span>
                   {variables.length} {variables.length === 1 ? "variable" : "variables"}:
                 </span>
-                <span className="text-indigo-200 font-mono text-[10px] ml-1">
+                <span className="text-accent-foreground font-mono text-[10px] ml-1">
                   {variables.slice(0, 3).map((v) => `{{${v.key}}}`).join(", ")}
                   {variables.length > 3 ? "..." : ""}
                 </span>
@@ -163,11 +163,11 @@ export const PromptCard: React.FC<PromptCardProps> = ({
           )}
 
           {/* Snippet Code Preview Box */}
-          <div className="bg-[#07090e] border border-white/[0.07] rounded-2xl p-3.5 font-mono-code text-[11px] text-slate-300 leading-relaxed overflow-hidden relative shadow-inner">
+          <div className="bg-default/30 border border-border/60 rounded-2xl p-3.5 font-mono-code text-[11px] text-foreground/90 leading-relaxed overflow-hidden relative shadow-inner">
             <pre className="whitespace-pre-wrap line-clamp-3 select-none font-inherit">
               {previewLines}
             </pre>
-            <div className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-[#07090e] to-transparent pointer-events-none" />
+            <div className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-default/40 to-transparent pointer-events-none" />
           </div>
 
           {/* Tags Row */}
@@ -182,7 +182,7 @@ export const PromptCard: React.FC<PromptCardProps> = ({
                     e.stopPropagation();
                     onSelectTag(tag);
                   }}
-                  className="cursor-pointer text-[10px] text-slate-400 hover:text-indigo-300 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.06] transition"
+                  className="cursor-pointer text-[10px] hover:border-accent/40 transition"
                 >
                   #{tag}
                 </Chip>
@@ -194,7 +194,7 @@ export const PromptCard: React.FC<PromptCardProps> = ({
 
       {/* Card Footer: Action Buttons */}
       <CardFooter
-        className="flex items-center justify-between gap-2 p-0 pt-4 mt-3 border-t border-white/[0.06]"
+        className="flex items-center justify-between gap-2 p-0 pt-4 mt-3 border-t border-border/60"
         onClick={(e: React.MouseEvent) => e.stopPropagation()}
       >
         <div className="flex items-center gap-1">
@@ -203,7 +203,7 @@ export const PromptCard: React.FC<PromptCardProps> = ({
             size="sm"
             variant="ghost"
             onClick={() => onEdit(prompt)}
-            className="text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] rounded-xl"
+            className="text-muted hover:text-foreground rounded-xl"
             aria-label="Editar prompt"
           >
             <Edit2 className="w-3.5 h-3.5" />
@@ -214,7 +214,7 @@ export const PromptCard: React.FC<PromptCardProps> = ({
             size="sm"
             variant="ghost"
             onClick={() => onDelete(prompt.id, prompt.title)}
-            className="text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl"
+            className="text-muted hover:text-danger rounded-xl"
             aria-label="Eliminar prompt"
           >
             <Trash2 className="w-3.5 h-3.5" />
@@ -225,7 +225,7 @@ export const PromptCard: React.FC<PromptCardProps> = ({
             size="sm"
             variant="ghost"
             onClick={() => onViewDetail(prompt)}
-            className="text-slate-400 hover:text-indigo-300 hover:bg-white/[0.06] rounded-xl"
+            className="text-muted hover:text-accent rounded-xl"
             aria-label="Ver prompt completo"
           >
             <ExternalLink className="w-3.5 h-3.5" />
@@ -238,16 +238,12 @@ export const PromptCard: React.FC<PromptCardProps> = ({
             variant={copied ? "primary" : "secondary"}
             size="sm"
             onClick={handleCopy}
-            className={`rounded-xl text-xs font-medium transition-all ${
-              copied
-                ? "bg-emerald-600 text-white font-semibold"
-                : "bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 hover:text-white border border-white/[0.08]"
-            }`}
+            className="rounded-xl text-xs font-medium"
             aria-label="Copiar prompt"
           >
             {copied ? (
               <>
-                <Check className="w-3.5 h-3.5 mr-1 text-white" />
+                <Check className="w-3.5 h-3.5 mr-1" />
                 <span>¡Copiado!</span>
               </>
             ) : (
@@ -264,7 +260,7 @@ export const PromptCard: React.FC<PromptCardProps> = ({
               variant="primary"
               size="sm"
               onClick={() => onUseVariables(prompt)}
-              className="rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 shadow-sm shadow-indigo-600/30"
+              className="rounded-xl text-xs font-semibold shadow-xs"
               aria-label="Rellenar variables"
             >
               <Sliders className="w-3.5 h-3.5 mr-1" />
@@ -275,7 +271,7 @@ export const PromptCard: React.FC<PromptCardProps> = ({
               variant="primary"
               size="sm"
               onClick={handleCopy}
-              className="rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 shadow-sm shadow-indigo-600/30"
+              className="rounded-xl text-xs font-semibold shadow-xs"
               aria-label="Usar prompt"
             >
               <span>Usar</span>

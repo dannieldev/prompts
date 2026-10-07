@@ -54,11 +54,7 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
             variant={selectedCategory === "Todas" ? "primary" : "secondary"}
             size="sm"
             onClick={() => onSelectCategory("Todas")}
-            className={`rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
-              selectedCategory === "Todas"
-                ? "bg-indigo-600 text-white font-semibold shadow-md shadow-indigo-600/30"
-                : "bg-white/[0.04] text-slate-300 hover:text-white border border-white/[0.07]"
-            }`}
+            className="rounded-2xl text-xs font-medium whitespace-nowrap shadow-xs"
           >
             <span>✨</span>
             <span>Todas</span>
@@ -72,11 +68,7 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
                 variant={isSelected ? "primary" : "secondary"}
                 size="sm"
                 onClick={() => onSelectCategory(cat)}
-                className={`rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
-                  isSelected
-                    ? "bg-indigo-600 text-white font-semibold shadow-md shadow-indigo-600/30"
-                    : "bg-white/[0.04] text-slate-300 hover:text-white border border-white/[0.07]"
-                }`}
+                className="rounded-2xl text-xs font-medium whitespace-nowrap shadow-xs"
               >
                 <span>{CATEGORY_ICONS[cat]}</span>
                 <span>{cat}</span>
@@ -91,24 +83,20 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
             variant={showFavoritesOnly ? "primary" : "outline"}
             size="sm"
             onClick={onToggleFavorites}
-            className={`rounded-xl text-xs font-medium transition-all flex items-center gap-1.5 ${
-              showFavoritesOnly
-                ? "bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-xs"
-                : "bg-white/[0.03] text-slate-300 hover:text-white border-white/[0.08]"
-            }`}
+            className="rounded-2xl text-xs font-medium transition-transform flex items-center gap-1.5"
             aria-label="Mostrar solo prompts célebres favoritos"
           >
             <Star
               className={`w-3.5 h-3.5 ${
-                showFavoritesOnly ? "text-amber-400 fill-amber-400" : "text-slate-400"
+                showFavoritesOnly ? "text-amber-300 fill-amber-300" : "text-amber-400"
               }`}
             />
             <span>Célebres</span>
             <Chip
-              color="warning"
+              color={showFavoritesOnly ? "default" : "warning"}
               variant="soft"
               size="sm"
-              className="text-[10px] font-bold px-1.5 py-0"
+              className="text-[10px] font-bold px-1.5 py-0 min-h-0 h-4"
             >
               {favoritesCount}
             </Chip>
@@ -119,7 +107,7 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
               variant="danger-soft"
               size="sm"
               onClick={handleResetFilters}
-              className="rounded-xl text-xs flex items-center gap-1 text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/25"
+              className="rounded-2xl text-xs flex items-center gap-1"
               aria-label="Restablecer todos los filtros"
             >
               <X className="w-3.5 h-3.5" />
@@ -130,23 +118,19 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
       </div>
 
       {/* Sub-filters: AI Model & Active Tags */}
-      <div className="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-white/[0.06] text-xs">
+      <div className="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-border/60 text-xs">
         {/* Model Filter Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-          <span className="text-slate-400 flex items-center gap-1 font-medium whitespace-nowrap text-xs mr-1">
-            <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+          <span className="text-muted flex items-center gap-1 font-medium whitespace-nowrap text-xs mr-1">
+            <Sparkles className="w-3.5 h-3.5 text-accent" />
             <span>Modelo:</span>
           </span>
 
           <Button
-            variant={selectedModel === "Todos" ? "secondary" : "ghost"}
+            variant={selectedModel === "Todos" ? "primary" : "secondary"}
             size="sm"
             onClick={() => onSelectModel("Todos")}
-            className={`rounded-lg text-[11px] h-7 px-2.5 transition whitespace-nowrap ${
-              selectedModel === "Todos"
-                ? "bg-white/[0.1] text-indigo-300 border border-indigo-500/40 font-semibold"
-                : "text-slate-400 hover:text-slate-200"
-            }`}
+            className="rounded-xl text-[11px] h-7 px-2.5 transition whitespace-nowrap"
           >
             Todos
           </Button>
@@ -156,14 +140,10 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
             return (
               <Button
                 key={model}
-                variant={isSelected ? "secondary" : "ghost"}
+                variant={isSelected ? "primary" : "secondary"}
                 size="sm"
                 onClick={() => onSelectModel(model)}
-                className={`rounded-lg text-[11px] h-7 px-2.5 transition whitespace-nowrap ${
-                  isSelected
-                    ? "bg-white/[0.1] text-indigo-300 border border-indigo-500/40 font-semibold"
-                    : "text-slate-400 hover:text-slate-200"
-                }`}
+                className="rounded-xl text-[11px] h-7 px-2.5 transition whitespace-nowrap"
               >
                 {model}
               </Button>
@@ -179,11 +159,11 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
             size="sm"
             className="flex items-center gap-1 text-[11px] font-medium"
           >
-            <TagIcon className="w-3 h-3 inline mr-1 text-indigo-400" />
+            <TagIcon className="w-3 h-3 inline mr-1 text-accent" />
             <span>#{selectedTag}</span>
             <button
               onClick={onClearTag}
-              className="ml-1.5 p-0.5 hover:text-white transition inline-flex items-center"
+              className="ml-1.5 p-0.5 hover:text-foreground transition inline-flex items-center"
               title="Quitar filtro de tag"
             >
               <X className="w-3 h-3" />
@@ -194,9 +174,9 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
 
       {/* Top Popular Tags Quick Bar (when no tag selected) */}
       {!selectedTag && availableTags.length > 0 && (
-        <div className="flex items-center gap-1.5 overflow-x-auto text-[11px] text-slate-500 pb-1 scrollbar-none no-scrollbar">
-          <span className="text-slate-400 flex items-center gap-1 shrink-0 text-xs mr-1">
-            <TagIcon className="w-3 h-3 text-slate-500" />
+        <div className="flex items-center gap-1.5 overflow-x-auto text-[11px] text-muted pb-1 scrollbar-none no-scrollbar">
+          <span className="text-muted flex items-center gap-1 shrink-0 text-xs mr-1">
+            <TagIcon className="w-3 h-3 text-muted" />
             <span>Tags frecuentes:</span>
           </span>
           {availableTags.slice(0, 8).map((tag) => (
@@ -205,7 +185,7 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
               variant="secondary"
               size="sm"
               onClick={() => onSelectTag(tag)}
-              className="cursor-pointer text-[10px] text-slate-400 hover:text-indigo-300 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.06] transition whitespace-nowrap active:scale-95"
+              className="cursor-pointer text-[10px] transition whitespace-nowrap hover:border-accent/40 active:scale-95"
             >
               #{tag}
             </Chip>
