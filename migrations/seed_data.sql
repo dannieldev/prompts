@@ -206,27 +206,6 @@ Por favor, estructura tu entrega en este **Dossier de Ingesta de Marca**:
    - Lista de 4 o 5 pilares temáticos sugeridos (con porcentaje recomendado de distribución).
 
 ⚠️ REGLA ESTRICTA: NO generes publicaciones ni el calendario editorial todavía. Tu única meta es consolidar este entendimiento estratégico, guardarlo en tu memoria de contexto y esperar mi aprobación para pasar al Paso 2.', 'Marketing', '["agencia","calendario","redes-sociales","auditoria-marca","onboarding","estrategia","prompt-chaining"]', '["Claude 3.5 Sonnet","GPT-4o"]', 1, '2026-10-07T05:41:47.254Z', '2026-10-07T05:41:47.259Z');
-INSERT OR REPLACE INTO prompts (id, title, description, content, category, tags, models, is_favorite, created_at, updated_at) VALUES ('seed-12-gamma-laboratorios-onboarding', 'Gamma Laboratorios — Auditoría de Marca & Calendario (Paso 1)', 'Auditoría de marca e ingesta histórica específica para Gamma Laboratorios (El Salvador) antes de generar el calendario.', 'Actúa como un Senior Brand Strategist y Director de Contenido de Agencia de Marketing Digital para Gamma Laboratorios (El Salvador).
-
-Antes de generar el calendario de contenidos, necesito que realices una inmersión completa y auditoría de la marca para consolidar su ADN en memoria.
-
-Fuentes oficiales de investigación:
-- **Sitio Web Oficial (Fuente principal y final)**: https://www.gammalaboratories.com/
-- **Facebook Oficial**: https://www.facebook.com/GammaLaboratoriesSV/?locale=es_LA
-- **Histórico de Calendarios y Documentos**: {{ruta_o_archivos_excel}}
-- **Mes o Período a Planificar**: {{mes_a_planificar}}
-
-Instrucciones:
-1. Revisa principalmente el sitio web oficial; allí está la información verídica, servicios clínicos, perfiles de laboratorio y catálogo final.
-2. Analiza los calendarios anteriores en Excel para entender qué pilares temáticos se han publicado, qué servicios se han priorizado y qué tono se ha usado.
-3. Entrega un Dossier de Ingesta de Marca con:
-   - Identidad y propuesta de valor única en el sector de salud y análisis clínicos.
-   - Servicios prioritarios a promover (check-ups, perfiles preventivos, pruebas especializadas).
-   - Brand voice (tono científico, empático, confiable y pedagógico).
-   - Hallazgos clave de los calendarios anteriores en Excel.
-   - Propuesta de 4 pilares temáticos estructurados para el siguiente calendario.
-
-⚠️ REGLA: No generes el calendario todavía. Guarda este contexto en memoria y espera mi feedback para el Paso 2.', 'Marketing', '["gamma-laboratorios","salud","calendario","agencia","el-salvador"]', '["Claude 3.5 Sonnet","GPT-4o"]', 1, '2026-10-07T05:41:47.254Z', '2026-10-07T05:41:47.259Z');
 INSERT OR REPLACE INTO prompts (id, title, description, content, category, tags, models, is_favorite, created_at, updated_at) VALUES ('seed-13-calendario-agencia-paso-2', 'Calendarios de Agencia (Paso 2: Matriz Editorial & Metaprompts)', 'Paso 2 de 2: Crea el calendario mensual en Excel con cuotas exactas de Reels, Carruseles y Estáticos, efemérides y prompts para generar artes con IA.', 'Actúa como un Senior Content Creator y Director Editorial de Agencia de Marketing Digital.
 
 Tomando en cuenta el Dossier de Marca y el contexto consolidado en el Paso 1, tu objetivo es construir la matriz completa del calendario de contenidos para {{nombre_marca}} correspondiente al mes de {{mes_y_ano_a_planificar}}.
@@ -262,26 +241,6 @@ Para cada una de las piezas, entrega la siguiente información tabulada:
 - **Referencias de Inspiración**: Enlaces o notas de estilo.
 
 Si tienes herramientas para editar directamente el archivo Excel (como Python / openpyxl), crea la nueva hoja ''{{mes_y_ano_a_planificar}}'' respetando el diseño y estilos de las hojas anteriores; de lo contrario, entrega la tabla estructurada para volcarla de inmediato.', 'Marketing', '["agencia","calendario","redes-sociales","reels","carruseles","metaprompts","excel","prompt-chaining"]', '["Claude 3.5 Sonnet","GPT-4o"]', 1, '2026-10-07T05:41:47.254Z', '2026-10-07T05:41:47.259Z');
-INSERT OR REPLACE INTO prompts (id, title, description, content, category, tags, models, is_favorite, created_at, updated_at) VALUES ('seed-14-gamma-laboratorios-calendario-paso-2', 'Gamma Laboratorios — Generación de Calendario & Excel (Paso 2)', 'Generación del calendario de Gamma Laboratorios para Excel con 6 Reels (15s), 6 Carruseles (2-3 slides), 6 Estáticos, efemérides y prompts para IA.', 'Actúa como Director de Contenido de Agencia para Gamma Laboratorios (El Salvador).
-
-Con base en la auditoría y dossier consolidado en el Paso 1, genera el calendario editorial completo para el mes de {{mes_a_planificar}} en el documento de Excel.
-
-Requisitos de Entrega:
-- **Nueva hoja de Excel**: Crear o preparar una hoja adicional llamada ''{{mes_a_planificar}}'', manteniendo exactamente la misma estructura de columnas y formatos de los meses anteriores.
-- **Mix de Contenidos (18 piezas en total)**:
-  • **6 Reels**: De exactamente 15 segundos (0-3s Hook médico/preventivo, 3-12s respuesta clara, 12-15s CTA para cotizar o visitar sucursal).
-  • **6 Carruseles**: De 2 a 3 slides únicamente (concisos, directos al grano y con tipografía legible).
-  • **6 Estáticos**: Piezas de valor único, infografías rápidas o promociones de perfiles de laboratorio.
-
-Reglas Obligatorias:
-1. **Efemérides de Salud**: Revisa días mundiales o nacionales de salud que apliquen en {{mes_a_planificar}} para Gamma Laboratorios (ej. diabetes, salud masculina/femenina, corazón, etc.).
-2. **Cero Repeticiones**: Contrasta contra todos los meses del 2026 en el Excel. No repitas ángulos ni temas ya quemados.
-3. **Columna "Prompt para IA"**: Para cada publicación, incluye un prompt detallado listo para copiar en Google Gemini o ChatGPT para generar el arte gráfico, portada o guión visual.
-4. **Referencias**: Adjunta referencias visuales para el diseñador.
-5. **Calidad**: Solo incluye ideas sólidas, clínicamente verídicas y con alta probabilidad de interacción.
-
-Estructura requerida por fila:
-`ID | Fecha | Pilar | Formato | Hook | Estructura / Slides | Caption Completo | Prompt para Arte IA | Referencias`', 'Marketing', '["gamma-laboratorios","calendario","excel","reels","salud","el-salvador","antigravity"]', '["Claude 3.5 Sonnet","GPT-4o","Gemini 1.5 Pro"]', 1, '2026-10-07T05:41:47.254Z', '2026-10-07T05:41:47.259Z');
 INSERT OR REPLACE INTO prompts (id, title, description, content, category, tags, models, is_favorite, created_at, updated_at) VALUES ('seed-15-taste-skill-direccion', 'Taste Skill — Dirección Estética y Vibe Anti-Plantilla', 'Infiere la audiencia, el tono estético y los 3 diales (varianza, movimiento, densidad) antes de tirar una sola línea de código.', 'Actúa como un Design Director de clase mundial especializado en interfaces de alto impacto visual y anti-slop.
 
 Tu tarea es ejecutar la fase de **Brief Inference y Dirección Estética** para un nuevo proyecto web antes de generar código.

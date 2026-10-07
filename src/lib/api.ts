@@ -3,6 +3,20 @@ import { SEED_PROMPTS } from "./seedData";
 
 const STORAGE_KEY = "dannieldev_prompts_vault_v1";
 
+const DEPRECATED_IDS = new Set([
+  "seed-12-gamma-laboratorios-onboarding",
+  "seed-14-gamma-laboratorios-calendario-paso-2",
+]);
+
+function sanitizePrompts(items: PromptItem[]): PromptItem[] {
+  return items.filter(
+    (p) =>
+      !DEPRECATED_IDS.has(p.id) &&
+      !p.title?.toLowerCase().includes("gamma laboratorios") &&
+      !p.tags?.some((t) => t.toLowerCase().includes("gamma-laboratorios"))
+  );
+}
+
 // Helper to get local storage prompts
 function getLocalPrompts(): PromptItem[] {
   try {
@@ -13,14 +27,14 @@ function getLocalPrompts(): PromptItem[] {
     }
     const parsed = JSON.parse(raw);
     if (Array.isArray(parsed) && parsed.length > 0) {
-      const existingIds = new Set(parsed.map((p) => p.id));
+      const sanitized = sanitizePrompts(parsed);
+      const existingIds = new Set(sanitized.map((p) => p.id));
       const missingSeeds = SEED_PROMPTS.filter((s) => !existingIds.has(s.id));
-      if (missingSeeds.length > 0) {
-        const merged = [...parsed, ...missingSeeds];
+      const merged = [...sanitized, ...missingSeeds];
+      if (sanitized.length !== parsed.length || missingSeeds.length > 0) {
         saveLocalPrompts(merged);
-        return merged;
       }
-      return parsed;
+      return merged;
     }
     return SEED_PROMPTS;
   } catch {
@@ -64,13 +78,14 @@ class PromptApiClient {
         const data = await resp.json();
         if (Array.isArray(data)) {
           this.setMode("d1");
+          const sanitized = sanitizePrompts(data);
           // If remote D1 is empty, auto-seed it with the rich seed prompts
-          if (data.length === 0) {
+          if (sanitized.length === 0) {
             await this.seedRemote();
             return SEED_PROMPTS;
           }
-          saveLocalPrompts(data);
-          return data;
+          saveLocalPrompts(sanitized);
+          return sanitized;
         }
       }
     } catch {

@@ -231,27 +231,6 @@ export const SEED_PROMPTS = [
     "content": "Actúa como un Senior Brand Strategist y Director de Contenido de Agencia de Marketing Digital.\n\nAntes de comenzar a redactar publicaciones o generar el calendario de contenidos, tu objetivo en este PRIMER PASO es realizar una inmersión completa y auditoría de la marca para consolidar su ADN, pilares y contexto en memoria.\n\nDatos de la marca y fuentes de consulta:\n- **Nombre de la Marca**: {{nombre_marca}}\n- **Sitio Web Oficial (Fuente principal de verdad)**: {{sitio_web}}\n- **Redes Sociales Oficiales**: {{redes_sociales}}\n- **Documentos e Histórico de Calendarios**: {{archivos_o_calendarios_anteriores}}\n- **Período a Planificar (Próximo paso)**: {{periodo_a_planificar}}\n\nInstrucciones de Investigación y Análisis:\n1. **Prioridad de Información**: Revisa detalladamente el sitio web oficial; allí reside la información técnica, verídica, servicios exactos y lineamientos finales de la marca. Complementa con las redes sociales para entender cómo interactúa con su comunidad.\n2. **Auditoría del Histórico de Calendarios**: Revisa los archivos y calendarios anteriores para identificar:\n   - Qué formatos y tipos de publicaciones han funcionado mejor.\n   - Qué temas o servicios se han sobreexplotado o quedado rezagados.\n   - Qué tono de comunicación se ha venido utilizando.\n\nPor favor, estructura tu entrega en este **Dossier de Ingesta de Marca**:\n1. **Identidad & Propuesta de Valor**:\n   - Misión y promesa central de la marca en 2 oraciones.\n   - Arquetipo de marca y pilares de confianza (certificaciones, bioseguridad, trayectoria).\n2. **Mapa de Servicios y Ofertas Prioritarias**:\n   - Servicios estrella y áreas de especialidad que deben promoverse con mayor énfasis.\n   - Perfil de clientes o audiencias a las que se dirige (pacientes, profesionales, empresas).\n3. **Guía de Brand Voice & Tono de Comunicación**:\n   - Tono recomendado (ej: cercano, profesional, pedagógico, clínico sin ser frío).\n   - Palabras clave y términos recurrentes que refuerzan la marca.\n   - Qué NO decir o temas sensibles a cuidar con prudencia.\n4. **Diagnóstico del Historial de Contenido**:\n   - Resumen de lo aprendido de los calendarios anteriores.\n   - 3 oportunidades o vacíos temáticos detectados que podemos explotar en el nuevo período.\n5. **Propuesta de Pilares de Contenido para el Paso 2**:\n   - Lista de 4 o 5 pilares temáticos sugeridos (con porcentaje recomendado de distribución).\n\n⚠️ REGLA ESTRICTA: NO generes publicaciones ni el calendario editorial todavía. Tu única meta es consolidar este entendimiento estratégico, guardarlo en tu memoria de contexto y esperar mi aprobación para pasar al Paso 2."
   },
   {
-    "id": "seed-12-gamma-laboratorios-onboarding",
-    "title": "Gamma Laboratorios — Auditoría de Marca & Calendario (Paso 1)",
-    "description": "Auditoría de marca e ingesta histórica específica para Gamma Laboratorios (El Salvador) antes de generar el calendario.",
-    "category": "Marketing",
-    "tags": [
-      "gamma-laboratorios",
-      "salud",
-      "calendario",
-      "agencia",
-      "el-salvador"
-    ],
-    "models": [
-      "Claude 3.5 Sonnet",
-      "GPT-4o"
-    ],
-    "is_favorite": true,
-    "created_at": "2026-10-07T05:41:47.254Z",
-    "updated_at": "2026-10-07T05:41:47.254Z",
-    "content": "Actúa como un Senior Brand Strategist y Director de Contenido de Agencia de Marketing Digital para Gamma Laboratorios (El Salvador).\n\nAntes de generar el calendario de contenidos, necesito que realices una inmersión completa y auditoría de la marca para consolidar su ADN en memoria.\n\nFuentes oficiales de investigación:\n- **Sitio Web Oficial (Fuente principal y final)**: https://www.gammalaboratories.com/\n- **Facebook Oficial**: https://www.facebook.com/GammaLaboratoriesSV/?locale=es_LA\n- **Histórico de Calendarios y Documentos**: {{ruta_o_archivos_excel}}\n- **Mes o Período a Planificar**: {{mes_a_planificar}}\n\nInstrucciones:\n1. Revisa principalmente el sitio web oficial; allí está la información verídica, servicios clínicos, perfiles de laboratorio y catálogo final.\n2. Analiza los calendarios anteriores en Excel para entender qué pilares temáticos se han publicado, qué servicios se han priorizado y qué tono se ha usado.\n3. Entrega un Dossier de Ingesta de Marca con:\n   - Identidad y propuesta de valor única en el sector de salud y análisis clínicos.\n   - Servicios prioritarios a promover (check-ups, perfiles preventivos, pruebas especializadas).\n   - Brand voice (tono científico, empático, confiable y pedagógico).\n   - Hallazgos clave de los calendarios anteriores en Excel.\n   - Propuesta de 4 pilares temáticos estructurados para el siguiente calendario.\n\n⚠️ REGLA: No generes el calendario todavía. Guarda este contexto en memoria y espera mi feedback para el Paso 2."
-  },
-  {
     "id": "seed-13-calendario-agencia-paso-2",
     "title": "Calendarios de Agencia (Paso 2: Matriz Editorial & Metaprompts)",
     "description": "Paso 2 de 2: Crea el calendario mensual en Excel con cuotas exactas de Reels, Carruseles y Estáticos, efemérides y prompts para generar artes con IA.",
@@ -274,30 +253,6 @@ export const SEED_PROMPTS = [
     "created_at": "2026-10-07T05:41:47.254Z",
     "updated_at": "2026-10-07T05:41:47.254Z",
     "content": "Actúa como un Senior Content Creator y Director Editorial de Agencia de Marketing Digital.\n\nTomando en cuenta el Dossier de Marca y el contexto consolidado en el Paso 1, tu objetivo es construir la matriz completa del calendario de contenidos para {{nombre_marca}} correspondiente al mes de {{mes_y_ano_a_planificar}}.\n\nObjetivo de producción:\n- **Mes a planificar**: {{mes_y_ano_a_planificar}}\n- **Documento base**: {{archivo_o_hoja_excel}}\n- **Cuota de Contenidos requerida**:\n  • {{cuota_reels}} (Reels dinámicos de 15 segundos con gancho de 3s, desarrollo y CTA).\n  • {{cuota_carruseles}} (Carruseles concisos de 2 a 3 diapositivas de alto valor).\n  • {{cuota_estaticos}} (Publicaciones estáticas de impacto o infografías rápidas).\n\nReglas y Criterios de Calidad:\n1. **Investigación de Efemérides & Días Conmemorativos**: Investiga e integra fechas mundiales o nacionales relevantes de la industria que apliquen en {{mes_y_ano_a_planificar}} (salud, prevención, tecnología, etc.).\n2. **Filtro Anti-Repetición Estricto**: Revisa el historial de los meses anteriores del documento de Excel. NO repitas conceptos, ganchos ni ángulos que ya se hayan publicado recientemente.\n3. **Estilo y Tono de Redes**: Monitorea el lenguaje y estilo visual que mejor conecta con la comunidad de la marca y elévalo.\n4. **Columna Obligatoria de \"Metaprompt para IA\"**: Para CADA publicación, redacta un prompt en texto detallado y listo para copiar en {{herramienta_ia_arte}} (Google Gemini o ChatGPT / DALL-E) para generar el arte gráfico, guión audiovisual o imágenes de apoyo.\n5. **Referencias Reales**: Adjunta enlaces o referencias visuales de inspiración para el equipo de diseño y edición.\n\nEstructura de la Matriz (Columnas para la hoja de Excel):\nPara cada una de las piezas, entrega la siguiente información tabulada:\n- **Día y Fecha**: (distribuido a lo largo del mes).\n- **Formato**: [Reel 15s / Carrusel 2-3 slides / Estático].\n- **Pilar de Contenido**: [Educativo / Comercial / Prueba Social / Efeméride / Institucional].\n- **Hook / Gancho Inicial**: Frase de los primeros 3 segundos o titular de portada.\n- **Estructura Visual & Contenido**:\n  - *Si es Reel*: Guión segundo a segundo (0-3s hook, 3-12s desarrollo, 12-15s CTA) + texto en pantalla.\n  - *Si es Carrusel*: Contenido Slide 1, Slide 2 y Slide 3.\n  - *Si es Estático*: Descripción del arte y texto principal.\n- **Copywriting / Caption**: Texto completo para el post con tono de la marca, emojis medidos y llamada a la acción.\n- **Hashtags sugeridos**: 4 a 6 hashtags estratégicos.\n- **Metaprompt para Generación de Arte (IA)**: Prompt textual descriptivo (estilo visual, iluminación, composición, paleta y elementos clave) para {{herramienta_ia_arte}}.\n- **Referencias de Inspiración**: Enlaces o notas de estilo.\n\nSi tienes herramientas para editar directamente el archivo Excel (como Python / openpyxl), crea la nueva hoja '{{mes_y_ano_a_planificar}}' respetando el diseño y estilos de las hojas anteriores; de lo contrario, entrega la tabla estructurada para volcarla de inmediato."
-  },
-  {
-    "id": "seed-14-gamma-laboratorios-calendario-paso-2",
-    "title": "Gamma Laboratorios — Generación de Calendario & Excel (Paso 2)",
-    "description": "Generación del calendario de Gamma Laboratorios para Excel con 6 Reels (15s), 6 Carruseles (2-3 slides), 6 Estáticos, efemérides y prompts para IA.",
-    "category": "Marketing",
-    "tags": [
-      "gamma-laboratorios",
-      "calendario",
-      "excel",
-      "reels",
-      "salud",
-      "el-salvador",
-      "antigravity"
-    ],
-    "models": [
-      "Claude 3.5 Sonnet",
-      "GPT-4o",
-      "Gemini 1.5 Pro"
-    ],
-    "is_favorite": true,
-    "created_at": "2026-10-07T05:41:47.254Z",
-    "updated_at": "2026-10-07T05:41:47.254Z",
-    "content": "Actúa como Director de Contenido de Agencia para Gamma Laboratorios (El Salvador).\n\nCon base en la auditoría y dossier consolidado en el Paso 1, genera el calendario editorial completo para el mes de {{mes_a_planificar}} en el documento de Excel.\n\nRequisitos de Entrega:\n- **Nueva hoja de Excel**: Crear o preparar una hoja adicional llamada '{{mes_a_planificar}}', manteniendo exactamente la misma estructura de columnas y formatos de los meses anteriores.\n- **Mix de Contenidos (18 piezas en total)**:\n  • **6 Reels**: De exactamente 15 segundos (0-3s Hook médico/preventivo, 3-12s respuesta clara, 12-15s CTA para cotizar o visitar sucursal).\n  • **6 Carruseles**: De 2 a 3 slides únicamente (concisos, directos al grano y con tipografía legible).\n  • **6 Estáticos**: Piezas de valor único, infografías rápidas o promociones de perfiles de laboratorio.\n\nReglas Obligatorias:\n1. **Efemérides de Salud**: Revisa días mundiales o nacionales de salud que apliquen en {{mes_a_planificar}} para Gamma Laboratorios (ej. diabetes, salud masculina/femenina, corazón, etc.).\n2. **Cero Repeticiones**: Contrasta contra todos los meses del 2026 en el Excel. No repitas ángulos ni temas ya quemados.\n3. **Columna \"Prompt para IA\"**: Para cada publicación, incluye un prompt detallado listo para copiar en Google Gemini o ChatGPT para generar el arte gráfico, portada o guión visual.\n4. **Referencias**: Adjunta referencias visuales para el diseñador.\n5. **Calidad**: Solo incluye ideas sólidas, clínicamente verídicas y con alta probabilidad de interacción.\n\nEstructura requerida por fila:\n`ID | Fecha | Pilar | Formato | Hook | Estructura / Slides | Caption Completo | Prompt para Arte IA | Referencias`"
   },
   {
     "id": "seed-15-taste-skill-direccion",
