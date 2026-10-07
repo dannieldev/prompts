@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { Search, Plus, Database, HardDrive, Download, X } from "lucide-react";
+import { Search, Plus, Database, HardDrive, Download, X, BookOpen } from "lucide-react";
 import { StorageMode } from "../lib/api";
 
 interface HeaderProps {
@@ -10,6 +10,7 @@ interface HeaderProps {
   filteredCount: number;
   onNewPrompt: () => void;
   onOpenExportImport: () => void;
+  onOpenDocs: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -20,6 +21,7 @@ export const Header: React.FC<HeaderProps> = ({
   filteredCount,
   onNewPrompt,
   onOpenExportImport,
+  onOpenDocs,
 }) => {
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -44,11 +46,21 @@ export const Header: React.FC<HeaderProps> = ({
         e.preventDefault();
         onNewPrompt();
       }
+
+      // Shortcut 'G' for Web Guide
+      if (
+        e.key.toLowerCase() === "g" &&
+        document.activeElement?.tagName !== "INPUT" &&
+        document.activeElement?.tagName !== "TEXTAREA"
+      ) {
+        e.preventDefault();
+        onOpenDocs();
+      }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onNewPrompt]);
+  }, [onNewPrompt, onOpenDocs]);
 
   return (
     <header className="sticky top-0 z-30 bg-[#07090e]/85 backdrop-blur-xl border-b border-white/[0.08] px-4 lg:px-8 py-3 transition-colors">
@@ -153,6 +165,20 @@ export const Header: React.FC<HeaderProps> = ({
               </>
             )}
           </div>
+
+          {/* Web AI Guide Button */}
+          <button
+            onClick={onOpenDocs}
+            className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 active:scale-[0.98] border border-indigo-500/30 rounded-xl transition shadow-xs"
+            title="Manual y Metodología de Creación Web con IA (Atajo: G)"
+            aria-label="Abrir Guía Web con IA"
+          >
+            <BookOpen className="w-3.5 h-3.5 text-indigo-400" />
+            <span className="hidden sm:inline">Guía Web IA</span>
+            <span className="text-[9px] font-mono px-1 py-0.2 bg-indigo-500/20 rounded text-indigo-200 ml-0.5">
+              G
+            </span>
+          </button>
 
           {/* Export / Import Button */}
           <button

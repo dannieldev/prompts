@@ -13,6 +13,7 @@ import { VariableModal } from "./components/VariableModal";
 import { PromptEditorModal } from "./components/PromptEditorModal";
 import { PromptDetailModal } from "./components/PromptDetailModal";
 import { ExportImportModal } from "./components/ExportImportModal";
+import { DocumentationModal } from "./components/DocumentationModal";
 import { ToastContainer, ToastMessage } from "./components/Toast";
 import { SEED_PROMPTS } from "./lib/seedData";
 import { SearchX, Plus, RefreshCw } from "lucide-react";
@@ -35,6 +36,7 @@ export function App() {
   const [editorPrompt, setEditorPrompt] = useState<PromptItem | null>(null);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [isExportImportOpen, setIsExportImportOpen] = useState(false);
+  const [isDocsOpen, setIsDocsOpen] = useState(false);
 
   // Toasts
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
@@ -205,6 +207,7 @@ export function App() {
           setIsEditorOpen(true);
         }}
         onOpenExportImport={() => setIsExportImportOpen(true)}
+        onOpenDocs={() => setIsDocsOpen(true)}
       />
 
       {/* Categories & Filter Bar */}
@@ -345,6 +348,12 @@ export function App() {
         onImport={handleImport}
         onResetSeed={handleResetSeed}
         onToast={addToast}
+      />
+
+      {/* Web AI Documentation & Methodology Guide Modal */}
+      <DocumentationModal
+        isOpen={isDocsOpen}
+        onClose={() => setIsDocsOpen(false)}
       />
 
       {/* Floating Notifications */}
