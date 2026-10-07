@@ -79,7 +79,7 @@ export const PromptCard: React.FC<PromptCardProps> = ({
     <Card
       variant="default"
       onClick={() => onViewDetail(prompt)}
-      className="group relative flex flex-col justify-between border border-border/80 hover:border-accent/60 rounded-3xl p-5 transition-all duration-200 hover:-translate-y-1.5 shadow-md hover:shadow-xl hover:shadow-accent/5 cursor-pointer overflow-hidden"
+      className="group relative flex flex-col justify-between bg-surface border border-border/90 hover:border-accent/70 rounded-3xl p-5 transition-all duration-200 hover:-translate-y-1.5 shadow-lg shadow-black/40 hover:shadow-2xl hover:shadow-accent/10 cursor-pointer overflow-hidden"
     >
       <div>
         {/* Card Header: Category & Controls */}
@@ -163,11 +163,11 @@ export const PromptCard: React.FC<PromptCardProps> = ({
           )}
 
           {/* Snippet Code Preview Box */}
-          <div className="bg-default/30 border border-border/60 rounded-2xl p-3.5 font-mono-code text-[11px] text-foreground/90 leading-relaxed overflow-hidden relative shadow-inner">
+          <div className="bg-surface-secondary/80 border border-border/80 rounded-2xl p-3.5 font-mono-code text-[11px] text-foreground/90 leading-relaxed overflow-hidden relative shadow-inner">
             <pre className="whitespace-pre-wrap line-clamp-3 select-none font-inherit">
               {previewLines}
             </pre>
-            <div className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-default/40 to-transparent pointer-events-none" />
+            <div className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-surface-secondary/80 to-transparent pointer-events-none" />
           </div>
 
           {/* Tags Row */}
@@ -182,7 +182,7 @@ export const PromptCard: React.FC<PromptCardProps> = ({
                     e.stopPropagation();
                     onSelectTag(tag);
                   }}
-                  className="cursor-pointer text-[10px] hover:border-accent/40 transition"
+                  className="cursor-pointer text-[10px] border border-border/60 hover:border-accent/60 transition"
                 >
                   #{tag}
                 </Chip>
@@ -194,7 +194,7 @@ export const PromptCard: React.FC<PromptCardProps> = ({
 
       {/* Card Footer: Action Buttons */}
       <CardFooter
-        className="flex items-center justify-between gap-2 p-0 pt-4 mt-3 border-t border-border/60"
+        className="flex items-center justify-between gap-2 p-0 pt-4 mt-3 border-t border-border/80"
         onClick={(e: React.MouseEvent) => e.stopPropagation()}
       >
         <div className="flex items-center gap-1">
@@ -235,10 +235,12 @@ export const PromptCard: React.FC<PromptCardProps> = ({
         <div className="flex items-center gap-1.5">
           {/* Quick Copy Button */}
           <Button
-            variant={copied ? "primary" : "secondary"}
+            variant={copied ? "primary" : "outline"}
             size="sm"
             onClick={handleCopy}
-            className="rounded-xl text-xs font-medium"
+            className={`rounded-xl text-xs font-medium transition-all ${
+              copied ? "shadow-sm shadow-accent/20" : "border-border/80 hover:bg-surface-secondary"
+            }`}
             aria-label="Copiar prompt"
           >
             {copied ? (
@@ -260,7 +262,7 @@ export const PromptCard: React.FC<PromptCardProps> = ({
               variant="primary"
               size="sm"
               onClick={() => onUseVariables(prompt)}
-              className="rounded-xl text-xs font-semibold shadow-xs"
+              className="rounded-xl text-xs font-semibold shadow-md shadow-accent/25"
               aria-label="Rellenar variables"
             >
               <Sliders className="w-3.5 h-3.5 mr-1" />
@@ -271,7 +273,7 @@ export const PromptCard: React.FC<PromptCardProps> = ({
               variant="primary"
               size="sm"
               onClick={handleCopy}
-              className="rounded-xl text-xs font-semibold shadow-xs"
+              className="rounded-xl text-xs font-semibold shadow-md shadow-accent/25"
               aria-label="Usar prompt"
             >
               <span>Usar</span>

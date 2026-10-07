@@ -24,6 +24,7 @@ import {
   Compass,
   ExternalLink,
 } from "lucide-react";
+import { Button, Chip, Kbd } from "@heroui/react";
 
 interface ManualPageProps {
   onNavigateToPrompts: () => void;
@@ -174,54 +175,50 @@ export const ManualPage: React.FC<ManualPageProps> = ({
   });
 
   return (
-    <div className="w-full min-h-screen bg-[#07090e] text-slate-100 flex flex-col">
+    <div className="w-full min-h-screen bg-background text-foreground flex flex-col">
       {/* Subpage Breadcrumb & Top Bar */}
-      <div className="border-b border-white/[0.08] bg-[#090d18]/70 backdrop-blur-md px-4 lg:px-8 py-3">
+      <div className="border-b border-border/80 bg-surface/70 backdrop-blur-md px-4 lg:px-8 py-3">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button
+            <Button
+              variant="outline"
+              size="sm"
               onClick={onNavigateToPrompts}
-              className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-slate-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] active:scale-[0.98] border border-white/[0.08] rounded-xl transition shadow-xs"
-              title="Volver a la Bóveda de Prompts"
+              className="flex items-center gap-2 rounded-xl text-xs font-semibold"
+              aria-label="Volver a la Bóveda de Prompts"
             >
-              <ArrowLeft className="w-3.5 h-3.5 text-slate-400" />
+              <ArrowLeft className="w-3.5 h-3.5 text-muted" />
               <span>Volver a Prompts</span>
-            </button>
+              <Kbd className="text-[9px]">Esc</Kbd>
+            </Button>
             <span className="text-slate-600 hidden sm:inline">/</span>
-            <span className="text-xs font-semibold text-indigo-300 hidden sm:inline flex items-center gap-1.5">
-              <BookmarkCheck className="w-3.5 h-3.5 text-indigo-400" />
+            <span className="text-xs font-semibold text-accent hidden sm:inline flex items-center gap-1.5">
+              <BookmarkCheck className="w-3.5 h-3.5 text-accent" />
               Manual de Creación Web Anti-Genérica con IA
             </span>
           </div>
 
           <div className="flex items-center gap-3 text-xs">
-            <div className="flex items-center gap-2 bg-[#0d121f] border border-white/[0.08] px-3 py-1 rounded-xl">
-              <span className="text-[11px] text-slate-400">Checklist Pre-Lanzamiento:</span>
-              <span className="font-bold text-emerald-400">{checkedCount}/20</span>
-              <div className="w-12 h-1.5 bg-white/[0.08] rounded-full overflow-hidden hidden sm:block">
-                <div
-                  className="h-full bg-emerald-500 transition-all duration-300"
-                  style={{ width: `${progressPercent}%` }}
-                />
-              </div>
-            </div>
+            <Chip color="success" variant="soft" size="sm" className="font-semibold text-xs">
+              Checklist: {checkedCount}/20
+            </Chip>
           </div>
         </div>
       </div>
 
       {/* Hero Presentation Header */}
-      <div className="relative border-b border-white/[0.08] bg-gradient-to-b from-[#0c101d] via-[#090d18] to-[#07090e] px-4 lg:px-8 py-12 lg:py-16 overflow-hidden">
+      <div className="relative border-b border-border/80 bg-gradient-to-b from-surface via-surface/90 to-background px-4 lg:px-8 py-12 lg:py-16 overflow-hidden">
         {/* Subtle radial backdrop glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-64 bg-indigo-600/10 blur-3xl pointer-events-none rounded-full" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-64 bg-accent/10 blur-3xl pointer-events-none rounded-full" />
 
         <div className="max-w-7xl mx-auto relative z-10 flex flex-col gap-6">
-          <div className="flex items-center gap-2 text-indigo-400 text-xs font-bold uppercase tracking-wider">
-            <span className="px-2.5 py-1 rounded-full bg-indigo-500/15 border border-indigo-500/30 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
+            <Chip color="accent" variant="soft" size="sm" className="font-bold uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5 text-accent mr-1 inline" />
               Estándar de Ingeniería @dannieldev
-            </span>
+            </Chip>
             <span className="text-slate-600 hidden sm:inline">·</span>
-            <span className="text-slate-400 hidden sm:inline">12 Capítulos Prácticos & 4 Galerías UX/UI</span>
+            <span className="text-muted hidden sm:inline">12 Capítulos Prácticos & 4 Galerías UX/UI</span>
           </div>
 
           <div className="max-w-4xl space-y-3">
@@ -231,7 +228,7 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                 Anti-Genérica con IA
               </span>
             </h1>
-            <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
+            <p className="text-sm sm:text-base text-muted leading-relaxed font-normal">
               De la idea en blanco a producción en Cloudflare con cero código basura, diseño de élite,
               físicas de interacción de clase mundial y auditoría autónoma en cada pantalla.
             </p>
@@ -239,34 +236,34 @@ export const ManualPage: React.FC<ManualPageProps> = ({
 
           {/* Quick Metrics & Pillars */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4">
-            <div className="p-4 rounded-2xl bg-[#0d121f]/80 border border-white/[0.08] flex flex-col gap-1">
+            <div className="p-4 rounded-2xl bg-surface-secondary/80 border border-border/80 flex flex-col gap-1">
               <span className="text-2xl font-black text-indigo-400 font-mono">12</span>
-              <span className="text-xs font-semibold text-slate-200">Capítulos Maestros</span>
-              <span className="text-[11px] text-slate-400">Guía técnica integral</span>
+              <span className="text-xs font-semibold text-foreground/90">Capítulos Maestros</span>
+              <span className="text-[11px] text-muted">Guía técnica integral</span>
             </div>
 
-            <div className="p-4 rounded-2xl bg-[#0d121f]/80 border border-white/[0.08] flex flex-col gap-1">
+            <div className="p-4 rounded-2xl bg-surface-secondary/80 border border-border/80 flex flex-col gap-1">
               <span className="text-2xl font-black text-purple-400 font-mono">4</span>
-              <span className="text-xs font-semibold text-slate-200">Galerías de Élite</span>
-              <span className="text-[11px] text-slate-400">Inspiración UX/UI</span>
+              <span className="text-xs font-semibold text-foreground/90">Galerías de Élite</span>
+              <span className="text-[11px] text-muted">Inspiración UX/UI</span>
             </div>
 
-            <div className="p-4 rounded-2xl bg-[#0d121f]/80 border border-white/[0.08] flex flex-col gap-1">
+            <div className="p-4 rounded-2xl bg-surface-secondary/80 border border-border/80 flex flex-col gap-1">
               <span className="text-2xl font-black text-emerald-400 font-mono">20</span>
-              <span className="text-xs font-semibold text-slate-200">Puntos Pre-Launch</span>
-              <span className="text-[11px] text-slate-400">Auditoría no negociable</span>
+              <span className="text-xs font-semibold text-foreground/90">Puntos Pre-Launch</span>
+              <span className="text-[11px] text-muted">Auditoría no negociable</span>
             </div>
 
-            <div className="p-4 rounded-2xl bg-[#0d121f]/80 border border-white/[0.08] flex flex-col gap-1">
+            <div className="p-4 rounded-2xl bg-surface-secondary/80 border border-border/80 flex flex-col gap-1">
               <span className="text-2xl font-black text-amber-400 font-mono">8</span>
-              <span className="text-xs font-semibold text-slate-200">Skills Especializadas</span>
-              <span className="text-[11px] text-slate-400">En ~/.agents/skills</span>
+              <span className="text-xs font-semibold text-foreground/90">Skills Especializadas</span>
+              <span className="text-[11px] text-muted">En ~/.agents/skills</span>
             </div>
 
-            <div className="p-4 rounded-2xl bg-[#0d121f]/80 border border-white/[0.08] flex flex-col gap-1">
+            <div className="p-4 rounded-2xl bg-surface-secondary/80 border border-border/80 flex flex-col gap-1">
               <span className="text-2xl font-black text-pink-400 font-mono">100%</span>
-              <span className="text-xs font-semibold text-slate-200">Anti-Slop Craft</span>
-              <span className="text-[11px] text-slate-400">Cero plantillas genéricas</span>
+              <span className="text-xs font-semibold text-foreground/90">Anti-Slop Craft</span>
+              <span className="text-[11px] text-muted">Cero plantillas genéricas</span>
             </div>
           </div>
         </div>
@@ -276,13 +273,13 @@ export const ManualPage: React.FC<ManualPageProps> = ({
       <div className="max-w-7xl mx-auto px-4 lg:px-8 py-8 w-full flex-1 flex flex-col lg:flex-row gap-10">
         {/* Left Sticky Sidebar Table of Contents */}
         <aside className="lg:w-72 shrink-0 hidden lg:block self-start sticky top-20">
-          <div className="p-4 rounded-3xl bg-[#0b0f1a] border border-white/[0.08] shadow-xl flex flex-col gap-4 max-h-[calc(100vh-6rem)] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+          <div className="p-4 rounded-3xl bg-surface border border-border/80 shadow-xl flex flex-col gap-4 max-h-[calc(100vh-6rem)] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-border/60 pb-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-muted flex items-center gap-2">
                 <Layers className="w-3.5 h-3.5 text-indigo-400" />
                 Índice del Manual
               </span>
-              <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-md bg-white/[0.04] text-slate-400">
+              <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-md bg-white/[0.04] text-muted">
                 11 Secciones
               </span>
             </div>
@@ -291,7 +288,7 @@ export const ManualPage: React.FC<ManualPageProps> = ({
             <div className="space-y-4">
               {Array.from(new Set(SECTIONS.map((s) => s.group))).map((groupName) => (
                 <div key={groupName} className="space-y-1">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 px-2 block">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted px-2 block">
                     {groupName}
                   </span>
                   <div className="space-y-0.5">
@@ -304,7 +301,7 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                           className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-medium transition-all text-left active:scale-[0.98] ${
                             isActive
                               ? "bg-indigo-600/20 text-indigo-200 border border-indigo-500/35 font-semibold shadow-xs"
-                              : "text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]"
+                              : "text-muted hover:text-foreground/90 hover:bg-white/[0.04]"
                           }`}
                         >
                           <span className="shrink-0">{section.icon}</span>
@@ -318,9 +315,9 @@ export const ManualPage: React.FC<ManualPageProps> = ({
             </div>
 
             {/* Checklist progress mini card inside sidebar */}
-            <div className="mt-2 pt-3 border-t border-white/[0.06] bg-[#07090e] p-3 rounded-2xl border border-white/[0.05] flex flex-col gap-2">
+            <div className="mt-2 pt-3 border-t border-border/60 bg-background p-3 rounded-2xl border border-border/60 flex flex-col gap-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-slate-400 font-medium">Auditoría Pre-Launch</span>
+                <span className="text-muted font-medium">Auditoría Pre-Launch</span>
                 <span className="font-bold text-emerald-400">{progressPercent}%</span>
               </div>
               <div className="w-full h-1.5 bg-white/[0.08] rounded-full overflow-hidden">
@@ -364,7 +361,7 @@ export const ManualPage: React.FC<ManualPageProps> = ({
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 Criterio sobre Generación: La Muerte del "AI Slop"
               </h2>
-              <p className="text-slate-300 leading-relaxed text-sm sm:text-base">
+              <p className="text-muted leading-relaxed text-sm sm:text-base">
                 La Inteligencia Artificial no diseña mal por falta de capacidad técnica, sino por{" "}
                 <strong>ausencia de restricciones explícitas, referencias reales del mundo profesional y reglas de diseño rigurosas</strong>.
                 Cuando a un modelo le dices simplemente <em>"créame una landing bonita"</em>, recurre al promedio
@@ -405,7 +402,7 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                 <ul className="text-xs text-emerald-100/80 space-y-2.5 list-disc pl-4 leading-relaxed">
                   <li>Brief inferido y 3 diales calibrados (Varianza, Movimiento y Densidad).</li>
                   <li>Tokens reales de marcas de élite definidos en un archivo <code>DESIGN.md</code>.</li>
-                  <li>Bento Grids asimétricos, jerarquía visual clara y micro-bordes elegantes (<code>border-white/[0.08]</code>).</li>
+                  <li>Bento Grids asimétricos, jerarquía visual clara y micro-bordes elegantes (<code>border-border/80</code>).</li>
                   <li>Físicas de resorte de 180–250ms con retroalimentación háptica inmediata en <code>:active</code>.</li>
                   <li>Botones con área táctil mínima de 44px (Apple HIG) y contraste WCAG 4.5:1.</li>
                   <li>Verificación autónoma con Playwright y 0 librerías innecesarias (Ponytail).</li>
@@ -414,12 +411,12 @@ export const ManualPage: React.FC<ManualPageProps> = ({
             </div>
 
             {/* Protocol Callout Card */}
-            <div className="p-6 rounded-3xl bg-[#0c101d] border border-white/[0.08] space-y-3 shadow-lg">
+            <div className="p-6 rounded-3xl bg-surface border border-border/80 space-y-3 shadow-lg">
               <div className="flex items-center gap-2 text-indigo-400 text-xs font-bold uppercase tracking-wider">
                 <Sliders className="w-4 h-4" />
                 <span>Protocolo de Inicio Obligatorio con Danniel</span>
               </div>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              <p className="text-xs sm:text-sm text-muted leading-relaxed">
                 Al arrancar cualquier sitio web o landing page, el agente <strong>no codifica a ciegas</strong>.
                 Primero saluda, diagnostica el modo de superficie (<em>Persuade, Operate, Read o Experience</em>)
                 y propone activamente a Danniel un combo específico de 2 a 4 herramientas (referencia visual + sistema de componentes + filtro de animación/código)
@@ -429,20 +426,20 @@ export const ManualPage: React.FC<ManualPageProps> = ({
           </section>
 
           {/* SECTION 2: FLUJO EN 7 FASES */}
-          <section id="fases" className="scroll-mt-24 space-y-6 pt-6 border-t border-white/[0.06]">
+          <section id="fases" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2 text-indigo-400 text-xs font-bold uppercase tracking-wider">
                 <Layers className="w-4 h-4" />
                 <span>Capítulo 2 · Metodología de Ejecución</span>
               </div>
-              <span className="text-[11px] font-mono text-slate-400">Orden Lineal Estricto</span>
+              <span className="text-[11px] font-mono text-muted">Orden Lineal Estricto</span>
             </div>
 
             <div className="space-y-2">
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 El Flujo Maestro de 7 Fases
               </h2>
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+              <p className="text-muted text-sm sm:text-base leading-relaxed">
                 Todo proyecto web construido con IA debe transitar por estas 7 etapas sin saltarse pasos.
                 La calidad del resultado final depende de consolidar cada fase antes de iniciar la siguiente.
               </p>
@@ -512,20 +509,20 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                   className={`p-5 rounded-3xl border ${item.color} transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4`}
                 >
                   <div className="flex items-start gap-4">
-                    <span className="w-9 h-9 rounded-2xl bg-white/[0.08] text-white flex items-center justify-center text-sm font-mono font-black shrink-0 border border-white/[0.1]">
+                    <span className="w-9 h-9 rounded-2xl bg-white/[0.08] text-white flex items-center justify-center text-sm font-mono font-black shrink-0 border border-border">
                       {item.idx}
                     </span>
                     <div className="space-y-1">
                       <div className="flex items-center gap-2 flex-wrap">
                         <h3 className="font-bold text-white text-base">{item.fase}</h3>
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/[0.06] text-slate-300">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/[0.06] text-muted">
                           {item.badge}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-300/90 leading-relaxed max-w-2xl">{item.desc}</p>
+                      <p className="text-xs text-muted/90 leading-relaxed max-w-2xl">{item.desc}</p>
                     </div>
                   </div>
-                  <span className="text-[11px] font-mono px-3 py-1 rounded-xl bg-black/40 text-slate-300 border border-white/[0.08] shrink-0 self-end sm:self-center">
+                  <span className="text-[11px] font-mono px-3 py-1 rounded-xl bg-black/40 text-muted border border-border/80 shrink-0 self-end sm:self-center">
                     {item.tools}
                   </span>
                 </div>
@@ -534,20 +531,20 @@ export const ManualPage: React.FC<ManualPageProps> = ({
           </section>
 
           {/* SECTION 3: BÓVEDA DE INSPIRACIÓN UX/UI */}
-          <section id="inspiracion" className="scroll-mt-24 space-y-6 pt-6 border-t border-white/[0.06]">
+          <section id="inspiracion" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2 text-purple-400 text-xs font-bold uppercase tracking-wider">
                 <Compass className="w-4 h-4" />
                 <span>Capítulo 3 · Referencias Visuales</span>
               </div>
-              <span className="text-[11px] font-mono text-slate-400">4 Fuentes Oficiales</span>
+              <span className="text-[11px] font-mono text-muted">4 Fuentes Oficiales</span>
             </div>
 
             <div className="space-y-2">
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 Bóveda de Inspiración & Galerías UX/UI de Élite
               </h2>
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+              <p className="text-muted text-sm sm:text-base leading-relaxed">
                 El diseño de nivel mundial nunca comienza desde el vacío ni inventa patrones a ciegas.
                 Utiliza estas cuatro fuentes de inspiración para extraer referencias visuales, tipografías,
                 animaciones y componentes antes de escribir código:
@@ -591,7 +588,7 @@ export const ManualPage: React.FC<ManualPageProps> = ({
               ].map((site, idx) => (
                 <div
                   key={idx}
-                  className="p-5 rounded-3xl bg-[#0c101d] border border-white/[0.08] hover:border-indigo-500/30 transition-all flex flex-col justify-between gap-4 shadow-sm group"
+                  className="p-5 rounded-3xl bg-surface border border-border/80 hover:border-indigo-500/30 transition-all flex flex-col justify-between gap-4 shadow-sm group"
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between flex-wrap gap-2">
@@ -614,18 +611,18 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                       <ExternalLink className="w-3.5 h-3.5 shrink-0" />
                     </a>
 
-                    <p className="text-xs text-slate-300 leading-relaxed">{site.description}</p>
+                    <p className="text-xs text-muted leading-relaxed">{site.description}</p>
                   </div>
 
-                  <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between flex-wrap gap-2 text-[11px]">
-                    <span className="text-slate-400">
-                      <strong className="text-slate-300">Aplicación:</strong> {site.usage}
+                  <div className="pt-3 border-t border-border/60 flex items-center justify-between flex-wrap gap-2 text-[11px]">
+                    <span className="text-muted">
+                      <strong className="text-muted">Aplicación:</strong> {site.usage}
                     </span>
                     <a
                       href={site.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] active:scale-95 text-slate-200 transition font-semibold"
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] active:scale-95 text-foreground/90 transition font-semibold"
                     >
                       <span>Explorar</span>
                       <ArrowUpRight className="w-3.5 h-3.5" />
@@ -637,20 +634,20 @@ export const ManualPage: React.FC<ManualPageProps> = ({
           </section>
 
           {/* SECTION 4: CATÁLOGO DE HERRAMIENTAS */}
-          <section id="herramientas" className="scroll-mt-24 space-y-6 pt-6 border-t border-white/[0.06]">
+          <section id="herramientas" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold uppercase tracking-wider">
                 <Terminal className="w-4 h-4" />
                 <span>Capítulo 4 · Arsenal de Habilidades</span>
               </div>
-              <span className="text-[11px] font-mono text-slate-400">Instalado en ~/.agents/skills</span>
+              <span className="text-[11px] font-mono text-muted">Instalado en ~/.agents/skills</span>
             </div>
 
             <div className="space-y-2">
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 Catálogo de Skills y Comandos Globales
               </h2>
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+              <p className="text-muted text-sm sm:text-base leading-relaxed">
                 Herramientas instaladas globalmente en el sistema operativo de Danniel para invocar de forma
                 autónoma o mediante prompts específicos:
               </p>
@@ -731,7 +728,7 @@ export const ManualPage: React.FC<ManualPageProps> = ({
               ].map((tool, idx) => (
                 <div
                   key={idx}
-                  className="p-5 rounded-3xl bg-[#0c101d] border border-white/[0.08] hover:border-indigo-500/30 transition-all flex flex-col justify-between gap-4 shadow-sm"
+                  className="p-5 rounded-3xl bg-surface border border-border/80 hover:border-indigo-500/30 transition-all flex flex-col justify-between gap-4 shadow-sm"
                 >
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
@@ -747,13 +744,13 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                         </button>
                       )}
                     </div>
-                    <code className="text-xs text-indigo-300 font-mono block bg-black/40 px-2.5 py-1 rounded-lg border border-white/[0.05]">
+                    <code className="text-xs text-indigo-300 font-mono block bg-black/40 px-2.5 py-1 rounded-lg border border-border/60">
                       {tool.cmd}
                     </code>
-                    <p className="text-xs text-slate-300 leading-relaxed">{tool.desc}</p>
+                    <p className="text-xs text-muted leading-relaxed">{tool.desc}</p>
                   </div>
-                  <div className="pt-3 border-t border-white/[0.06] text-[11px] text-slate-400">
-                    <strong className="text-slate-300">Cuándo aplicar:</strong> {tool.when}
+                  <div className="pt-3 border-t border-border/60 text-[11px] text-muted">
+                    <strong className="text-muted">Cuándo aplicar:</strong> {tool.when}
                   </div>
                 </div>
               ))}
@@ -761,30 +758,30 @@ export const ManualPage: React.FC<ManualPageProps> = ({
           </section>
 
           {/* SECTION 5: TOKENS & DESIGN.MD */}
-          <section id="design-spec" className="scroll-mt-24 space-y-6 pt-6 border-t border-white/[0.06]">
+          <section id="design-spec" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2 text-pink-400 text-xs font-bold uppercase tracking-wider">
                 <Palette className="w-4 h-4" />
                 <span>Capítulo 5 · Sistema de Tokens</span>
               </div>
-              <span className="text-[11px] font-mono text-slate-400">Raíz del Proyecto</span>
+              <span className="text-[11px] font-mono text-muted">Raíz del Proyecto</span>
             </div>
 
             <div className="space-y-2">
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 Estructura Oficial de un `DESIGN.md`
               </h2>
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+              <p className="text-muted text-sm sm:text-base leading-relaxed">
                 Tener un archivo <code>DESIGN.md</code> en la raíz del repositorio actúa como el único sistema de verdad.
                 Evita que los modelos inventen estilos, colores arbitrarios o radios dispares sobre la marcha:
               </p>
             </div>
 
-            <div className="relative bg-[#0c101d] border border-white/[0.08] rounded-3xl p-5 font-mono-code text-xs text-slate-200 shadow-xl">
-              <div className="flex items-center justify-between border-b border-white/[0.08] pb-3 mb-4">
-                <div className="flex items-center gap-2 text-slate-400">
+            <div className="relative bg-surface border border-border/80 rounded-3xl p-5 font-mono-code text-xs text-foreground/90 shadow-xl">
+              <div className="flex items-center justify-between border-b border-border/80 pb-3 mb-4">
+                <div className="flex items-center gap-2 text-muted">
                   <Palette className="w-4 h-4 text-pink-400" />
-                  <span className="font-semibold text-slate-300 font-sans">DESIGN.md (Plantilla Maestra)</span>
+                  <span className="font-semibold text-muted font-sans">DESIGN.md (Plantilla Maestra)</span>
                 </div>
                 <button
                   onClick={() =>
@@ -819,7 +816,7 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                       "design-md-spec"
                     )
                   }
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] active:scale-95 text-slate-200 transition font-sans text-xs font-semibold"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] active:scale-95 text-foreground/90 transition font-sans text-xs font-semibold"
                   title="Copiar plantilla DESIGN.md"
                 >
                   {copiedCodeId === "design-md-spec" ? (
@@ -836,7 +833,7 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                 </button>
               </div>
 
-              <pre className="overflow-x-auto whitespace-pre leading-relaxed text-slate-300">
+              <pre className="overflow-x-auto whitespace-pre leading-relaxed text-muted">
 {`# DESIGN.md — Especificación de Sistema de Diseño
 
 ## 1. Filosofía de Superficie y Elevación
@@ -869,76 +866,76 @@ export const ManualPage: React.FC<ManualPageProps> = ({
           </section>
 
           {/* SECTION 6: EMIL KOWALSKI MOTION */}
-          <section id="emil-motion" className="scroll-mt-24 space-y-6 pt-6 border-t border-white/[0.06]">
+          <section id="emil-motion" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2 text-sky-400 text-xs font-bold uppercase tracking-wider">
                 <Zap className="w-4 h-4" />
                 <span>Capítulo 6 · Micro-Interacciones</span>
               </div>
-              <span className="text-[11px] font-mono text-slate-400">180ms – 250ms máx</span>
+              <span className="text-[11px] font-mono text-muted">180ms – 250ms máx</span>
             </div>
 
             <div className="space-y-2">
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 Las 5 Reglas de Oro de Emil Kowalski
               </h2>
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+              <p className="text-muted text-sm sm:text-base leading-relaxed">
                 Para que una web se sienta fluida, precisa y de gama alta (en lugar de lenta y artificial),
                 las animaciones deben respetar estas cinco directrices fundamentales:
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-5 rounded-3xl bg-[#0c101d] border border-white/[0.08] space-y-2">
+              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
                 <h3 className="text-sm font-bold text-white flex items-center gap-2">
                   <span className="text-sky-400 font-mono">1.</span>
                   <span>Curvas: ease-out al entrar, ease-in al salir</span>
                 </h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-muted leading-relaxed">
                   El ojo humano percibe como natural cuando un objeto entra rápido y frena suavemente (<code>ease-out</code>).
                   Usar <code>ease-in</code> al abrir menús o modales se siente pesado y perezoso.
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-[#0c101d] border border-white/[0.08] space-y-2">
+              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
                 <h3 className="text-sm font-bold text-white flex items-center gap-2">
                   <span className="text-sky-400 font-mono">2.</span>
                   <span>Nunca escalar desde cero (scale 0)</span>
                 </h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-muted leading-relaxed">
                   En el mundo físico ningún objeto nace de un punto microscópico. Los modales y ventanas deben escalar
                   desde <code>scale(0.96)</code> o <code>scale(0.97)</code> con <code>opacity: 0</code> hacia <code>scale(1)</code>.
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-[#0c101d] border border-white/[0.08] space-y-2">
+              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
                 <h3 className="text-sm font-bold text-white flex items-center gap-2">
                   <span className="text-sky-400 font-mono">3.</span>
                   <span>Techo estricto de duración: 180ms – 250ms</span>
                 </h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-muted leading-relaxed">
                   Cualquier animación de más de 300ms en botones, menús o modales provoca fatiga cognitiva y hace sentir
                   lenta la app. Reserva duraciones mayores únicamente para transiciones de pantalla completa.
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-[#0c101d] border border-white/[0.08] space-y-2">
+              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
                 <h3 className="text-sm font-bold text-white flex items-center gap-2">
                   <span className="text-sky-400 font-mono">4.</span>
                   <span>Feedback físico inmediato al presionar (:active)</span>
                 </h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-muted leading-relaxed">
                   Todo botón debe responder al toque con <code>active:scale-[0.98]</code> y <code>transition: transform 100ms ease-out</code>.
                   El usuario debe sentir que los componentes tienen masa y resistencia física.
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-[#0c101d] border border-white/[0.08] space-y-2 md:col-span-2">
+              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2 md:col-span-2">
                 <h3 className="text-sm font-bold text-white flex items-center gap-2">
                   <span className="text-sky-400 font-mono">5.</span>
                   <span>Respeto inquebrantable a prefers-reduced-motion</span>
                 </h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-muted leading-relaxed">
                   Usuarios con sensibilidad vestibular requieren la anulación de desplazamientos y zooms automáticos mediante
                   la media query estándar de CSS. En su lugar, utiliza fundidos suaves de opacidad (<code>opacity</code>).
                 </p>
@@ -947,53 +944,53 @@ export const ManualPage: React.FC<ManualPageProps> = ({
           </section>
 
           {/* SECTION 7: APPLE HIG */}
-          <section id="apple-hig" className="scroll-mt-24 space-y-6 pt-6 border-t border-white/[0.06]">
+          <section id="apple-hig" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2 text-indigo-300 text-xs font-bold uppercase tracking-wider">
                 <Eye className="w-4 h-4" />
                 <span>Capítulo 7 · Human Interface Guidelines</span>
               </div>
-              <span className="text-[11px] font-mono text-slate-400">Apple HIG Ergonomics</span>
+              <span className="text-[11px] font-mono text-muted">Apple HIG Ergonomics</span>
             </div>
 
             <div className="space-y-2">
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 Ergonomía Táctil y Fluidez Nativa (Apple HIG)
               </h2>
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+              <p className="text-muted text-sm sm:text-base leading-relaxed">
                 La interfaz debe sentirse como una extensión natural de la mano, con retroalimentación instantánea
                 y materiales translúcidos que aportan jerarquía espacial:
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-5 rounded-3xl bg-[#0c101d] border border-white/[0.08] space-y-2">
+              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
                 <h3 className="font-bold text-white text-sm">Área Táctil Mínima de 44x44 px</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-muted leading-relaxed">
                   En dispositivos móviles ningún botón, enlace o ícono interactivo debe medir menos de 44x44px de área de contacto real,
                   incluso si el glifo visual mide 16px (usar padding invisible o <code>min-h-[44px] min-w-[44px]</code>).
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-[#0c101d] border border-white/[0.08] space-y-2">
+              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
                 <h3 className="font-bold text-white text-sm">Feedback en pointerdown</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-muted leading-relaxed">
                   La reacción visual debe ocurrir en el microsegundo en que el dedo toca la pantalla, no al soltarlo (<code>click</code>).
                   La latencia percibida debe ser de 0 milisegundos.
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-[#0c101d] border border-white/[0.08] space-y-2">
+              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
                 <h3 className="font-bold text-white text-sm">Materiales Translúcidos & Cristal Esmerilado</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-muted leading-relaxed">
                   Uso de fondos con <code>backdrop-blur-xl</code> en barras de navegación fijas y modales, permitiendo
                   intuir la profundidad y el contenido subyacente sin perder legibilidad.
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-[#0c101d] border border-white/[0.08] space-y-2">
+              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
                 <h3 className="font-bold text-white text-sm">Manipulación Directa 1:1</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-muted leading-relaxed">
                   Cualquier gesto táctil (deslizamiento, drag & drop o apertura de cajones) debe seguir el dedo 1:1 y permitir
                   ser interrumpido o cancelado a mitad de camino sin bloquear la interfaz.
                 </p>
@@ -1002,47 +999,47 @@ export const ManualPage: React.FC<ManualPageProps> = ({
           </section>
 
           {/* SECTION 8: PONYTAIL */}
-          <section id="ponytail" className="scroll-mt-24 space-y-6 pt-6 border-t border-white/[0.06]">
+          <section id="ponytail" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2 text-amber-300 text-xs font-bold uppercase tracking-wider">
                 <Scissors className="w-4 h-4" />
                 <span>Capítulo 8 · The Lazy Senior Dev</span>
               </div>
-              <span className="text-[11px] font-mono text-slate-400">-50% a -80% Código</span>
+              <span className="text-[11px] font-mono text-muted">-50% a -80% Código</span>
             </div>
 
             <div className="space-y-2">
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 Ponytail: Código Conciso y Zero-Bloat
               </h2>
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+              <p className="text-muted text-sm sm:text-base leading-relaxed">
                 La IA tiende al bloat: crea wrappers infinitos, importa librerías npm de 100KB para tareas que resuelve
                 una sola línea de CSS y genera estados duplicados. Ponytail poda la sobre-ingeniería:
               </p>
             </div>
 
             <div className="space-y-4">
-              <div className="p-5 rounded-3xl bg-[#0c101d] border border-white/[0.08] space-y-2">
+              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
                 <h3 className="text-sm font-bold text-white">1. Pregunta antes de escribir: ¿Realmente se necesita?</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-muted leading-relaxed">
                   Aplica el principio YAGNI (<em>You Aren't Gonna Need It</em>). Elimina abstracciones prematuras y efectos
                   secundarios (<code>useEffect</code>) que solo sincronizan estados que podían calcularse en línea
                   con variables derivadas o <code>useMemo</code>.
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-[#0c101d] border border-white/[0.08] space-y-2">
+              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
                 <h3 className="text-sm font-bold text-white">2. Aprovecha las APIs Nativas de la Plataforma Web</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-muted leading-relaxed">
                   Usa <code>&lt;dialog&gt;</code> nativo con <code>showModal()</code>, <code>&lt;details&gt;</code> para acordeones,
                   <code>Intl.NumberFormat</code> para monedas, y selectores modernos de CSS (<code>:has()</code>, <code>@container</code>)
                   en lugar de dependencias npm pesadas.
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-[#0c101d] border border-white/[0.08] space-y-2">
+              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
                 <h3 className="text-sm font-bold text-white">3. Regla del Tamaño de Archivo</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-muted leading-relaxed">
                   Ningún componente de React debería superar las 250 líneas. Si supera ese límite, divídelo en subcomponentes
                   atómicos con responsabilidades únicas y contratos de tipado estrictos.
                 </p>
@@ -1051,64 +1048,64 @@ export const ManualPage: React.FC<ManualPageProps> = ({
           </section>
 
           {/* SECTION 9: IMPECCABLE & VERCEL */}
-          <section id="impeccable" className="scroll-mt-24 space-y-6 pt-6 border-t border-white/[0.06]">
+          <section id="impeccable" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2 text-rose-400 text-xs font-bold uppercase tracking-wider">
                 <ShieldCheck className="w-4 h-4" />
                 <span>Capítulo 9 · Auditoría de Calidad</span>
               </div>
-              <span className="text-[11px] font-mono text-slate-400">Vercel Labs & Impeccable</span>
+              <span className="text-[11px] font-mono text-muted">Vercel Labs & Impeccable</span>
             </div>
 
             <div className="space-y-2">
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 Pulido Impeccable & Directrices de Vercel Labs
               </h2>
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+              <p className="text-muted text-sm sm:text-base leading-relaxed">
                 Antes de dar por finalizada una pantalla, audita visualmente contra las cuatro directrices
                 de consistencia geométrica y accesibilidad:
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-5 rounded-3xl bg-[#0c101d] border border-white/[0.08] space-y-2">
+              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
                 <h3 className="text-sm font-bold text-white flex items-center gap-2">
                   <span>📐 Rejilla de 8pt Estricta</span>
                 </h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-muted leading-relaxed">
                   Todos los márgenes, paddings y espaciados entre secciones deben seguir la escala de 4px / 8px:
                   <code>p-2 (8px), p-3 (12px), p-4 (16px), p-6 (24px), p-8 (32px), p-12 (48px)</code>.
                   Cero medidas arbitrarias como 13px o 27px.
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-[#0c101d] border border-white/[0.08] space-y-2">
+              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
                 <h3 className="text-sm font-bold text-white flex items-center gap-2">
                   <span>👁️ Contraste WCAG AA 4.5:1</span>
                 </h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-muted leading-relaxed">
                   Todo texto debe superar la relación 4.5:1. En fondos oscuros (<code>#07090e</code>),
                   los títulos usan <code>#f8fafc</code> (100% contraste), las descripciones <code>#94a3b8</code> y
                   los metadatos <code>#64748b</code>.
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-[#0c101d] border border-white/[0.08] space-y-2">
+              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
                 <h3 className="text-sm font-bold text-white flex items-center gap-2">
                   <span>⌨️ Navegación por Teclado</span>
                 </h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-muted leading-relaxed">
                   Nunca elimines el outline sin proveer un anillo accesible: usar{" "}
                   <code>focus-visible:ring-2 focus-visible:ring-indigo-500/50 focus-visible:outline-none</code>{" "}
                   para navegación clara por tabulador.
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-[#0c101d] border border-white/[0.08] space-y-2">
+              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
                 <h3 className="text-sm font-bold text-white flex items-center gap-2">
                   <span>🚫 Cero Truncamiento Involuntario</span>
                 </h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-muted leading-relaxed">
                   No cortes datos críticos con <code>truncate</code> a menos que proporciones un tooltip
                   o botón de expansión accesible para el usuario.
                 </p>
@@ -1117,30 +1114,30 @@ export const ManualPage: React.FC<ManualPageProps> = ({
           </section>
 
           {/* SECTION 10: PLAYWRIGHT */}
-          <section id="playwright" className="scroll-mt-24 space-y-6 pt-6 border-t border-white/[0.06]">
+          <section id="playwright" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2 text-violet-400 text-xs font-bold uppercase tracking-wider">
                 <Code2 className="w-4 h-4" />
                 <span>Capítulo 10 · Testing Autónomo E2E</span>
               </div>
-              <span className="text-[11px] font-mono text-slate-400">Playwright Test Suite</span>
+              <span className="text-[11px] font-mono text-muted">Playwright Test Suite</span>
             </div>
 
             <div className="space-y-2">
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 Pruebas Autónomas de Runtime con Playwright
               </h2>
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+              <p className="text-muted text-sm sm:text-base leading-relaxed">
                 Antes de hacer deploy a producción, corre un script autónomo de Playwright para validar que la web
                 funciona sin fallos en un navegador Chromium real:
               </p>
             </div>
 
-            <div className="relative bg-[#0c101d] border border-white/[0.08] rounded-3xl p-5 font-mono-code text-xs text-slate-200 shadow-xl">
-              <div className="flex items-center justify-between border-b border-white/[0.08] pb-3 mb-4">
-                <div className="flex items-center gap-2 text-slate-400 font-sans">
+            <div className="relative bg-surface border border-border/80 rounded-3xl p-5 font-mono-code text-xs text-foreground/90 shadow-xl">
+              <div className="flex items-center justify-between border-b border-border/80 pb-3 mb-4">
+                <div className="flex items-center gap-2 text-muted font-sans">
                   <Terminal className="w-4 h-4 text-violet-400" />
-                  <span className="font-semibold text-slate-300">tests/e2e-quality.spec.ts</span>
+                  <span className="font-semibold text-muted">tests/e2e-quality.spec.ts</span>
                 </div>
                 <button
                   onClick={() =>
@@ -1175,7 +1172,7 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
                       "playwright-script"
                     )
                   }
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] active:scale-95 text-slate-200 transition font-sans text-xs font-semibold"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] active:scale-95 text-foreground/90 transition font-sans text-xs font-semibold"
                   title="Copiar script Playwright"
                 >
                   {copiedCodeId === "playwright-script" ? (
@@ -1192,7 +1189,7 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
                 </button>
               </div>
 
-              <pre className="overflow-x-auto whitespace-pre leading-relaxed text-slate-300">
+              <pre className="overflow-x-auto whitespace-pre leading-relaxed text-muted">
 {`import { test, expect } from '@playwright/test';
 
 test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
@@ -1225,7 +1222,7 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
           </section>
 
           {/* SECTION 11: CHECKLIST INTERACTIVO */}
-          <section id="checklist" className="scroll-mt-24 space-y-6 pt-6 border-t border-white/[0.06]">
+          <section id="checklist" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold uppercase tracking-wider">
                 <CheckCircle2 className="w-4 h-4" />
@@ -1233,7 +1230,7 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
               </div>
               <button
                 onClick={resetChecklist}
-                className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-rose-400 transition"
+                className="flex items-center gap-1.5 text-xs text-muted hover:text-rose-400 transition"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Reiniciar checklist</span>
@@ -1245,18 +1242,18 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                   Checklist de 20 Puntos Pre-Lanzamiento
                 </h2>
-                <p className="text-slate-300 text-sm leading-relaxed">
+                <p className="text-muted text-sm leading-relaxed">
                   Marca cada punto verificado. Tu progreso se guarda automáticamente en este dispositivo.
                 </p>
               </div>
 
               {/* Progress Summary Card */}
-              <div className="flex items-center gap-3 bg-[#0c101d] border border-white/[0.08] px-5 py-3 rounded-2xl shadow-md">
+              <div className="flex items-center gap-3 bg-surface border border-border/80 px-5 py-3 rounded-2xl shadow-md">
                 <div className="text-right">
                   <span className="text-sm font-bold text-white block">
                     {checkedCount} de {checklist.length}
                   </span>
-                  <span className="text-[11px] text-slate-400">Puntos Aprobados</span>
+                  <span className="text-[11px] text-muted">Puntos Aprobados</span>
                 </div>
                 <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center font-extrabold text-emerald-400 text-base font-mono">
                   {progressPercent}%
@@ -1266,13 +1263,13 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
 
             {/* Visual Progress Bar */}
             <div className="space-y-2">
-              <div className="w-full h-3 bg-white/[0.06] rounded-full overflow-hidden p-0.5 border border-white/[0.05]">
+              <div className="w-full h-3 bg-white/[0.06] rounded-full overflow-hidden p-0.5 border border-border/60">
                 <div
                   className="h-full bg-gradient-to-r from-indigo-500 via-violet-500 to-emerald-500 rounded-full transition-all duration-300"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
-              <div className="flex items-center justify-between text-[11px] text-slate-400">
+              <div className="flex items-center justify-between text-[11px] text-muted">
                 <span>0% Sin revisar</span>
                 <span>50% Desarrollo avanzado</span>
                 <span className="text-emerald-400 font-semibold">100% Ready for Production 🚀</span>
@@ -1286,7 +1283,7 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition ${
                   checklistFilter === "todos"
                     ? "bg-indigo-600 text-white shadow-xs"
-                    : "bg-white/[0.04] text-slate-400 hover:text-white"
+                    : "bg-white/[0.04] text-muted hover:text-white"
                 }`}
               >
                 Todos ({checklist.length})
@@ -1296,7 +1293,7 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition ${
                   checklistFilter === "pendientes"
                     ? "bg-amber-600/80 text-white shadow-xs"
-                    : "bg-white/[0.04] text-slate-400 hover:text-white"
+                    : "bg-white/[0.04] text-muted hover:text-white"
                 }`}
               >
                 Pendientes ({checklist.length - checkedCount})
@@ -1306,7 +1303,7 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition ${
                   checklistFilter === "completados"
                     ? "bg-emerald-600 text-white shadow-xs"
-                    : "bg-white/[0.04] text-slate-400 hover:text-white"
+                    : "bg-white/[0.04] text-muted hover:text-white"
                 }`}
               >
                 Completados ({checkedCount})
@@ -1322,22 +1319,22 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
                   className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center gap-3.5 select-none active:scale-[0.99] ${
                     item.checked
                       ? "bg-emerald-950/25 border-emerald-500/35 text-emerald-100"
-                      : "bg-[#0c101d] border-white/[0.07] text-slate-300 hover:border-white/[0.15]"
+                      : "bg-surface border-border/70 text-muted hover:border-border"
                   }`}
                 >
                   <div className="shrink-0">
                     {item.checked ? (
                       <CheckSquare className="w-5 h-5 text-emerald-400" />
                     ) : (
-                      <Square className="w-5 h-5 text-slate-500" />
+                      <Square className="w-5 h-5 text-muted" />
                     )}
                   </div>
                   <div className="flex-1 flex items-center justify-between gap-3">
                     <span className="text-xs sm:text-sm font-medium leading-relaxed">
-                      <strong className="text-slate-400 font-mono mr-2">#{item.id}</strong>
+                      <strong className="text-muted font-mono mr-2">#{item.id}</strong>
                       {item.text}
                     </span>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-white/[0.06] text-slate-400 shrink-0">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-white/[0.06] text-muted shrink-0">
                       {item.category}
                     </span>
                   </div>
@@ -1347,48 +1344,48 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
           </section>
 
           {/* SECTION 12: DESPLIEGUE EN CLOUDFLARE */}
-          <section id="deploy" className="scroll-mt-24 space-y-6 pt-6 border-t border-white/[0.06]">
+          <section id="deploy" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2 text-orange-400 text-xs font-bold uppercase tracking-wider">
                 <Cloud className="w-4 h-4" />
                 <span>Capítulo 12 · Infraestructura & Edge</span>
               </div>
-              <span className="text-[11px] font-mono text-slate-400">Cloudflare Workers Assets</span>
+              <span className="text-[11px] font-mono text-muted">Cloudflare Workers Assets</span>
             </div>
 
             <div className="space-y-2">
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 Despliegue Global en Cloudflare Workers & D1
               </h2>
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+              <p className="text-muted text-sm sm:text-base leading-relaxed">
                 Todo proyecto de Danniel se publica de manera ultra-rápida y con latencia mínima en la red
                 perimetral de Cloudflare utilizando Workers Static Assets y base de datos D1:
               </p>
             </div>
 
             <div className="space-y-4">
-              <div className="p-5 rounded-3xl bg-[#0c101d] border border-white/[0.08] space-y-2">
+              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
                 <h3 className="text-sm font-bold text-white flex items-center gap-2">
                   <span className="text-orange-400 font-mono">1.</span>
                   <span>Compilación de TypeScript & Vite</span>
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-muted">
                   Genera los archivos optimizados en la carpeta <code>dist/</code>:
                 </p>
-                <code className="text-xs font-mono bg-black/40 px-3 py-1.5 rounded-xl text-indigo-300 block border border-white/[0.05]">
+                <code className="text-xs font-mono bg-black/40 px-3 py-1.5 rounded-xl text-indigo-300 block border border-border/60">
                   npm run build
                 </code>
               </div>
 
-              <div className="p-5 rounded-3xl bg-[#0c101d] border border-white/[0.08] space-y-2">
+              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
                 <h3 className="text-sm font-bold text-white flex items-center gap-2">
                   <span className="text-orange-400 font-mono">2.</span>
                   <span>Configuración en wrangler.jsonc</span>
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-muted">
                   Asegúrate de declarar los activos estáticos y el custom domain:
                 </p>
-                <pre className="text-xs font-mono bg-black/40 p-3.5 rounded-xl text-slate-300 overflow-x-auto border border-white/[0.05]">
+                <pre className="text-xs font-mono bg-black/40 p-3.5 rounded-xl text-muted overflow-x-auto border border-border/60">
 {`"assets": {
   "directory": "./dist",
   "not_found_handling": "single-page-application"
@@ -1399,15 +1396,15 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
                 </pre>
               </div>
 
-              <div className="p-5 rounded-3xl bg-[#0c101d] border border-white/[0.08] space-y-2">
+              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
                 <h3 className="text-sm font-bold text-white flex items-center gap-2">
                   <span className="text-orange-400 font-mono">3.</span>
                   <span>Publicación Instantánea</span>
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-muted">
                   Ejecuta Wrangler para subir únicamente los archivos modificados a la red mundial en menos de 3 segundos:
                 </p>
-                <code className="text-xs font-mono bg-black/40 px-3 py-1.5 rounded-xl text-emerald-300 block border border-white/[0.05]">
+                <code className="text-xs font-mono bg-black/40 px-3 py-1.5 rounded-xl text-emerald-300 block border border-border/60">
                   npx wrangler deploy
                 </code>
               </div>
@@ -1417,7 +1414,7 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
             <div className="p-6 rounded-3xl bg-gradient-to-r from-indigo-950/30 via-[#0c101d] to-violet-950/30 border border-indigo-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div>
                 <h3 className="text-base font-bold text-white">¿Listo para comenzar a construir?</h3>
-                <p className="text-xs text-slate-300">
+                <p className="text-xs text-muted">
                   Abre la Bóveda de Prompts y ejecuta el Protocolo de Inicio con tu asistente.
                 </p>
               </div>
@@ -1434,14 +1431,14 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-white/[0.06] py-6 px-4 text-center text-xs text-slate-500 mt-auto bg-[#07090e]/60">
+      <footer className="border-t border-border/60 py-6 px-4 text-center text-xs text-muted mt-auto bg-background/60">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-slate-300">📖 Manual Web Anti-Genérica</span>
+            <span className="font-semibold text-muted">📖 Manual Web Anti-Genérica</span>
             <span>·</span>
             <span>Estándar de ingeniería @dannieldev</span>
           </div>
-          <div className="flex items-center gap-4 text-slate-400 text-[11px]">
+          <div className="flex items-center gap-4 text-muted text-[11px]">
             <span>Cloudflare Workers + D1</span>
             <span>·</span>
             <span>11 Capítulos Técnicos</span>

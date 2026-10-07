@@ -107,6 +107,16 @@ export default {
         const assetRes = await env.ASSETS.fetch(request);
         const headers = new Headers(assetRes.headers);
         headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
+
+        // Force fresh HTML so browsers and CDNs immediately see updated assets
+        if (url.pathname === "/" || url.pathname.endsWith(".html") || !url.pathname.includes(".")) {
+          headers.set("Cache-Control", "no-cache, no-store, must-revalidate");
+          headers.set("Pragma", "no-cache");
+          headers.set("Expires", "0");
+        } else if (url.pathname.startsWith("/assets/")) {
+          headers.set("Cache-Control", "public, max-age=31536000, immutable");
+        }
+
         return new Response(assetRes.body, {
           status: assetRes.status,
           statusText: assetRes.statusText,

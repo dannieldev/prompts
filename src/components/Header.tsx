@@ -113,14 +113,13 @@ export const Header: React.FC<HeaderProps> = ({
           <Tabs
             selectedKey={currentView}
             onSelectionChange={(key) => onViewChange(key as "prompts" | "manual")}
-            variant="secondary"
             className="w-auto"
           >
-            <Tabs.ListContainer className="p-1 rounded-2xl">
-              <Tabs.List className="gap-1">
+            <Tabs.ListContainer className="p-1 rounded-2xl bg-surface-secondary/80 border border-border/80 shadow-inner">
+              <Tabs.List className="relative gap-1">
                 <Tabs.Tab
                   id="prompts"
-                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-all"
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-all data-[selected=true]:text-foreground data-[selected=true]:font-bold text-muted hover:text-foreground"
                 >
                   <span>Prompts</span>
                   <Chip size="sm" variant="secondary" className="text-[10px] h-4 min-h-0 px-1 font-mono">
@@ -130,7 +129,7 @@ export const Header: React.FC<HeaderProps> = ({
 
                 <Tabs.Tab
                   id="manual"
-                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-all"
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-all data-[selected=true]:text-foreground data-[selected=true]:font-bold text-muted hover:text-foreground"
                 >
                   <BookOpen className="w-3.5 h-3.5" />
                   <span>Manual Web</span>
@@ -143,6 +142,7 @@ export const Header: React.FC<HeaderProps> = ({
                     12 Caps
                   </Chip>
                 </Tabs.Tab>
+                <Tabs.Indicator className="bg-surface border border-border/60 shadow-sm rounded-xl" />
               </Tabs.List>
             </Tabs.ListContainer>
           </Tabs>
@@ -158,7 +158,7 @@ export const Header: React.FC<HeaderProps> = ({
               className="w-full"
               aria-label="Buscar prompts"
             >
-              <SearchField.Group className="h-10 rounded-2xl border border-border/80 bg-default/40 hover:bg-default/60 focus-within:bg-default/80 transition-all shadow-inner px-3">
+              <SearchField.Group className="h-10 rounded-2xl border border-border/80 bg-surface-secondary/70 hover:bg-surface-secondary focus-within:bg-surface focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/25 transition-all shadow-sm px-3">
                 <SearchField.SearchIcon className="text-muted w-4 h-4 mr-2 shrink-0" />
                 <SearchField.Input
                   ref={searchInputRef}

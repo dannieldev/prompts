@@ -54,7 +54,11 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
             variant={selectedCategory === "Todas" ? "primary" : "secondary"}
             size="sm"
             onClick={() => onSelectCategory("Todas")}
-            className="rounded-2xl text-xs font-medium whitespace-nowrap shadow-xs"
+            className={`rounded-2xl text-xs font-medium whitespace-nowrap transition-all ${
+              selectedCategory === "Todas"
+                ? "shadow-md shadow-accent/20"
+                : "border border-border/80 hover:border-border"
+            }`}
           >
             <span>✨</span>
             <span>Todas</span>
@@ -68,7 +72,11 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
                 variant={isSelected ? "primary" : "secondary"}
                 size="sm"
                 onClick={() => onSelectCategory(cat)}
-                className="rounded-2xl text-xs font-medium whitespace-nowrap shadow-xs"
+                className={`rounded-2xl text-xs font-medium whitespace-nowrap transition-all ${
+                  isSelected
+                    ? "shadow-md shadow-accent/20"
+                    : "border border-border/80 hover:border-border"
+                }`}
               >
                 <span>{CATEGORY_ICONS[cat]}</span>
                 <span>{cat}</span>
@@ -130,7 +138,11 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
             variant={selectedModel === "Todos" ? "primary" : "secondary"}
             size="sm"
             onClick={() => onSelectModel("Todos")}
-            className="rounded-xl text-[11px] h-7 px-2.5 transition whitespace-nowrap"
+            className={`rounded-xl text-[11px] h-7 px-2.5 transition whitespace-nowrap ${
+              selectedModel === "Todos"
+                ? "shadow-sm"
+                : "border border-border/80 hover:border-border"
+            }`}
           >
             Todos
           </Button>
@@ -143,7 +155,11 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
                 variant={isSelected ? "primary" : "secondary"}
                 size="sm"
                 onClick={() => onSelectModel(model)}
-                className="rounded-xl text-[11px] h-7 px-2.5 transition whitespace-nowrap"
+                className={`rounded-xl text-[11px] h-7 px-2.5 transition whitespace-nowrap ${
+                  isSelected
+                    ? "shadow-sm"
+                    : "border border-border/80 hover:border-border"
+                }`}
               >
                 {model}
               </Button>
