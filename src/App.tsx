@@ -13,15 +13,31 @@ import { VariableModal } from "./components/VariableModal";
 import { PromptEditorModal } from "./components/PromptEditorModal";
 import { PromptDetailModal } from "./components/PromptDetailModal";
 import { ExportImportModal } from "./components/ExportImportModal";
-import { DocumentationModal } from "./components/DocumentationModal";
+import { ManualPage } from "./components/ManualPage";
 import { ToastContainer, ToastMessage } from "./components/Toast";
 import { SEED_PROMPTS } from "./lib/seedData";
 import { SearchX, Plus, RefreshCw } from "lucide-react";
+
+function getInitialView(): "prompts" | "manual" {
+  if (typeof window === "undefined") return "prompts";
+  const path = window.location.pathname.toLowerCase();
+  const hash = window.location.hash.toLowerCase();
+  if (
+    path.startsWith("/manual") ||
+    path.startsWith("/guia") ||
+    hash.includes("manual") ||
+    hash.includes("guia")
+  ) {
+    return "manual";
+  }
+  return "prompts";
+}
 
 export function App() {
   const [prompts, setPrompts] = useState<PromptItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [storageMode, setStorageMode] = useState<StorageMode>("local");
+  const [currentView, setCurrentView] = useState<"prompts" | "manual">(getInitialView);
 
   // Filter & Search states
   const [searchQuery, setSearchQuery] = useState("");
@@ -36,7 +52,6 @@ export function App() {
   const [editorPrompt, setEditorPrompt] = useState<PromptItem | null>(null);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [isExportImportOpen, setIsExportImportOpen] = useState(false);
-  const [isDocsOpen, setIsDocsOpen] = useState(false);
 
   // Toasts
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
@@ -52,6 +67,28 @@ export function App() {
   const removeToast = (id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
+
+  // Sync current view with URL history
+  const handleViewChange = (view: "prompts" | "manual") => {
+    setCurrentView(view);
+    const targetPath = view === "manual" ? "/manual" : "/";
+    if (window.location.pathname !== targetPath) {
+      window.history.pushState(null, "", targetPath);
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentView(getInitialView());
+    };
+    window.addEventListener("popstate", handlePopState);
+    window.addEventListener("hashchange", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("hashchange", handlePopState);
+    };
+  }, []);
 
   // Load prompts on start
   const loadPrompts = async () => {
@@ -193,10 +230,23 @@ export function App() {
     await loadPrompts();
   };
 
+  // Switch to prompts view and open prompt if selected from Manual
+  const handleSelectPromptFromManual = (promptId: string) => {
+    handleViewChange("prompts");
+    const target = prompts.find((p) => p.id === promptId);
+    if (target) {
+      setVariablePrompt(target);
+    } else {
+      setSearchQuery(promptId);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col selection:bg-indigo-500 selection:text-white font-sans">
       {/* Top Navigation */}
       <Header
+        currentView={currentView}
+        onViewChange={handleViewChange}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         storageMode={storageMode}
@@ -207,105 +257,121 @@ export function App() {
           setIsEditorOpen(true);
         }}
         onOpenExportImport={() => setIsExportImportOpen(true)}
-        onOpenDocs={() => setIsDocsOpen(true)}
       />
 
-      {/* Categories & Filter Bar */}
-      <CategoryFilter
-        selectedCategory={selectedCategory}
-        onSelectCategory={setSelectedCategory}
-        selectedModel={selectedModel}
-        onSelectModel={setSelectedModel}
-        showFavoritesOnly={showFavoritesOnly}
-        onToggleFavorites={() => setShowFavoritesOnly(!showFavoritesOnly)}
-        selectedTag={selectedTag}
-        onClearTag={() => setSelectedTag(null)}
-        favoritesCount={favoritesCount}
-        availableTags={availableTags}
-        onSelectTag={(tag) => setSelectedTag(tag)}
-      />
+      {/* Render Main Content depending on active subpage view */}
+      {currentView === "manual" ? (
+        <ManualPage
+          onNavigateToPrompts={() => handleViewChange("prompts")}
+          onSelectPrompt={handleSelectPromptFromManual}
+          onAddToast={addToast}
+        />
+      ) : (
+        <>
+          {/* Categories & Filter Bar */}
+          <CategoryFilter
+            selectedCategory={selectedCategory}
+            onSelectCategory={setSelectedCategory}
+            selectedModel={selectedModel}
+            onSelectModel={setSelectedModel}
+            showFavoritesOnly={showFavoritesOnly}
+            onToggleFavorites={() => setShowFavoritesOnly(!showFavoritesOnly)}
+            selectedTag={selectedTag}
+            onClearTag={() => setSelectedTag(null)}
+            favoritesCount={favoritesCount}
+            availableTags={availableTags}
+            onSelectTag={(tag) => setSelectedTag(tag)}
+          />
 
-      {/* Main Grid View */}
-      <main className="flex-1 max-w-7xl mx-auto px-4 lg:px-8 py-4 w-full">
-        {loading ? (
-          <div className="flex flex-col items-center justify-center py-24 text-slate-400 gap-3">
-            <RefreshCw className="w-8 h-8 text-indigo-500 animate-spin" />
-            <p className="text-sm font-medium">Cargando prompts célebres...</p>
-          </div>
-        ) : filteredPrompts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filteredPrompts.map((prompt) => (
-              <PromptCard
-                key={prompt.id}
-                prompt={prompt}
-                onCopyDirect={handleCopyDirect}
-                onUseVariables={(p) => setVariablePrompt(p)}
-                onViewDetail={(p) => setDetailPrompt(p)}
-                onEdit={(p) => {
-                  setEditorPrompt(p);
-                  setIsEditorOpen(true);
-                }}
-                onDelete={handleDeletePrompt}
-                onToggleFavorite={handleToggleFavorite}
-                onSelectTag={(tag) => setSelectedTag(tag)}
-              />
-            ))}
-          </div>
-        ) : (
-          /* Empty Search / Filter State */
-          <div className="flex flex-col items-center justify-center py-20 px-4 text-center max-w-md mx-auto">
-            <div className="w-16 h-16 rounded-3xl bg-[#0c101d] border border-white/[0.08] flex items-center justify-center text-slate-400 mb-4 shadow-xl">
-              <SearchX className="w-8 h-8 text-indigo-400" />
-            </div>
-            <h3 className="text-base font-bold text-white mb-1">
-              No se encontraron prompts
-            </h3>
-            <p className="text-xs text-slate-400 mb-5 leading-relaxed">
-              No hay resultados que coincidan con tus criterios de búsqueda o filtros activos.
-            </p>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => {
-                  setSearchQuery("");
-                  setSelectedCategory("Todas");
-                  setSelectedModel("Todos");
-                  setShowFavoritesOnly(false);
-                  setSelectedTag(null);
-                }}
-                className="px-4 py-2 text-xs font-semibold text-slate-300 bg-white/[0.05] hover:bg-white/[0.1] rounded-xl active:scale-95 transition"
-              >
-                Limpiar filtros
-              </button>
-              <button
-                onClick={() => {
-                  setEditorPrompt(null);
-                  setIsEditorOpen(true);
-                }}
-                className="px-4 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl active:scale-95 transition shadow-md shadow-indigo-600/30 flex items-center gap-1.5"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span>Crear nuevo</span>
-              </button>
-            </div>
-          </div>
-        )}
-      </main>
+          {/* Main Grid View */}
+          <main className="flex-1 max-w-7xl mx-auto px-4 lg:px-8 py-4 w-full">
+            {loading ? (
+              <div className="flex flex-col items-center justify-center py-24 text-slate-400 gap-3">
+                <RefreshCw className="w-8 h-8 text-indigo-500 animate-spin" />
+                <p className="text-sm font-medium">Cargando prompts célebres...</p>
+              </div>
+            ) : filteredPrompts.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {filteredPrompts.map((prompt) => (
+                  <PromptCard
+                    key={prompt.id}
+                    prompt={prompt}
+                    onCopyDirect={handleCopyDirect}
+                    onUseVariables={(p) => setVariablePrompt(p)}
+                    onViewDetail={(p) => setDetailPrompt(p)}
+                    onEdit={(p) => {
+                      setEditorPrompt(p);
+                      setIsEditorOpen(true);
+                    }}
+                    onDelete={handleDeletePrompt}
+                    onToggleFavorite={handleToggleFavorite}
+                    onSelectTag={(tag) => setSelectedTag(tag)}
+                  />
+                ))}
+              </div>
+            ) : (
+              /* Empty Search / Filter State */
+              <div className="flex flex-col items-center justify-center py-20 px-4 text-center max-w-md mx-auto">
+                <div className="w-16 h-16 rounded-3xl bg-[#0c101d] border border-white/[0.08] flex items-center justify-center text-slate-400 mb-4 shadow-xl">
+                  <SearchX className="w-8 h-8 text-indigo-400" />
+                </div>
+                <h3 className="text-base font-bold text-white mb-1">
+                  No se encontraron prompts
+                </h3>
+                <p className="text-xs text-slate-400 mb-5 leading-relaxed">
+                  No hay resultados que coincidan con tus criterios de búsqueda o filtros activos.
+                </p>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      setSearchQuery("");
+                      setSelectedCategory("Todas");
+                      setSelectedModel("Todos");
+                      setShowFavoritesOnly(false);
+                      setSelectedTag(null);
+                    }}
+                    className="px-4 py-2 text-xs font-semibold text-slate-300 bg-white/[0.05] hover:bg-white/[0.1] rounded-xl active:scale-95 transition"
+                  >
+                    Limpiar filtros
+                  </button>
+                  <button
+                    onClick={() => {
+                      setEditorPrompt(null);
+                      setIsEditorOpen(true);
+                    }}
+                    className="px-4 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl active:scale-95 transition shadow-md shadow-indigo-600/30 flex items-center gap-1.5"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Crear nuevo</span>
+                  </button>
+                </div>
+              </div>
+            )}
+          </main>
 
-      {/* Footer */}
-      <footer className="border-t border-white/[0.06] py-6 px-4 text-center text-xs text-slate-500 mt-auto bg-[#07090e]/60">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-slate-300">⚡ Prompts Célebres</span>
-            <span>·</span>
-            <span>Colección personal de @dannieldev</span>
-          </div>
-          <div className="flex items-center gap-4 text-slate-400 text-[11px]">
-            <span>Cloudflare Workers + D1</span>
-            <span>·</span>
-            <span>Atajo: Presiona <kbd className="font-mono bg-white/[0.08] px-1.5 py-0.5 rounded text-slate-300 border border-white/[0.06]">/</kbd> para buscar</span>
-          </div>
-        </div>
-      </footer>
+          {/* Prompts Footer */}
+          <footer className="border-t border-white/[0.06] py-6 px-4 text-center text-xs text-slate-500 mt-auto bg-[#07090e]/60">
+            <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-slate-300">⚡ Prompts Célebres</span>
+                <span>·</span>
+                <span>Colección personal de @dannieldev</span>
+              </div>
+              <div className="flex items-center gap-4 text-slate-400 text-[11px]">
+                <span>Cloudflare Workers + D1</span>
+                <span>·</span>
+                <span>
+                  Atajo: Presiona{" "}
+                  <kbd className="font-mono bg-white/[0.08] px-1.5 py-0.5 rounded text-slate-300 border border-white/[0.06]">
+                    /
+                  </kbd>{" "}
+                  para buscar
+                </span>
+              </div>
+            </div>
+          </footer>
+        </>
+      )}
 
       {/* Interactive Variable Filling Modal */}
       <VariableModal
@@ -350,15 +416,10 @@ export function App() {
         onToast={addToast}
       />
 
-      {/* Web AI Documentation & Methodology Guide Modal */}
-      <DocumentationModal
-        isOpen={isDocsOpen}
-        onClose={() => setIsDocsOpen(false)}
-      />
-
       {/* Floating Notifications */}
       <ToastContainer toasts={toasts} onDismiss={removeToast} />
     </div>
   );
 }
+
 export default App;
