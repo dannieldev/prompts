@@ -5,7 +5,9 @@ import {
   Upload,
   RotateCcw,
   FileJson,
+  Sparkles,
 } from "lucide-react";
+import { Button, Chip, Kbd } from "@heroui/react";
 import { PromptItem } from "../types";
 
 interface ExportImportModalProps {
@@ -89,7 +91,7 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
   const handleRestoreDefaults = async () => {
     if (
       !window.confirm(
-        "¿Deseas restaurar la lista con los 10 Prompts Célebres iniciales? Tus prompts existentes no se perderán si tienen IDs distintos."
+        "¿Deseas restaurar la lista con los 16 Prompts Célebres iniciales? Tus prompts existentes no se perderán si tienen IDs distintos."
       )
     ) {
       return;
@@ -108,53 +110,69 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/75 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md">
       <div className="relative w-full max-w-lg bg-[#0c101d] border border-white/[0.1] rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-modal-enter">
         {/* Header */}
-        <div className="px-6 py-4.5 border-b border-[#1f2d47] flex items-center justify-between bg-[#131c2e]">
+        <div className="px-6 py-4.5 border-b border-white/[0.08] flex items-center justify-between bg-[#101626]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+            <div className="w-10 h-10 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
               <FileJson className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white">Respaldar e Importar</h2>
-              <p className="text-xs text-gray-400">Exporta tu colección en formato JSON estándar</p>
+              <div className="flex items-center gap-2">
+                <h2 className="text-base font-bold text-white">Respaldar e Importar</h2>
+                <Chip color="accent" variant="soft" size="sm">
+                  {prompts.length} prompts
+                </Chip>
+              </div>
+              <p className="text-xs text-slate-400">Exporta o sincroniza tu colección en formato JSON</p>
             </div>
           </div>
 
-          <button
+          <Button
+            isIconOnly
+            size="sm"
+            variant="ghost"
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-200 hover:bg-gray-800 rounded-xl transition"
+            className="rounded-xl text-slate-400 hover:text-white"
           >
             <X className="w-5 h-5" />
-          </button>
+          </Button>
         </div>
 
         {/* Body */}
-        <div className="p-6 flex flex-col gap-5">
+        <div className="p-6 flex flex-col gap-4">
           {/* Export card */}
-          <div className="bg-[#0b0f17] border border-[#1e2a42] rounded-2xl p-4 flex items-center justify-between gap-4">
+          <div className="bg-[#07090e] border border-white/[0.08] rounded-2xl p-4 flex items-center justify-between gap-4 shadow-inner">
             <div>
-              <h3 className="text-sm font-semibold text-white">Exportar Respaldo</h3>
-              <p className="text-xs text-gray-400 mt-0.5">
-                Descarga un archivo con tus {prompts.length} prompts para guardarlo en tu Mac o sincronizar.
+              <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
+                <Download className="w-4 h-4 text-indigo-400" />
+                <span>Exportar Respaldo</span>
+              </h3>
+              <p className="text-xs text-slate-400 mt-1">
+                Descarga un archivo JSON con tus {prompts.length} prompts para guardarlo en local o moverlo de equipo.
               </p>
             </div>
-            <button
+            <Button
+              variant="primary"
+              size="sm"
               onClick={handleExportJson}
-              className="flex items-center gap-1.5 px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold shadow-md shadow-indigo-600/30 transition shrink-0"
+              className="rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 shadow-md shadow-indigo-600/30 shrink-0"
             >
-              <Download className="w-4 h-4" />
+              <Download className="w-4 h-4 mr-1" />
               <span>Descargar</span>
-            </button>
+            </Button>
           </div>
 
           {/* Import card */}
-          <div className="bg-[#0b0f17] border border-[#1e2a42] rounded-2xl p-4 flex items-center justify-between gap-4">
+          <div className="bg-[#07090e] border border-white/[0.08] rounded-2xl p-4 flex items-center justify-between gap-4 shadow-inner">
             <div>
-              <h3 className="text-sm font-semibold text-white">Importar JSON</h3>
-              <p className="text-xs text-gray-400 mt-0.5">
-                Sube un respaldo previo para combinar o restaurar tus prompts.
+              <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
+                <Upload className="w-4 h-4 text-violet-400" />
+                <span>Importar JSON</span>
+              </h3>
+              <p className="text-xs text-slate-400 mt-1">
+                Sube un respaldo previo para combinar o restaurar tus prompts célebres.
               </p>
             </div>
             <div>
@@ -165,44 +183,53 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
                 onChange={handleFileUpload}
                 className="hidden"
               />
-              <button
+              <Button
+                variant="secondary"
+                size="sm"
                 onClick={() => fileInputRef.current?.click()}
-                disabled={importing}
-                className="flex items-center gap-1.5 px-3.5 py-2 bg-[#1c273d] hover:bg-[#253554] border border-[#293d63] text-gray-200 rounded-xl text-xs font-medium transition shrink-0"
+                isDisabled={importing}
+                className="rounded-xl text-xs shrink-0"
               >
-                <Upload className="w-4 h-4" />
+                <Upload className="w-4 h-4 mr-1" />
                 <span>{importing ? "Cargando..." : "Subir Archivo"}</span>
-              </button>
+              </Button>
             </div>
           </div>
 
           {/* Seed reset card */}
-          <div className="bg-[#0b0f17] border border-[#1e2a42] rounded-2xl p-4 flex items-center justify-between gap-4">
+          <div className="bg-[#07090e] border border-white/[0.08] rounded-2xl p-4 flex items-center justify-between gap-4 shadow-inner">
             <div>
-              <h3 className="text-sm font-semibold text-white">Cargar Prompts Célebres</h3>
-              <p className="text-xs text-gray-400 mt-0.5">
-                Restablece los 10 prompts iniciales recomendados para desarrollo, marketing y arquitectura.
+              <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-amber-400" />
+                <span>Restaurar Seeds Maestros</span>
+              </h3>
+              <p className="text-xs text-slate-400 mt-1">
+                Recarga los prompts semilla iniciales de desarrollo web, marketing y arquitectura.
               </p>
             </div>
-            <button
+            <Button
+              variant="outline"
+              size="sm"
               onClick={handleRestoreDefaults}
-              disabled={resetting}
-              className="flex items-center gap-1.5 px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl text-xs font-medium transition shrink-0"
+              isDisabled={resetting}
+              className="rounded-xl text-xs text-slate-300 hover:text-white shrink-0"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
+              <RotateCcw className="w-3.5 h-3.5 mr-1" />
               <span>{resetting ? "Cargando..." : "Cargar Seeds"}</span>
-            </button>
+            </Button>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 bg-[#131c2e] border-t border-[#1f2d47] flex justify-end">
-          <button
+        <div className="px-6 py-4 bg-[#101626] border-t border-white/[0.08] flex justify-end">
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={onClose}
-            className="px-4 py-2 text-xs font-medium text-gray-400 hover:text-gray-200 hover:bg-gray-800 rounded-xl transition"
+            className="rounded-xl text-xs text-slate-400 hover:text-white"
           >
-            Cerrar
-          </button>
+            Cerrar <Kbd className="ml-1 text-[9px]">Esc</Kbd>
+          </Button>
         </div>
       </div>
     </div>

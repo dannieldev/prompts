@@ -8,7 +8,18 @@ import {
   Trash2,
   ExternalLink,
   Bot,
+  Sliders,
 } from "lucide-react";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+  Button,
+  Chip,
+} from "@heroui/react";
 import { PromptItem } from "../types";
 import { CATEGORY_ICONS } from "../lib/constants";
 import { extractVariables } from "../lib/variableUtils";
@@ -48,187 +59,230 @@ export const PromptCard: React.FC<PromptCardProps> = ({
   // Preview snippet (first 3-4 lines)
   const previewLines = prompt.content.split("\n").slice(0, 4).join("\n");
 
+  const getCategoryColor = (cat: string): "accent" | "success" | "warning" | "default" => {
+    switch (cat) {
+      case "Diseño Web IA":
+        return "accent";
+      case "Estrategia":
+        return "success";
+      case "Desarrollo":
+        return "accent";
+      case "Contenido":
+      case "Marketing":
+        return "warning";
+      default:
+        return "default";
+    }
+  };
+
   return (
-    <div
+    <Card
+      variant="default"
       onClick={() => onViewDetail(prompt)}
-      className="group relative flex flex-col justify-between bg-[#0e1320]/90 hover:bg-[#111828] border border-white/[0.08] hover:border-indigo-500/35 rounded-2xl p-5 transition-all duration-200 hover:-translate-y-0.5 shadow-md hover:shadow-xl hover:shadow-black/40 cursor-pointer"
+      className="group relative flex flex-col justify-between bg-[#0e1320]/95 hover:bg-[#121929] border border-white/[0.08] hover:border-indigo-500/40 rounded-3xl p-5 transition-all duration-200 hover:-translate-y-1 shadow-md hover:shadow-2xl hover:shadow-black/50 cursor-pointer overflow-hidden"
     >
       <div>
-        {/* Header: Category & Favorite */}
-        <div className="flex items-center justify-between gap-2 mb-3">
+        {/* Card Header: Category & Controls */}
+        <CardHeader className="flex items-center justify-between gap-2 p-0 mb-3.5">
           <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-white/[0.04] text-indigo-300 border border-white/[0.08] flex items-center gap-1">
-              <span>{CATEGORY_ICONS[prompt.category] || "📌"}</span>
-              <span>{prompt.category}</span>
-            </span>
-
-            {/* Models badges */}
-            {prompt.models?.slice(0, 2).map((m) => (
-              <span
-                key={m}
-                className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-white/[0.03] text-slate-300 border border-white/[0.06] flex items-center gap-1"
-              >
-                <Bot className="w-2.5 h-2.5 text-slate-400" />
-                <span>{m}</span>
-              </span>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-1">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleFavorite(prompt.id);
-              }}
-              className={`p-1.5 rounded-lg transition-transform active:scale-90 ${
-                prompt.is_favorite
-                  ? "text-amber-400 hover:text-amber-300 bg-amber-500/15 border border-amber-500/25"
-                  : "text-slate-500 hover:text-amber-400 hover:bg-white/[0.05]"
-              }`}
-              title={prompt.is_favorite ? "Quitar de célebres" : "Marcar como célebre"}
-              aria-label={prompt.is_favorite ? "Quitar de célebres" : "Marcar como célebre"}
+            <Chip
+              color={getCategoryColor(prompt.category)}
+              variant="soft"
+              size="sm"
+              className="font-semibold text-[11px] px-2.5 py-0.5"
             >
-              <Star
-                className={`w-4 h-4 ${prompt.is_favorite ? "fill-amber-400" : ""}`}
-              />
-            </button>
-          </div>
-        </div>
+              <span className="mr-1">{CATEGORY_ICONS[prompt.category] || "📌"}</span>
+              <span>{prompt.category}</span>
+            </Chip>
 
-        {/* Title */}
-        <h3 className="text-base font-bold text-slate-100 group-hover:text-indigo-200 transition-colors line-clamp-1 mb-1.5">
-          {prompt.title}
-        </h3>
-
-        {/* Short description */}
-        {prompt.description && (
-          <p className="text-xs text-slate-400 line-clamp-2 mb-3 leading-relaxed font-normal">
-            {prompt.description}
-          </p>
-        )}
-
-        {/* Dynamic Variables Pill if detected */}
-        {hasVariables && (
-          <div className="mb-3">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-indigo-950/50 border border-indigo-500/25 text-indigo-300">
-              <Zap className="w-3 h-3 text-indigo-400" />
-              <span>
-                {variables.length} {variables.length === 1 ? "variable" : "variables"}:
-              </span>
-              <span className="text-indigo-200 font-mono text-[10px]">
-                {variables.slice(0, 3).map((v) => `{{${v.key}}}`).join(", ")}
-                {variables.length > 3 ? "..." : ""}
-              </span>
-            </span>
-          </div>
-        )}
-
-        {/* Content Preview Box */}
-        <div className="bg-[#07090e] border border-white/[0.06] rounded-xl p-3 font-mono-code text-[11px] text-slate-300/90 leading-relaxed overflow-hidden relative mb-3.5">
-          <pre className="whitespace-pre-wrap line-clamp-3 select-none font-inherit">
-            {previewLines}
-          </pre>
-          <div className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-[#07090e] to-transparent pointer-events-none" />
-        </div>
-
-        {/* Tags Row */}
-        {prompt.tags && prompt.tags.length > 0 && (
-          <div className="flex items-center gap-1.5 flex-wrap mb-4">
-            {prompt.tags.map((tag) => (
-              <button
-                key={tag}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onSelectTag(tag);
-                }}
-                className="text-[10px] text-slate-400 hover:text-indigo-300 bg-white/[0.03] hover:bg-white/[0.06] px-2 py-0.5 rounded-md border border-white/[0.06] transition"
+            {/* Model Badges */}
+            {prompt.models?.slice(0, 2).map((m) => (
+              <Chip
+                key={m}
+                variant="secondary"
+                size="sm"
+                className="text-[10px] bg-white/[0.03] border border-white/[0.06] text-slate-300"
               >
-                #{tag}
-              </button>
+                <Bot className="w-2.5 h-2.5 inline mr-1 text-slate-400" />
+                <span>{m}</span>
+              </Chip>
             ))}
           </div>
-        )}
+
+          {/* Favorite Toggle Button */}
+          <Button
+            isIconOnly
+            size="sm"
+            variant="ghost"
+            onClick={(e: React.MouseEvent) => {
+              e.stopPropagation();
+              onToggleFavorite(prompt.id);
+            }}
+            className={`rounded-xl transition-all ${
+              prompt.is_favorite
+                ? "text-amber-400 bg-amber-500/15 border border-amber-500/30"
+                : "text-slate-500 hover:text-amber-400 hover:bg-white/[0.06]"
+            }`}
+            aria-label={prompt.is_favorite ? "Quitar de célebres" : "Marcar como célebre"}
+          >
+            <Star className={`w-4 h-4 ${prompt.is_favorite ? "fill-amber-400" : ""}`} />
+          </Button>
+        </CardHeader>
+
+        {/* Card Content: Title, Description, Snippet */}
+        <CardContent className="p-0 space-y-2.5">
+          <CardTitle className="text-base font-bold text-slate-100 group-hover:text-indigo-200 transition-colors line-clamp-1">
+            {prompt.title}
+          </CardTitle>
+
+          {prompt.description && (
+            <CardDescription className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
+              {prompt.description}
+            </CardDescription>
+          )}
+
+          {/* Dynamic Variables Pill if detected */}
+          {hasVariables && (
+            <div className="pt-0.5">
+              <Chip
+                color="accent"
+                variant="soft"
+                size="sm"
+                className="flex items-center gap-1.5 text-[11px] font-medium"
+              >
+                <Zap className="w-3 h-3 inline mr-1 text-indigo-400" />
+                <span>
+                  {variables.length} {variables.length === 1 ? "variable" : "variables"}:
+                </span>
+                <span className="text-indigo-200 font-mono text-[10px] ml-1">
+                  {variables.slice(0, 3).map((v) => `{{${v.key}}}`).join(", ")}
+                  {variables.length > 3 ? "..." : ""}
+                </span>
+              </Chip>
+            </div>
+          )}
+
+          {/* Snippet Code Preview Box */}
+          <div className="bg-[#07090e] border border-white/[0.07] rounded-2xl p-3.5 font-mono-code text-[11px] text-slate-300 leading-relaxed overflow-hidden relative shadow-inner">
+            <pre className="whitespace-pre-wrap line-clamp-3 select-none font-inherit">
+              {previewLines}
+            </pre>
+            <div className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-[#07090e] to-transparent pointer-events-none" />
+          </div>
+
+          {/* Tags Row */}
+          {prompt.tags && prompt.tags.length > 0 && (
+            <div className="flex items-center gap-1.5 flex-wrap pt-0.5">
+              {prompt.tags.map((tag) => (
+                <Chip
+                  key={tag}
+                  variant="secondary"
+                  size="sm"
+                  onClick={(e: React.MouseEvent) => {
+                    e.stopPropagation();
+                    onSelectTag(tag);
+                  }}
+                  className="cursor-pointer text-[10px] text-slate-400 hover:text-indigo-300 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.06] transition"
+                >
+                  #{tag}
+                </Chip>
+              ))}
+            </div>
+          )}
+        </CardContent>
       </div>
 
-      {/* Footer Actions */}
-      <div
-        className="flex items-center justify-between gap-2 pt-3 border-t border-white/[0.06]"
-        onClick={(e) => e.stopPropagation()}
+      {/* Card Footer: Action Buttons */}
+      <CardFooter
+        className="flex items-center justify-between gap-2 p-0 pt-4 mt-3 border-t border-white/[0.06]"
+        onClick={(e: React.MouseEvent) => e.stopPropagation()}
       >
         <div className="flex items-center gap-1">
-          <button
+          <Button
+            isIconOnly
+            size="sm"
+            variant="ghost"
             onClick={() => onEdit(prompt)}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] active:scale-95 transition"
-            title="Editar prompt"
+            className="text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] rounded-xl"
             aria-label="Editar prompt"
           >
             <Edit2 className="w-3.5 h-3.5" />
-          </button>
-          <button
+          </Button>
+
+          <Button
+            isIconOnly
+            size="sm"
+            variant="ghost"
             onClick={() => onDelete(prompt.id, prompt.title)}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 active:scale-95 transition"
-            title="Eliminar prompt"
+            className="text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl"
             aria-label="Eliminar prompt"
           >
             <Trash2 className="w-3.5 h-3.5" />
-          </button>
-          <button
+          </Button>
+
+          <Button
+            isIconOnly
+            size="sm"
+            variant="ghost"
             onClick={() => onViewDetail(prompt)}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-300 hover:bg-white/[0.06] active:scale-95 transition"
-            title="Ver completo"
+            className="text-slate-400 hover:text-indigo-300 hover:bg-white/[0.06] rounded-xl"
             aria-label="Ver prompt completo"
           >
             <ExternalLink className="w-3.5 h-3.5" />
-          </button>
+          </Button>
         </div>
 
         <div className="flex items-center gap-1.5">
           {/* Quick Copy Button */}
-          <button
+          <Button
+            variant={copied ? "primary" : "secondary"}
+            size="sm"
             onClick={handleCopy}
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium active:scale-95 transition-all ${
+            className={`rounded-xl text-xs font-medium transition-all ${
               copied
-                ? "bg-emerald-600 text-white font-semibold shadow-xs"
+                ? "bg-emerald-600 text-white font-semibold"
                 : "bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 hover:text-white border border-white/[0.08]"
             }`}
-            title="Copiar texto sin modificar"
             aria-label="Copiar prompt"
           >
             {copied ? (
               <>
-                <Check className="w-3.5 h-3.5 text-white" />
+                <Check className="w-3.5 h-3.5 mr-1 text-white" />
                 <span>¡Copiado!</span>
               </>
             ) : (
               <>
-                <Copy className="w-3.5 h-3.5" />
+                <Copy className="w-3.5 h-3.5 mr-1" />
                 <span>Copiar</span>
               </>
             )}
-          </button>
+          </Button>
 
-          {/* Fill & Use Button (if has variables) */}
+          {/* Fill & Use Button */}
           {hasVariables ? (
-            <button
+            <Button
+              variant="primary"
+              size="sm"
               onClick={() => onUseVariables(prompt)}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] transition shadow-sm shadow-indigo-600/25"
-              title="Rellenar variables antes de copiar"
+              className="rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 shadow-sm shadow-indigo-600/30"
               aria-label="Rellenar variables"
             >
-              <Zap className="w-3.5 h-3.5" />
+              <Sliders className="w-3.5 h-3.5 mr-1" />
               <span>Rellenar</span>
-            </button>
+            </Button>
           ) : (
-            <button
+            <Button
+              variant="primary"
+              size="sm"
               onClick={handleCopy}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] transition shadow-sm shadow-indigo-600/25"
+              className="rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 shadow-sm shadow-indigo-600/30"
               aria-label="Usar prompt"
             >
               <span>Usar</span>
-            </button>
+            </Button>
           )}
         </div>
-      </div>
-    </div>
+      </CardFooter>
+    </Card>
   );
 };

@@ -17,6 +17,7 @@ import { ManualPage } from "./components/ManualPage";
 import { ToastContainer, ToastMessage } from "./components/Toast";
 import { SEED_PROMPTS } from "./lib/seedData";
 import { SearchX, Plus, RefreshCw } from "lucide-react";
+import { Button, Chip, Kbd } from "@heroui/react";
 
 function getInitialView(): "prompts" | "manual" {
   if (typeof window === "undefined") return "prompts";
@@ -310,19 +311,21 @@ export function App() {
                 ))}
               </div>
             ) : (
-              /* Empty Search / Filter State */
+              /* Empty Search / Filter State with HeroUI components */
               <div className="flex flex-col items-center justify-center py-20 px-4 text-center max-w-md mx-auto">
-                <div className="w-16 h-16 rounded-3xl bg-[#0c101d] border border-white/[0.08] flex items-center justify-center text-slate-400 mb-4 shadow-xl">
+                <div className="w-16 h-16 rounded-3xl bg-[#0e1424] border border-white/[0.08] flex items-center justify-center text-slate-400 mb-4 shadow-xl">
                   <SearchX className="w-8 h-8 text-indigo-400" />
                 </div>
-                <h3 className="text-base font-bold text-white mb-1">
+                <h3 className="text-base font-bold text-white mb-1.5">
                   No se encontraron prompts
                 </h3>
-                <p className="text-xs text-slate-400 mb-5 leading-relaxed">
+                <p className="text-xs text-slate-400 mb-6 leading-relaxed">
                   No hay resultados que coincidan con tus criterios de búsqueda o filtros activos.
                 </p>
-                <div className="flex items-center gap-2">
-                  <button
+                <div className="flex items-center gap-2.5">
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={() => {
                       setSearchQuery("");
                       setSelectedCategory("Todas");
@@ -330,42 +333,46 @@ export function App() {
                       setShowFavoritesOnly(false);
                       setSelectedTag(null);
                     }}
-                    className="px-4 py-2 text-xs font-semibold text-slate-300 bg-white/[0.05] hover:bg-white/[0.1] rounded-xl active:scale-95 transition"
+                    className="rounded-xl text-xs"
                   >
                     Limpiar filtros
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="sm"
                     onClick={() => {
                       setEditorPrompt(null);
                       setIsEditorOpen(true);
                     }}
-                    className="px-4 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl active:scale-95 transition shadow-md shadow-indigo-600/30 flex items-center gap-1.5"
+                    className="rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 shadow-md shadow-indigo-600/30"
                   >
-                    <Plus className="w-3.5 h-3.5" />
+                    <Plus className="w-4 h-4 mr-1" />
                     <span>Crear nuevo</span>
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}
           </main>
 
-          {/* Prompts Footer */}
-          <footer className="border-t border-white/[0.06] py-6 px-4 text-center text-xs text-slate-500 mt-auto bg-[#07090e]/60">
+          {/* Prompts Footer with HeroUI components */}
+          <footer className="border-t border-white/[0.06] py-6 px-4 text-center text-xs text-slate-500 mt-auto bg-[#07090e]/80 backdrop-blur-md">
             <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <span className="font-semibold text-slate-300">⚡ Prompts Célebres</span>
                 <span>·</span>
                 <span>Colección personal de @dannieldev</span>
               </div>
-              <div className="flex items-center gap-4 text-slate-400 text-[11px]">
-                <span>Cloudflare Workers + D1</span>
+              <div className="flex items-center gap-3 text-slate-400 text-[11px]">
+                <Chip color="success" variant="soft" size="sm" className="text-[10px]">
+                  Cloudflare Workers + D1
+                </Chip>
                 <span>·</span>
-                <span>
-                  Atajo: Presiona{" "}
-                  <kbd className="font-mono bg-white/[0.08] px-1.5 py-0.5 rounded text-slate-300 border border-white/[0.06]">
-                    /
-                  </kbd>{" "}
-                  para buscar
+                <span className="flex items-center gap-1.5">
+                  <span>Atajo:</span>
+                  <Kbd className="text-[10px]">/</Kbd>
+                  <span>o</span>
+                  <Kbd className="text-[10px]">⌘K</Kbd>
+                  <span>para buscar</span>
                 </span>
               </div>
             </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import { Star, X, Tag as TagIcon, Sparkles } from "lucide-react";
+import { Button, Chip } from "@heroui/react";
 import { AIModelTag, PromptCategory } from "../types";
 import { CATEGORIES, CATEGORY_ICONS, AI_MODELS } from "../lib/constants";
 
@@ -44,52 +45,58 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-3 py-3.5 max-w-7xl mx-auto px-4 lg:px-8">
+    <div className="flex flex-col gap-3 py-3.5 max-w-7xl mx-auto px-4 lg:px-8 w-full">
       {/* Primary Category Row + Favorites Toggle */}
       <div className="flex items-center justify-between flex-wrap gap-2.5">
-        {/* Category Pills */}
+        {/* Category Pills with HeroUI Buttons */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none no-scrollbar">
-          <button
+          <Button
+            variant={selectedCategory === "Todas" ? "primary" : "secondary"}
+            size="sm"
             onClick={() => onSelectCategory("Todas")}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
+            className={`rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
               selectedCategory === "Todas"
-                ? "bg-indigo-600 text-white shadow-sm shadow-indigo-600/30 font-semibold border border-indigo-400/40"
-                : "bg-white/[0.03] text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] border border-white/[0.07]"
+                ? "bg-indigo-600 text-white font-semibold shadow-md shadow-indigo-600/30"
+                : "bg-white/[0.04] text-slate-300 hover:text-white border border-white/[0.07]"
             }`}
           >
             <span>✨</span>
             <span>Todas</span>
-          </button>
+          </Button>
 
           {CATEGORIES.map((cat) => {
             const isSelected = selectedCategory === cat;
             return (
-              <button
+              <Button
                 key={cat}
+                variant={isSelected ? "primary" : "secondary"}
+                size="sm"
                 onClick={() => onSelectCategory(cat)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
+                className={`rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
                   isSelected
-                    ? "bg-indigo-600 text-white shadow-sm shadow-indigo-600/30 font-semibold border border-indigo-400/40"
-                    : "bg-white/[0.03] text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] border border-white/[0.07]"
+                    ? "bg-indigo-600 text-white font-semibold shadow-md shadow-indigo-600/30"
+                    : "bg-white/[0.04] text-slate-300 hover:text-white border border-white/[0.07]"
                 }`}
               >
                 <span>{CATEGORY_ICONS[cat]}</span>
                 <span>{cat}</span>
-              </button>
+              </Button>
             );
           })}
         </div>
 
         {/* Favorites and Reset Buttons */}
         <div className="flex items-center gap-2 ml-auto">
-          <button
+          <Button
+            variant={showFavoritesOnly ? "primary" : "outline"}
+            size="sm"
             onClick={onToggleFavorites}
-            className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all flex items-center gap-1.5 border active:scale-95 ${
+            className={`rounded-xl text-xs font-medium transition-all flex items-center gap-1.5 ${
               showFavoritesOnly
-                ? "bg-amber-500/15 border-amber-500/40 text-amber-300 font-semibold shadow-xs"
-                : "bg-white/[0.03] border-white/[0.07] text-slate-400 hover:text-slate-200 hover:bg-white/[0.06]"
+                ? "bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-xs"
+                : "bg-white/[0.03] text-slate-300 hover:text-white border-white/[0.08]"
             }`}
-            title="Mostrar solo prompts célebres favoritos"
+            aria-label="Mostrar solo prompts célebres favoritos"
           >
             <Star
               className={`w-3.5 h-3.5 ${
@@ -97,93 +104,111 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
               }`}
             />
             <span>Célebres</span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 font-bold">
+            <Chip
+              color="warning"
+              variant="soft"
+              size="sm"
+              className="text-[10px] font-bold px-1.5 py-0"
+            >
               {favoritesCount}
-            </span>
-          </button>
+            </Chip>
+          </Button>
 
           {isAnyFilterActive && (
-            <button
+            <Button
+              variant="danger-soft"
+              size="sm"
               onClick={handleResetFilters}
-              className="px-2.5 py-1.5 rounded-xl text-xs text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 transition-all active:scale-95 flex items-center gap-1"
-              title="Restablecer todos los filtros"
+              className="rounded-xl text-xs flex items-center gap-1 text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/25"
+              aria-label="Restablecer todos los filtros"
             >
               <X className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Limpiar filtros</span>
-            </button>
+            </Button>
           )}
         </div>
       </div>
 
       {/* Sub-filters: AI Model & Active Tags */}
-      <div className="flex items-center justify-between flex-wrap gap-2 pt-1 border-t border-[#1a2333]/60 text-xs">
-        {/* Model Filter */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
-          <span className="text-gray-500 flex items-center gap-1 font-medium whitespace-nowrap">
-            <Sparkles className="w-3 h-3 text-indigo-400" />
+      <div className="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-white/[0.06] text-xs">
+        {/* Model Filter Pills */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+          <span className="text-slate-400 flex items-center gap-1 font-medium whitespace-nowrap text-xs mr-1">
+            <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
             <span>Modelo:</span>
           </span>
 
-          <button
+          <Button
+            variant={selectedModel === "Todos" ? "secondary" : "ghost"}
+            size="sm"
             onClick={() => onSelectModel("Todos")}
-            className={`px-2 py-0.8 rounded-lg text-[11px] transition whitespace-nowrap ${
+            className={`rounded-lg text-[11px] h-7 px-2.5 transition whitespace-nowrap ${
               selectedModel === "Todos"
-                ? "bg-gray-800 text-indigo-300 border border-indigo-500/40 font-medium"
-                : "text-gray-400 hover:text-gray-300"
+                ? "bg-white/[0.1] text-indigo-300 border border-indigo-500/40 font-semibold"
+                : "text-slate-400 hover:text-slate-200"
             }`}
           >
             Todos
-          </button>
+          </Button>
 
           {AI_MODELS.map((model) => {
             const isSelected = selectedModel === model;
             return (
-              <button
+              <Button
                 key={model}
+                variant={isSelected ? "secondary" : "ghost"}
+                size="sm"
                 onClick={() => onSelectModel(model)}
-                className={`px-2 py-0.8 rounded-lg text-[11px] transition whitespace-nowrap ${
+                className={`rounded-lg text-[11px] h-7 px-2.5 transition whitespace-nowrap ${
                   isSelected
-                    ? "bg-gray-800 text-indigo-300 border border-indigo-500/40 font-medium"
-                    : "text-gray-400 hover:text-gray-300"
+                    ? "bg-white/[0.1] text-indigo-300 border border-indigo-500/40 font-semibold"
+                    : "text-slate-400 hover:text-slate-200"
                 }`}
               >
                 {model}
-              </button>
+              </Button>
             );
           })}
         </div>
 
-        {/* Active Tag pill if selected */}
+        {/* Active Tag chip if selected */}
         {selectedTag && (
-          <div className="flex items-center gap-1.5 bg-indigo-950/60 border border-indigo-500/30 px-2.5 py-0.8 rounded-lg text-[11px] text-indigo-300">
-            <TagIcon className="w-3 h-3" />
-            <span>Tag: <strong>#{selectedTag}</strong></span>
+          <Chip
+            color="accent"
+            variant="soft"
+            size="sm"
+            className="flex items-center gap-1 text-[11px] font-medium"
+          >
+            <TagIcon className="w-3 h-3 inline mr-1 text-indigo-400" />
+            <span>#{selectedTag}</span>
             <button
               onClick={onClearTag}
-              className="p-0.5 hover:text-white transition ml-1"
+              className="ml-1.5 p-0.5 hover:text-white transition inline-flex items-center"
               title="Quitar filtro de tag"
             >
               <X className="w-3 h-3" />
             </button>
-          </div>
+          </Chip>
         )}
       </div>
 
-      {/* Top 6 Popular Tags Quick Bar (if not tag selected) */}
+      {/* Top Popular Tags Quick Bar (when no tag selected) */}
       {!selectedTag && availableTags.length > 0 && (
-        <div className="flex items-center gap-1.5 overflow-x-auto text-[11px] text-gray-500 pb-1">
-          <span className="text-gray-500 flex items-center gap-1 shrink-0">
-            <TagIcon className="w-3 h-3" />
-            <span>Tags populares:</span>
+        <div className="flex items-center gap-1.5 overflow-x-auto text-[11px] text-slate-500 pb-1 scrollbar-none no-scrollbar">
+          <span className="text-slate-400 flex items-center gap-1 shrink-0 text-xs mr-1">
+            <TagIcon className="w-3 h-3 text-slate-500" />
+            <span>Tags frecuentes:</span>
           </span>
           {availableTags.slice(0, 8).map((tag) => (
-            <button
+            <Chip
               key={tag}
+              variant="secondary"
+              size="sm"
               onClick={() => onSelectTag(tag)}
-              className="px-2 py-0.5 rounded-md bg-[#111827] hover:bg-[#1a2333] text-gray-400 hover:text-indigo-300 border border-[#1f293d] transition whitespace-nowrap"
+              className="cursor-pointer text-[10px] text-slate-400 hover:text-indigo-300 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.06] transition whitespace-nowrap active:scale-95"
             >
               #{tag}
-            </button>
+            </Chip>
           ))}
         </div>
       )}
