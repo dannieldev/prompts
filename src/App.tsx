@@ -15,7 +15,6 @@ import { PromptDetailModal } from "./components/PromptDetailModal";
 import { ExportImportModal } from "./components/ExportImportModal";
 import { ManualPage } from "./components/ManualPage";
 import { ToastContainer, ToastMessage } from "./components/Toast";
-import { SEED_PROMPTS } from "./lib/seedData";
 import { SearchX, Plus, RefreshCw } from "lucide-react";
 import { Button } from "@heroui/react";
 
@@ -49,7 +48,6 @@ export function App() {
   // Modals state
   const [variablePrompt, setVariablePrompt] = useState<PromptItem | null>(null);
   const [detailPrompt, setDetailPrompt] = useState<PromptItem | null>(null);
-  const [editorPrompt, setEditorPrompt] = useState<PromptItem | null>(null);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [isExportImportOpen, setIsExportImportOpen] = useState(false);
 
@@ -71,7 +69,7 @@ export function App() {
   // Sync current view with URL history
   const handleViewChange = (view: "prompts" | "manual") => {
     setCurrentView(view);
-    document.title = view === "manual" ? "Manual web | Prompts Célebres" : "Prompts Célebres — dannieldev";
+    document.title = view === "manual" ? "Manual web | Prompts Célebres" : "Prompts Célebres · dannieldev";
     const targetPath = view === "manual" ? "/manual" : "/";
     if (window.location.pathname !== targetPath) {
       window.history.pushState(null, "", targetPath);
@@ -196,41 +194,16 @@ export function App() {
     }
   };
 
-  const handleSavePrompt = async (data: PromptInput, existingId?: string) => {
-    if (existingId) {
-      const updated = await promptApi.updatePrompt(existingId, data);
-      setPrompts((prev) => prev.map((p) => (p.id === existingId ? updated : p)));
-      if (detailPrompt?.id === existingId) setDetailPrompt(updated);
-      addToast(`Prompt "${updated.title}" actualizado`, "success");
-    } else {
-      const created = await promptApi.createPrompt(data);
-      setPrompts((prev) => [created, ...prev]);
-      addToast(`Prompt "${created.title}" creado`, "success");
-    }
-  };
-
-  const handleDeletePrompt = async (id: string, title: string) => {
-    if (!window.confirm(`¿Seguro que deseas eliminar "${title}"?`)) return;
-
-    try {
-      await promptApi.deletePrompt(id);
-      setPrompts((prev) => prev.filter((p) => p.id !== id));
-      if (detailPrompt?.id === id) setDetailPrompt(null);
-      addToast(`Prompt "${title}" eliminado`, "info");
-    } catch (err: any) {
-      addToast("Error al eliminar: " + err.message, "error");
-    }
+  const handleSavePrompt = async (data: PromptInput) => {
+    const created = await promptApi.createPrompt(data);
+    setPrompts((prev) => [created, ...prev]);
+    addToast(`Prompt "${created.title}" creado`, "success");
   };
 
   const handleImport = async (items: PromptItem[]) => {
     const count = await promptApi.importData(items);
     await loadPrompts();
     return count;
-  };
-
-  const handleResetSeed = async () => {
-    await promptApi.importData(SEED_PROMPTS);
-    await loadPrompts();
   };
 
   // Switch to prompts view and open prompt if selected from Manual
@@ -254,10 +227,7 @@ export function App() {
         onSearchChange={setSearchQuery}
         totalCount={prompts.length}
         filteredCount={filteredPrompts.length}
-        onNewPrompt={() => {
-          setEditorPrompt(null);
-          setIsEditorOpen(true);
-        }}
+        onNewPrompt={() => setIsEditorOpen(true)}
         onOpenExportImport={() => setIsExportImportOpen(true)}
       />
 
@@ -302,11 +272,6 @@ export function App() {
                     onCopyDirect={handleCopyDirect}
                     onUseVariables={(p) => { setDetailPrompt(null); setVariablePrompt(p); }}
                     onViewDetail={(p) => setDetailPrompt(p)}
-                    onEdit={(p) => {
-                      setEditorPrompt(p);
-                      setIsEditorOpen(true);
-                    }}
-                    onDelete={handleDeletePrompt}
                     onToggleFavorite={handleToggleFavorite}
                     onSelectTag={(tag) => setSelectedTag(tag)}
                   />
@@ -342,10 +307,7 @@ export function App() {
                   <Button
                     variant="primary"
                     size="sm"
-                    onClick={() => {
-                      setEditorPrompt(null);
-                      setIsEditorOpen(true);
-                    }}
+                    onClick={() => setIsEditorOpen(true)}
                     className="rounded-2xl text-xs font-semibold shadow-md"
                   >
                     <Plus className="w-4 h-4 mr-1" />
@@ -357,8 +319,13 @@ export function App() {
           </main>
 
           <footer className="site-footer page-width">
-            <span>Prompts Célebres · Colección de @dannieldev</span>
-            <span>Tus cambios se guardan solo en este navegador</span>
+            <span>
+              Prompts Célebres · Colección de{" "}
+              <a href="https://dannieldev.com" target="_blank" rel="noopener noreferrer">
+                @dannieldev
+              </a>
+            </span>
+            <span>Catálogo base protegido · La edición dentro de cada prompt es temporal y no se guarda</span>
           </footer>
         </>
       )}
@@ -377,24 +344,15 @@ export function App() {
         prompt={detailPrompt}
         isOpen={Boolean(detailPrompt)}
         onClose={() => setDetailPrompt(null)}
-        onEdit={(p) => {
-          setDetailPrompt(null);
-          setEditorPrompt(p);
-          setIsEditorOpen(true);
-        }}
         onUseVariables={(p) => { setDetailPrompt(null); setVariablePrompt(p); }}
         onToggleFavorite={handleToggleFavorite}
         onCopied={(msg) => addToast(msg, "success")}
       />
 
-      {/* Prompt Create / Edit Modal */}
+      {/* Prompt Create Modal */}
       <PromptEditorModal
         isOpen={isEditorOpen}
-        initialPrompt={editorPrompt}
-        onClose={() => {
-          setIsEditorOpen(false);
-          setEditorPrompt(null);
-        }}
+        onClose={() => setIsEditorOpen(false)}
         onSave={handleSavePrompt}
       />
 
@@ -404,7 +362,6 @@ export function App() {
         onClose={() => setIsExportImportOpen(false)}
         prompts={prompts}
         onImport={handleImport}
-        onResetSeed={handleResetSeed}
         onToast={addToast}
       />
 

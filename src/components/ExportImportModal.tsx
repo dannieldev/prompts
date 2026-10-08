@@ -4,9 +4,7 @@ import {
   X,
   Download,
   Upload,
-  RotateCcw,
   FileJson,
-  Sparkles,
 } from "lucide-react";
 import { Button, Chip, Kbd } from "@heroui/react";
 import { PromptItem } from "../types";
@@ -16,7 +14,6 @@ interface ExportImportModalProps {
   onClose: () => void;
   prompts: PromptItem[];
   onImport: (items: PromptItem[]) => Promise<number>;
-  onResetSeed: () => Promise<void>;
   onToast: (msg: string, type: "success" | "error") => void;
 }
 
@@ -25,12 +22,10 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
   onClose,
   prompts,
   onImport,
-  onResetSeed,
   onToast,
 }) => {
   const dialogRef = useDialogFocus(isOpen);
   const [importing, setImporting] = useState(false);
-  const [resetting, setResetting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (!isOpen) return null;
@@ -90,27 +85,6 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
     }
   };
 
-  const handleRestoreDefaults = async () => {
-    if (
-      !window.confirm(
-        "¿Deseas restaurar el catálogo inicial? Se reemplazarán los prompts con el mismo ID; los demás se conservarán en este navegador."
-      )
-    ) {
-      return;
-    }
-
-    setResetting(true);
-    try {
-      await onResetSeed();
-      onToast("Prompts Célebres iniciales cargados con éxito", "success");
-      onClose();
-    } catch (e: any) {
-      onToast("Error al restaurar: " + e.message, "error");
-    } finally {
-      setResetting(false);
-    }
-  };
-
   return (
     <div className="dialog-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/30">
       <div ref={dialogRef} role="dialog" aria-modal="true" aria-label="Respaldar e importar" tabIndex={-1} className="app-dialog relative w-full max-w-lg bg-surface border border-border rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-modal-enter">
@@ -144,7 +118,7 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
 
         {/* Body */}
         <div className="p-6 flex flex-col gap-4">
-          <p className="text-sm text-muted">Tus cambios e importaciones se guardan en este navegador y no se publican en el catálogo. El respaldo incluye tu colección completa: revísalo antes de compartirlo.</p>
+          <p className="text-sm text-muted">Los prompts base del catálogo se mantienen siempre intactos. Tus respaldos e importaciones locales se guardan únicamente en este navegador.</p>
           {/* Export card */}
           <div className="bg-surface-secondary/60 border border-border rounded-2xl p-4 flex items-center justify-between gap-4 ">
             <div>
@@ -175,7 +149,7 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
                 <span>Importar JSON</span>
               </h3>
               <p className="text-sm text-muted mt-1">
-                Abre un respaldo para combinar o restaurar tus prompts en este navegador.
+                Abre un respaldo para agregar tus prompts propios en este navegador sin alterar la base por defecto.
               </p>
             </div>
             <div>
@@ -197,29 +171,6 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
                 <span>{importing ? "Cargando..." : "Abrir archivo"}</span>
               </Button>
             </div>
-          </div>
-
-          {/* Seed reset card */}
-          <div className="bg-surface-secondary/60 border border-border rounded-2xl p-4 flex items-center justify-between gap-4 ">
-            <div>
-              <h3 className="text-sm font-bold text-foreground flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-amber-400" />
-                <span>Restaurar Seeds Maestros</span>
-              </h3>
-              <p className="text-sm text-muted mt-1">
-                Recarga los prompts semilla iniciales de desarrollo web, marketing y arquitectura.
-              </p>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleRestoreDefaults}
-              isDisabled={resetting}
-              className="rounded-xl text-sm text-muted hover:text-foreground shrink-0"
-            >
-              <RotateCcw className="w-3.5 h-3.5 mr-1" />
-              <span>{resetting ? "Cargando..." : "Cargar Seeds"}</span>
-            </Button>
           </div>
         </div>
 

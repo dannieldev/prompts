@@ -13,20 +13,18 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { Button, Chip, Kbd } from "@heroui/react";
-import { AIModelTag, PromptCategory, PromptInput, PromptItem } from "../types";
+import { AIModelTag, PromptCategory, PromptInput } from "../types";
 import { CATEGORIES, CATEGORY_ICONS, AI_MODELS } from "../lib/constants";
 import { extractVariables } from "../lib/variableUtils";
 
 interface PromptEditorModalProps {
   isOpen: boolean;
-  initialPrompt?: PromptItem | null;
   onClose: () => void;
-  onSave: (data: PromptInput, existingId?: string) => Promise<void>;
+  onSave: (data: PromptInput) => Promise<void>;
 }
 
 export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
   isOpen,
-  initialPrompt,
   onClose,
   onSave,
 }) => {
@@ -44,27 +42,17 @@ export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (initialPrompt) {
-      setTitle(initialPrompt.title);
-      setDescription(initialPrompt.description);
-      setContent(initialPrompt.content);
-      setCategory(initialPrompt.category);
-      setSelectedModels(initialPrompt.models || []);
-      setTags(initialPrompt.tags || []);
-      setIsFavorite(initialPrompt.is_favorite);
-    } else {
-      setTitle("");
-      setDescription("");
-      setContent("");
-      setCategory("Desarrollo");
-      setSelectedModels(["Claude 3.5 Sonnet", "GPT-4o"]);
-      setTags([]);
-      setIsFavorite(false);
-    }
+    setTitle("");
+    setDescription("");
+    setContent("");
+    setCategory("Desarrollo");
+    setSelectedModels(["Claude 3.5 Sonnet", "GPT-4o"]);
+    setTags([]);
+    setIsFavorite(false);
     setTagInput("");
     setActiveTab("edit");
     setError(null);
-  }, [initialPrompt, isOpen]);
+  }, [isOpen]);
 
   // Handle ESC key
   useEffect(() => {
@@ -121,18 +109,15 @@ export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
     setError(null);
 
     try {
-      await onSave(
-        {
-          title: title.trim(),
-          description: description.trim(),
-          content: content.trim(),
-          category,
-          tags,
-          models: selectedModels,
-          is_favorite: isFavorite,
-        },
-        initialPrompt ? initialPrompt.id : undefined
-      );
+      await onSave({
+        title: title.trim(),
+        description: description.trim(),
+        content: content.trim(),
+        category,
+        tags,
+        models: selectedModels,
+        is_favorite: isFavorite,
+      });
       onClose();
     } catch (err: any) {
       setError(err?.message || "Ocurrió un error al guardar el prompt.");
@@ -143,16 +128,16 @@ export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
 
   return (
     <div className="dialog-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/30">
-      <div ref={dialogRef} role="dialog" aria-modal="true" aria-label="Editar prompt" tabIndex={-1} className="app-dialog relative w-full max-w-4xl max-h-[92vh] bg-surface border border-border rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-modal-enter">
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-label="Nuevo prompt" tabIndex={-1} className="app-dialog relative w-full max-w-4xl max-h-[92vh] bg-surface border border-border rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-modal-enter">
         {/* Header */}
         <div className="px-6 py-4.5 border-b border-border flex items-center justify-between bg-surface-secondary/50">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-accent flex items-center justify-center text-white font-bold shadow-lg shadow-accent/25">
-              {initialPrompt ? "✏️" : "✨"}
+              ✨
             </div>
             <div>
               <h2 className="text-base font-bold text-foreground">
-                {initialPrompt ? "Editar Prompt Célebre" : "Nuevo Prompt Célebre"}
+                Nuevo Prompt Célebre
               </h2>
               <p className="text-sm text-muted">
                 Configura variables dinámicas con <code className="text-accent font-mono">{"{{variable}}"}</code>
@@ -438,7 +423,7 @@ Código:
             className="rounded-xl text-sm font-semibold shadow-lg shadow-accent/25"
           >
             <Save className="w-4 h-4 mr-1" />
-            <span>{saving ? "Guardando..." : initialPrompt ? "Actualizar Prompt" : "Guardar Prompt"}</span>
+            <span>{saving ? "Guardando..." : "Guardar Prompt"}</span>
           </Button>
         </div>
       </div>

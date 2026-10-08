@@ -207,6 +207,8 @@ html { scrollbar-color: #b7c2b0 var(--background); scroll-padding-top: 100px; }
 .prompt-card-actions .quiet-button, .prompt-card-actions .secondary-button { font-size: 13px; padding-inline: 12px; }
 .delete-button:hover { color: var(--danger); }
 .site-footer { border-top: 1px solid var(--border); display: flex; justify-content: space-between; gap: 20px; padding-block: 24px; color: var(--muted); font-size: 13px; margin-top: auto; }
+.site-footer a { color: var(--accent); font-weight: 600; text-decoration: underline; text-underline-offset: 4px; transition: color 160ms ease-out; }
+.site-footer a:hover { color: var(--foreground); }
 
 .manual-intro { display: flex; align-items: center; justify-content: space-between; gap: 32px; padding-block: 42px 36px; border-bottom: 1px solid var(--border); }
 .manual-intro h1 { font-size: clamp(26px, 3vw, 34px); letter-spacing: -.035em; font-weight: 600; line-height: 1.25; margin-bottom: 10px; }

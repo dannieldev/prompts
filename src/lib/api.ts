@@ -3,13 +3,36 @@ import { SEED_PROMPTS } from "./seedData";
 
 // A separate namespace leaves the old personal collection intact, without importing it into the public edition.
 const STORAGE_KEY = "prompts_celebres_public_v1";
+const SEED_IDS = new Set(SEED_PROMPTS.map((p) => p.id));
 
 function getLocalPrompts(): PromptItem[] {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (raw !== null) {
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) throw new Error("El respaldo local no tiene un formato válido.");
-    return parsed;
+
+    const favById = new Map<string, boolean>();
+    const customPrompts: PromptItem[] = [];
+
+    for (const item of parsed) {
+      if (!item || typeof item !== "object") continue;
+      if (SEED_IDS.has(item.id)) {
+        if (typeof item.is_favorite === "boolean") {
+          favById.set(item.id, item.is_favorite);
+        }
+      } else if (item.id && item.title && item.content) {
+        customPrompts.push(item);
+      }
+    }
+
+    const intactSeeds = structuredClone(SEED_PROMPTS).map((seed) => ({
+      ...seed,
+      is_favorite: favById.has(seed.id) ? favById.get(seed.id)! : seed.is_favorite,
+    }));
+
+    const combined = [...customPrompts, ...intactSeeds];
+    saveLocalPrompts(combined);
+    return combined;
   }
   const prompts = structuredClone(SEED_PROMPTS);
   saveLocalPrompts(prompts);
@@ -40,43 +63,48 @@ class PromptApiClient {
     return prompt;
   }
 
-  async updatePrompt(id: string, input: Partial<PromptInput>): Promise<PromptItem> {
+  async toggleFavorite(id: string): Promise<boolean> {
     const prompts = getLocalPrompts();
     const index = prompts.findIndex((p) => p.id === id);
     if (index === -1) throw new Error("Prompt no encontrado");
-    const updated: PromptItem = {
+    const nextFavorite = !prompts[index].is_favorite;
+    prompts[index] = {
       ...prompts[index],
-      ...input,
-      title: input.title?.trim() ?? prompts[index].title,
-      description: input.description?.trim() ?? prompts[index].description,
-      updated_at: new Date().toISOString(),
+      is_favorite: nextFavorite,
     };
-    prompts[index] = updated;
     saveLocalPrompts(prompts);
-    return updated;
-  }
-
-  async deletePrompt(id: string): Promise<void> {
-    saveLocalPrompts(getLocalPrompts().filter((p) => p.id !== id));
-  }
-
-  async toggleFavorite(id: string): Promise<boolean> {
-    const prompt = getLocalPrompts().find((p) => p.id === id);
-    if (!prompt) throw new Error("Prompt no encontrado");
-    const updated = await this.updatePrompt(id, { is_favorite: !prompt.is_favorite });
-    return updated.is_favorite;
+    return nextFavorite;
   }
 
   async importData(importedPrompts: PromptItem[]): Promise<number> {
-    const merged = new Map(getLocalPrompts().map((p) => [p.id, p]));
+    const current = getLocalPrompts();
+    const customMap = new Map(
+      current.filter((p) => !SEED_IDS.has(p.id)).map((p) => [p.id, p])
+    );
+    const seedFavMap = new Map(
+      current.filter((p) => SEED_IDS.has(p.id)).map((p) => [p.id, p.is_favorite])
+    );
+
     let count = 0;
     for (const prompt of importedPrompts) {
       if (!prompt.title || !prompt.content) continue;
       const id = prompt.id || `prompt_${crypto.randomUUID()}`;
-      merged.set(id, { ...prompt, id });
+      if (SEED_IDS.has(id)) {
+        if (typeof prompt.is_favorite === "boolean") {
+          seedFavMap.set(id, prompt.is_favorite);
+        }
+        continue;
+      }
+      customMap.set(id, { ...prompt, id });
       count++;
     }
-    saveLocalPrompts([...merged.values()]);
+
+    const intactSeeds = structuredClone(SEED_PROMPTS).map((seed) => ({
+      ...seed,
+      is_favorite: seedFavMap.has(seed.id) ? seedFavMap.get(seed.id)! : seed.is_favorite,
+    }));
+
+    saveLocalPrompts([...customMap.values(), ...intactSeeds]);
     return count;
   }
 }

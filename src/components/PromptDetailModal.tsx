@@ -5,7 +5,7 @@ import {
   Copy,
   Check,
   Zap,
-  Edit2,
+  RotateCcw,
   Star,
   Bot,
   Calendar,
@@ -21,7 +21,6 @@ interface PromptDetailModalProps {
   prompt: PromptItem | null;
   isOpen: boolean;
   onClose: () => void;
-  onEdit: (prompt: PromptItem) => void;
   onUseVariables: (prompt: PromptItem) => void;
   onToggleFavorite: (id: string) => void;
   onCopied: (text: string) => void;
@@ -31,13 +30,20 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
   prompt,
   isOpen,
   onClose,
-  onEdit,
   onUseVariables,
   onToggleFavorite,
   onCopied,
 }) => {
   const dialogRef = useDialogFocus(isOpen);
   const [copied, setCopied] = useState(false);
+  const [draftContent, setDraftContent] = useState("");
+
+  useEffect(() => {
+    if (prompt && isOpen) {
+      setDraftContent(prompt.content);
+      setCopied(false);
+    }
+  }, [prompt, isOpen]);
 
   // Handle ESC key
   useEffect(() => {
@@ -54,9 +60,10 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
 
   const variables = extractVariables(prompt.content);
   const hasVariables = variables.length > 0;
+  const isModified = draftContent !== prompt.content;
 
   const handleCopyDirect = () => {
-    navigator.clipboard.writeText(prompt.content);
+    navigator.clipboard.writeText(draftContent);
     setCopied(true);
     onCopied(`¡Prompt "${prompt.title}" copiado al portapapeles!`);
     setTimeout(() => setCopied(false), 2000);
@@ -104,19 +111,18 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                onClose();
-                onEdit(prompt);
-              }}
-              className="text-muted hover:text-foreground rounded-xl text-sm"
-              aria-label="Editar prompt"
-            >
-              <Edit2 className="w-3.5 h-3.5 mr-1" />
-              <span className="hidden sm:inline">Editar</span>
-            </Button>
+            {isModified && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setDraftContent(prompt.content)}
+                className="text-muted hover:text-foreground rounded-xl text-sm"
+                aria-label="Restaurar contenido base"
+              >
+                <RotateCcw className="w-3.5 h-3.5 mr-1" />
+                <span className="hidden sm:inline">Volver a la base</span>
+              </Button>
+            )}
 
             <Button
               isIconOnly
@@ -215,21 +221,33 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
             </div>
           )}
 
-          {/* Prompt Full Text */}
+          {/* Ephemeral editing notice */}
+          <div className="bg-surface-secondary/70 border border-border rounded-2xl px-4 py-3 text-sm text-muted flex flex-col sm:flex-row sm:items-center justify-between gap-2" role="note">
+            <span>
+              <strong className="text-foreground">Edición en el momento (no se guardan cambios):</strong>{" "}
+              Puedes adaptar este texto directamente aquí antes de copiarlo. Al cerrar esta ventana, el prompt vuelve a su estado base original.
+            </span>
+          </div>
+
+          {/* Prompt Full Text (Editable in the moment) */}
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between flex-wrap gap-3">
-              <span className="text-sm font-semibold uppercase tracking-wider text-muted flex items-center gap-1.5">
+              <label htmlFor="prompt-detail-editor" className="text-sm font-semibold uppercase tracking-wider text-muted flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-accent" />
-                Contenido Completo del Prompt
-              </span>
+                Base del Prompt (Editable al momento)
+              </label>
               <span className="text-sm font-mono text-muted">
-                {prompt.content.length} caracteres
+                {draftContent.length} caracteres {isModified ? "· editado temporalmente" : "· base intacta"}
               </span>
             </div>
 
-            <div className="bg-default/30 border border-border rounded-2xl p-5 font-mono-code text-base text-foreground leading-relaxed overflow-y-auto max-h-[420px] whitespace-pre-wrap select-text ">
-              {prompt.content}
-            </div>
+            <textarea
+              id="prompt-detail-editor"
+              rows={12}
+              value={draftContent}
+              onChange={(e) => setDraftContent(e.target.value)}
+              className="w-full bg-default/30 border border-border focus:border-accent focus:outline-none rounded-2xl p-5 font-mono-code text-base text-foreground leading-relaxed overflow-y-auto min-h-[260px] max-h-[420px] resize-y"
+            />
           </div>
         </div>
 

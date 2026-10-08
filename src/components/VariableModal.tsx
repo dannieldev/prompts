@@ -20,23 +20,25 @@ export const VariableModal: React.FC<VariableModalProps> = ({
 }) => {
   const dialogRef = useDialogFocus(isOpen);
   const [values, setValues] = useState<Record<string, string>>({});
+  const [customDraft, setCustomDraft] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [showPreview, setShowPreview] = useState(true);
 
   const variables = prompt ? extractVariables(prompt.content) : [];
 
-  // Reset values when a new prompt is selected
+  // Reset values when modal opens or a new prompt is selected
   useEffect(() => {
-    if (prompt) {
+    if (prompt && isOpen) {
       const initial: Record<string, string> = {};
       const vars = extractVariables(prompt.content);
       vars.forEach((v) => {
         initial[v.key] = "";
       });
       setValues(initial);
+      setCustomDraft(null);
       setCopied(false);
     }
-  }, [prompt]);
+  }, [prompt, isOpen]);
 
   // Handle ESC key
   useEffect(() => {
@@ -56,6 +58,7 @@ export const VariableModal: React.FC<VariableModalProps> = ({
       ...prev,
       [key]: value,
     }));
+    setCustomDraft(null);
   };
 
   const handleReset = () => {
@@ -64,12 +67,14 @@ export const VariableModal: React.FC<VariableModalProps> = ({
       initial[v.key] = "";
     });
     setValues(initial);
+    setCustomDraft(null);
   };
 
   const generatedContent = replaceVariables(prompt.content, values);
+  const finalContent = customDraft !== null ? customDraft : generatedContent;
 
   const handleCopy = (closeAfter: boolean = false) => {
-    navigator.clipboard.writeText(generatedContent);
+    navigator.clipboard.writeText(finalContent);
     onCopied(`¡Prompt "${prompt.title}" copiado con variables aplicadas!`);
     setCopied(true);
     setTimeout(() => {
@@ -137,6 +142,12 @@ export const VariableModal: React.FC<VariableModalProps> = ({
               <X className="w-4 h-4" />
             </Button>
           </div>
+        </div>
+
+        {/* Ephemeral editing notice */}
+        <div className="px-6 py-3 bg-surface-secondary/70 border-b border-border text-sm text-muted" role="note">
+          <strong className="text-foreground">Edición en el momento (no se guardan cambios):</strong>{" "}
+          Completa las variables o edita el texto directamente para copiarlo. Al salir de esta ventana, el prompt vuelve a su estado base original.
         </div>
 
         {/* Body (Form + Live Preview) */}
@@ -208,9 +219,9 @@ export const VariableModal: React.FC<VariableModalProps> = ({
           {showPreview && (
             <div className="flex flex-col gap-2.5 h-full">
               <div className="flex items-center justify-between flex-wrap gap-3">
-                <span className="text-sm font-semibold uppercase tracking-wider text-muted">
-                  Resultado en Tiempo Real
-                </span>
+                <label htmlFor="variable-live-editor" className="text-sm font-semibold uppercase tracking-wider text-muted">
+                  Resultado Editable en Tiempo Real
+                </label>
                 <Chip
                   color="accent"
                   variant="soft"
@@ -221,9 +232,13 @@ export const VariableModal: React.FC<VariableModalProps> = ({
                 </Chip>
               </div>
 
-              <div className="flex-1 bg-default/30 border border-border rounded-2xl p-5 font-mono-code text-base text-foreground leading-relaxed overflow-y-auto max-h-[460px] whitespace-pre-wrap select-text ">
-                {generatedContent}
-              </div>
+              <textarea
+                id="variable-live-editor"
+                rows={14}
+                value={finalContent}
+                onChange={(e) => setCustomDraft(e.target.value)}
+                className="flex-1 w-full bg-default/30 border border-border focus:border-accent focus:outline-none rounded-2xl p-5 font-mono-code text-base text-foreground leading-relaxed overflow-y-auto min-h-[280px] max-h-[460px] resize-y"
+              />
             </div>
           )}
         </div>

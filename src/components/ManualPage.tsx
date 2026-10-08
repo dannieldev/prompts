@@ -1282,7 +1282,15 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
           </nav>}
         </main>
       </div>
-      <footer className="site-footer page-width"><span>Manual web · @dannieldev</span><span>{SECTIONS.length} capítulos para consultar a tu ritmo</span></footer>
+      <footer className="site-footer page-width">
+        <span>
+          Manual web · Colección de{" "}
+          <a href="https://dannieldev.com" target="_blank" rel="noopener noreferrer">
+            @dannieldev
+          </a>
+        </span>
+        <span>{SECTIONS.length} capítulos para consultar a tu ritmo</span>
+      </footer>
     </div>
   );
 };

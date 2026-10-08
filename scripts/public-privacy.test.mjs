@@ -26,7 +26,7 @@ test("el manual sigue siendo servido como activo estático", async () => {
   assert.match(response.headers.get("Cache-Control"), /no-store/);
 });
 
-test("colección aislada: CRUD, favoritos e importación sin red ni datos heredados", async () => {
+test("colección aislada: catálogo base inmutable, favoritos e importación sin red ni datos heredados", async () => {
   const originalFetch = globalThis.fetch;
   const originalStorage = Object.getOwnPropertyDescriptor(globalThis, "localStorage");
   const legacyKey = "dannieldev_prompts_vault_v1";
@@ -41,20 +41,55 @@ test("colección aislada: CRUD, favoritos e importación sin red ni datos hereda
     const initial = await promptApi.getAllPrompts();
     assert.equal(initial.length, 25);
     assert.ok(!initial.some((p) => p.id === "private-fixture"));
+    assert.equal(promptApi.updatePrompt, undefined);
+    assert.equal(promptApi.deletePrompt, undefined);
+
+    const firstSeed = initial[0];
     const created = await promptApi.createPrompt({ title: "Prueba", description: "Local", content: "Solo navegador", category: "General", tags: [], models: [] });
-    await promptApi.updatePrompt(created.id, { content: "Editado" });
     assert.equal(await promptApi.toggleFavorite(created.id), true);
-    assert.equal((await promptApi.getAllPrompts()).find((p) => p.id === created.id).content, "Editado");
-    await promptApi.importData([{ ...created, id: "import-fixture" }]);
-    assert.ok((await promptApi.getAllPrompts()).some((p) => p.id === "import-fixture"));
-    await promptApi.deletePrompt(created.id);
-    assert.ok(!(await promptApi.getAllPrompts()).some((p) => p.id === created.id));
-    assert.equal(storage.get(legacyKey), legacy);
+
+    // Intentar sobrescribir un prompt base vía importData no debe alterar su título ni contenido
+    await promptApi.importData([
+      { ...firstSeed, title: "Intento de edición", content: "Contenido alterado" },
+      { ...created, id: "import-fixture" },
+    ]);
+    const afterImport = await promptApi.getAllPrompts();
+    assert.ok(afterImport.some((p) => p.id === "import-fixture"));
+    const seedAfterImport = afterImport.find((p) => p.id === firstSeed.id);
+    assert.equal(seedAfterImport.title, firstSeed.title);
+    assert.equal(seedAfterImport.content, firstSeed.content);
+
+    // Incluso si localStorage se vacía o altera manualmente, los 25 prompts por defecto vuelven intactos
+    storage.set("prompts_celebres_public_v1", JSON.stringify([{ ...firstSeed, title: "Modificado", content: "Modificado" }]));
+    const restored = await promptApi.getAllPrompts();
+    assert.equal(restored.length, 25);
+    assert.equal(restored.find((p) => p.id === firstSeed.id).title, firstSeed.title);
+    assert.equal(restored.find((p) => p.id === firstSeed.id).content, firstSeed.content);
+
     storage.set("prompts_celebres_public_v1", "[]");
-    assert.deepEqual(await promptApi.getAllPrompts(), []);
+    assert.equal((await promptApi.getAllPrompts()).length, 25);
+    assert.equal(storage.get(legacyKey), legacy);
   } finally {
     globalThis.fetch = originalFetch;
     if (originalStorage) Object.defineProperty(globalThis, "localStorage", originalStorage);
     else delete globalThis.localStorage;
   }
+});
+
+test("interfaz sin edición ni borrado persistente ni restaurar seeds; edición solo temporal en pop-up", async () => {
+  const { readFileSync } = await import("node:fs");
+  const exportModal = readFileSync("src/components/ExportImportModal.tsx", "utf8");
+  const promptCard = readFileSync("src/components/PromptCard.tsx", "utf8");
+  const detailModal = readFileSync("src/components/PromptDetailModal.tsx", "utf8");
+  const variableModal = readFileSync("src/components/VariableModal.tsx", "utf8");
+
+  assert.ok(!exportModal.includes("Restaurar Seeds Maestros"));
+  assert.ok(!exportModal.includes("Cargar Seeds"));
+  assert.ok(!promptCard.includes("onEdit"));
+  assert.ok(!promptCard.includes("onDelete"));
+  assert.ok(!detailModal.includes("onEdit"));
+  assert.match(detailModal, /no se guardan cambios/i);
+  assert.match(detailModal, /<textarea/);
+  assert.match(variableModal, /no se guardan cambios/i);
+  assert.match(variableModal, /<textarea[\s\S]*id="variable-live-editor"/);
 });
