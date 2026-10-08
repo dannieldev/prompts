@@ -85,41 +85,41 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
     <div className="dialog-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/30">
       <div ref={dialogRef} role="dialog" aria-modal="true" aria-label="Leer prompt" tabIndex={-1} className="app-dialog relative w-full max-w-4xl max-h-[92vh] bg-surface border border-border rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-modal-enter">
         {/* Header */}
-        <div className="px-6 py-4.5 border-b border-border flex items-center justify-between bg-surface-secondary/50">
-          <div className="flex items-center gap-3">
+        <div className="px-4 py-3.5 sm:px-6 sm:py-4.5 border-b border-border flex items-center justify-between gap-3 bg-surface-secondary/50">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
             <Button
               isIconOnly
               size="sm"
               variant={prompt.is_favorite ? "secondary" : "ghost"}
               onClick={() => onToggleFavorite(prompt.id)}
-              className="rounded-xl transition-transform active:scale-90"
+              className="rounded-xl transition-transform active:scale-90 w-11 h-11 min-w-[44px] min-h-[44px] shrink-0 flex items-center justify-center p-0"
               aria-label={prompt.is_favorite ? "Quitar de célebres" : "Marcar como célebre"}
             >
-              <Star className={`w-4 h-4 ${prompt.is_favorite ? "fill-amber-400 text-amber-400" : "text-muted"}`} />
+              <Star className={`w-4 h-4 shrink-0 ${prompt.is_favorite ? "fill-amber-400 text-amber-400" : "text-muted"}`} />
             </Button>
 
-            <div>
+            <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="category-label" data-category={prompt.category}>{prompt.category}</span>
                 <span className="text-sm text-muted flex items-center gap-1 font-medium">
-                  <Calendar className="w-3 h-3 text-muted" />
+                  <Calendar className="w-3 h-3 text-muted shrink-0" />
                   <span>{formatDate(prompt.updated_at || prompt.created_at)}</span>
                 </span>
               </div>
-              <h2 className="text-lg font-bold text-foreground mt-1 leading-tight">{prompt.title}</h2>
+              <h2 className="text-base sm:text-lg font-bold text-foreground mt-1 leading-tight truncate sm:whitespace-normal">{prompt.title}</h2>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {isModified && (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setDraftContent(prompt.content)}
-                className="text-muted hover:text-foreground rounded-xl text-sm"
+                className="text-muted hover:text-foreground rounded-xl text-xs sm:text-sm min-h-[44px] px-2.5 sm:px-3"
                 aria-label="Restaurar contenido base"
               >
-                <RotateCcw className="w-3.5 h-3.5 mr-1" />
+                <RotateCcw className="w-3.5 h-3.5 mr-1 shrink-0" />
                 <span className="hidden sm:inline">Volver a la base</span>
               </Button>
             )}
@@ -129,10 +129,10 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
               size="sm"
               variant="ghost"
               onClick={onClose}
-              className="text-muted hover:text-foreground rounded-xl"
+              className="text-muted hover:text-foreground rounded-xl w-11 h-11 min-w-[44px] min-h-[44px] shrink-0 flex items-center justify-center p-0"
               aria-label="Cerrar modal"
             >
-              <X className="w-4 h-4" />
+              <X className="w-4 h-4 shrink-0" />
             </Button>
           </div>
         </div>
@@ -191,13 +191,13 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
           {/* Dynamic Variables Alert */}
           {hasVariables && (
             <div className="bg-accent-soft border border-accent/30 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-accent/20 flex items-center justify-center text-accent">
-                  <Zap className="w-4 h-4" />
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-8 h-8 rounded-xl bg-accent/20 flex items-center justify-center text-accent shrink-0">
+                  <Zap className="w-4 h-4 shrink-0" />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <h4 className="text-sm font-bold text-foreground">Variables Dinámicas Detectadas</h4>
-                  <p className="text-sm text-muted">
+                  <p className="text-sm text-muted break-words">
                     Este prompt tiene {variables.length} campos personalizables:{" "}
                     <span className="text-accent font-mono">
                       {variables.map((v) => `{{${v.key}}}`).join(", ")}
@@ -213,9 +213,9 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
                   onClose();
                   onUseVariables({ ...prompt, content: draftContent });
                 }}
-                className="rounded-xl text-sm font-semibold shrink-0"
+                className="rounded-xl text-sm font-semibold shrink-0 w-full sm:w-auto justify-center min-h-[44px]"
               >
-                <Sliders className="w-3.5 h-3.5 mr-1" />
+                <Sliders className="w-3.5 h-3.5 mr-1 shrink-0" />
                 <span>Adaptar prompt</span>
               </Button>
             </div>
@@ -231,12 +231,12 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
 
           {/* Prompt Full Text (Editable in the moment) */}
           <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center justify-between flex-wrap gap-2">
               <label htmlFor="prompt-detail-editor" className="text-sm font-semibold uppercase tracking-wider text-muted flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-accent" />
+                <Sparkles className="w-3.5 h-3.5 text-accent shrink-0" />
                 Base del Prompt (Editable al momento)
               </label>
-              <span className="text-sm font-mono text-muted">
+              <span className="text-xs sm:text-sm font-mono text-muted">
                 {draftContent.length} caracteres {isModified ? "· editado temporalmente" : "· base intacta"}
               </span>
             </div>
@@ -246,37 +246,37 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
               rows={12}
               value={draftContent}
               onChange={(e) => setDraftContent(e.target.value)}
-              className="w-full bg-default/30 border border-border focus:border-accent focus:outline-none rounded-2xl p-5 font-mono-code text-base text-foreground leading-relaxed overflow-y-auto min-h-[260px] max-h-[420px] resize-y"
+              className="w-full bg-default/30 border border-border focus:border-accent focus:outline-none rounded-2xl p-3.5 sm:p-5 font-mono-code text-sm sm:text-base text-foreground leading-relaxed overflow-y-auto min-h-[200px] sm:min-h-[260px] max-h-[420px] resize-y"
             />
           </div>
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 bg-surface-secondary/40 border-t border-border flex items-center justify-between flex-wrap gap-3">
+        <div className="px-4 py-3 sm:px-6 sm:py-4 bg-surface-secondary/40 border-t border-border flex items-center justify-between flex-wrap gap-2.5 sm:gap-3">
           <Button
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="text-sm font-medium text-muted hover:text-foreground rounded-xl"
+            className="text-sm font-medium text-muted hover:text-foreground rounded-xl min-h-[44px]"
           >
-            Cerrar <Kbd className="ml-1 text-xs">Esc</Kbd>
+            Cerrar <Kbd className="ml-1 text-xs hidden sm:inline-flex">Esc</Kbd>
           </Button>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap w-full sm:w-auto justify-end">
             <Button
               variant={copied ? "primary" : "secondary"}
               size="sm"
               onClick={handleCopyDirect}
-              className="rounded-xl text-sm font-medium transition-all"
+              className="rounded-xl text-xs sm:text-sm font-medium transition-all flex-1 sm:flex-initial min-h-[44px]"
             >
               {copied ? (
                 <>
-                  <Check className="w-4 h-4 mr-1" />
+                  <Check className="w-4 h-4 mr-1 shrink-0" />
                   <span>¡Copiado!</span>
                 </>
               ) : (
                 <>
-                  <Copy className="w-4 h-4 mr-1" />
+                  <Copy className="w-4 h-4 mr-1 shrink-0" />
                   <span>Copiar texto</span>
                 </>
               )}
@@ -290,9 +290,9 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
                   onClose();
                   onUseVariables({ ...prompt, content: draftContent });
                 }}
-                className="rounded-xl text-sm font-semibold shadow-xs"
+                className="rounded-xl text-xs sm:text-sm font-semibold shadow-xs flex-1 sm:flex-initial min-h-[44px]"
               >
-                <Sliders className="w-4 h-4 mr-1" />
+                <Sliders className="w-4 h-4 mr-1 shrink-0" />
                 <span>Adaptar prompt</span>
               </Button>
             )}

@@ -18,11 +18,11 @@ export const ToastContainer: React.FC<ToastProps> = ({ toasts, onDismiss }) => {
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 max-w-sm pointer-events-none">
+    <div className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-5 sm:bottom-5 z-50 flex flex-col gap-2.5 sm:max-w-sm pointer-events-none">
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className={`pointer-events-auto flex items-center justify-between p-4 rounded-2xl shadow-2xl border backdrop-blur-xl transition-all duration-200 animate-toast-slide ${
+          className={`pointer-events-auto flex items-center justify-between p-3.5 sm:p-4 rounded-2xl shadow-2xl border backdrop-blur-xl transition-all duration-200 animate-toast-slide ${
             toast.type === "success"
               ? "bg-[#0b1b17]/95 border-emerald-500/40 text-emerald-200 shadow-emerald-950/50"
               : toast.type === "error"
@@ -30,7 +30,7 @@ export const ToastContainer: React.FC<ToastProps> = ({ toasts, onDismiss }) => {
               : "bg-[#0f1424]/95 border-indigo-500/40 text-indigo-200 shadow-indigo-950/50"
           }`}
         >
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 min-w-0">
             {toast.type === "success" && (
               <div className="w-8 h-8 rounded-xl bg-emerald-500/20 flex items-center justify-center shrink-0">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
@@ -46,15 +46,15 @@ export const ToastContainer: React.FC<ToastProps> = ({ toasts, onDismiss }) => {
                 <Info className="w-4 h-4 text-indigo-400" />
               </div>
             )}
-            <span className="text-xs font-semibold leading-relaxed">{toast.text}</span>
+            <span className="text-xs font-semibold leading-relaxed break-words">{toast.text}</span>
           </div>
 
           <button
             onClick={() => onDismiss(toast.id)}
-            className="p-1 rounded-lg opacity-70 hover:opacity-100 hover:bg-white/10 active:scale-90 transition-all ml-3 shrink-0"
+            className="p-1.5 -mr-1 rounded-lg opacity-70 hover:opacity-100 hover:bg-white/10 active:scale-90 transition-all ml-2 shrink-0 flex items-center justify-center min-w-[36px] min-h-[36px]"
             aria-label="Cerrar notificación"
           >
-            <X className="w-3.5 h-3.5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
       ))}

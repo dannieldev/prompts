@@ -458,12 +458,12 @@ export const ManualPage: React.FC<ManualPageProps> = ({
               ].map((site, idx) => (
                 <div
                   key={idx}
-                  className="p-5 rounded-xl bg-surface border border-border/80 hover:border-indigo-500/30 transition-colors flex flex-col justify-between gap-4  group"
+                  className="p-5 rounded-xl bg-surface border border-border/80 hover:border-accent/40 transition-colors flex flex-col justify-between gap-4 group"
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between flex-wrap gap-2">
                       <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-indigo-400 group-hover:scale-125 transition-transform" />
+                        <span className="w-2 h-2 rounded-full bg-accent group-hover:scale-125 transition-transform" />
                         <h3 className="font-bold text-foreground text-base">{site.title}</h3>
                       </div>
                       <span className={`text-sm font-bold px-2.5 py-0.5 rounded-full border ${site.badgeColor}`}>
@@ -605,7 +605,7 @@ export const ManualPage: React.FC<ManualPageProps> = ({
               ].map((tool, idx) => (
                 <div
                   key={idx}
-                  className="p-5 rounded-xl bg-surface border border-border/80 hover:border-indigo-500/30 transition-colors flex flex-col justify-between gap-4 "
+                  className="p-5 rounded-xl bg-surface border border-border/80 hover:border-accent/40 transition-colors flex flex-col justify-between gap-4"
                 >
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
@@ -1142,22 +1142,22 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
             <div className="space-y-2">
               <div className="w-full h-3 bg-surface-secondary rounded-full overflow-hidden p-0.5 border border-border/60">
                 <div
-                  className="h-full     rounded-full transition-colors duration-300"
+                  className="h-full bg-accent rounded-full transition-colors duration-300"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
-              <div className="flex items-center justify-between text-sm text-muted">
+              <div className="flex items-center justify-between text-xs sm:text-sm text-muted flex-wrap gap-2">
                 <span>0% Sin revisar</span>
-                <span>50% Desarrollo avanzado</span>
-                <span className="text-accent font-semibold">100% Ready for Production 🚀</span>
+                <span className="hidden sm:inline">50% Desarrollo avanzado</span>
+                <span className="text-accent font-semibold">100% Ready 🚀</span>
               </div>
             </div>
 
             {/* Checklist Filter Tabs */}
-            <div className="flex items-center gap-2 pt-2">
+            <div className="flex items-center gap-2 pt-2 flex-wrap">
               <button
                 onClick={() => setChecklistFilter("todos")}
-                className={`px-3 py-1.5 rounded-xl text-sm font-semibold transition ${
+                className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition ${
                   checklistFilter === "todos"
                     ? "bg-accent text-accent-foreground"
                     : "bg-surface-secondary text-muted hover:text-foreground"
@@ -1167,7 +1167,7 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
               </button>
               <button
                 onClick={() => setChecklistFilter("pendientes")}
-                className={`px-3 py-1.5 rounded-xl text-sm font-semibold transition ${
+                className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition ${
                   checklistFilter === "pendientes"
                     ? "bg-accent text-accent-foreground"
                     : "bg-surface-secondary text-muted hover:text-foreground"
@@ -1177,7 +1177,7 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
               </button>
               <button
                 onClick={() => setChecklistFilter("completados")}
-                className={`px-3 py-1.5 rounded-xl text-sm font-semibold transition ${
+                className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition ${
                   checklistFilter === "completados"
                     ? "bg-accent text-accent-foreground"
                     : "bg-surface-secondary text-muted hover:text-foreground"
@@ -1260,25 +1260,44 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
             </div>
 
             {/* Bottom Call to Action */}
-            <div className="p-6 rounded-xl     border border-indigo-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="p-5 sm:p-6 rounded-xl bg-surface border border-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h3 className="text-base font-bold text-foreground">¿Listo para comenzar a construir?</h3>
-                <p className="text-sm text-muted">
+                <p className="text-xs sm:text-sm text-muted mt-1">
                   Abre la Bóveda de Prompts y ejecuta el Protocolo de Inicio con tu asistente.
                 </p>
               </div>
               <button
                 onClick={onNavigateToPrompts}
-                className="px-5 py-2.5 rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground font-semibold text-sm transition active:scale-95   shrink-0 flex items-center gap-2"
+                className="px-5 py-2.5 rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground font-semibold text-sm transition active:scale-95 shrink-0 flex items-center justify-center gap-2 self-start sm:self-auto min-h-[44px]"
               >
                 <span>Ir a la Bóveda de Prompts</span>
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-4 h-4 shrink-0" />
               </button>
             </div>
           </section>
           {!readAll && <nav className="chapter-pagination" aria-label="Navegar entre capítulos">
-            {activeIndex > 0 ? <a href={`/manual#${SECTIONS[activeIndex - 1].id}`} onClick={(event) => chapterLink(event, SECTIONS[activeIndex - 1].id)}><span>Anterior</span>{SECTIONS[activeIndex - 1].title}</a> : <span />}
-            {activeIndex < SECTIONS.length - 1 && <a href={`/manual#${SECTIONS[activeIndex + 1].id}`} onClick={(event) => chapterLink(event, SECTIONS[activeIndex + 1].id)}><span>Siguiente</span>{SECTIONS[activeIndex + 1].title}<ChevronRight size={18} aria-hidden="true" /></a>}
+            {activeIndex > 0 ? (
+              <a
+                className="chapter-prev"
+                href={`/manual#${SECTIONS[activeIndex - 1].id}`}
+                onClick={(event) => chapterLink(event, SECTIONS[activeIndex - 1].id)}
+              >
+                <span>Anterior</span>
+                {SECTIONS[activeIndex - 1].title}
+              </a>
+            ) : <span />}
+            {activeIndex < SECTIONS.length - 1 && (
+              <a
+                className="chapter-next"
+                href={`/manual#${SECTIONS[activeIndex + 1].id}`}
+                onClick={(event) => chapterLink(event, SECTIONS[activeIndex + 1].id)}
+              >
+                <span>Siguiente</span>
+                {SECTIONS[activeIndex + 1].title}
+                <ChevronRight size={18} aria-hidden="true" className="shrink-0" />
+              </a>
+            )}
           </nav>}
         </main>
       </div>

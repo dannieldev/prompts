@@ -130,16 +130,16 @@ export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
     <div className="dialog-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/30">
       <div ref={dialogRef} role="dialog" aria-modal="true" aria-label="Nuevo prompt" tabIndex={-1} className="app-dialog relative w-full max-w-4xl max-h-[92vh] bg-surface border border-border rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-modal-enter">
         {/* Header */}
-        <div className="px-6 py-4.5 border-b border-border flex items-center justify-between bg-surface-secondary/50">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-accent flex items-center justify-center text-white font-bold shadow-lg shadow-accent/25">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-border flex items-center justify-between gap-3 bg-surface-secondary/50">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-2xl bg-accent flex items-center justify-center text-white font-bold shadow-lg shadow-accent/25 shrink-0">
               ✨
             </div>
-            <div>
-              <h2 className="text-base font-bold text-foreground">
+            <div className="min-w-0">
+              <h2 className="text-base font-bold text-foreground truncate">
                 Nuevo Prompt Célebre
               </h2>
-              <p className="text-sm text-muted">
+              <p className="text-xs sm:text-sm text-muted truncate">
                 Configura variables dinámicas con <code className="text-accent font-mono">{"{{variable}}"}</code>
               </p>
             </div>
@@ -150,7 +150,7 @@ export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
             size="sm"
             variant="ghost"
             onClick={onClose}
-            className="rounded-xl text-muted hover:text-foreground"
+            className="rounded-xl text-muted hover:text-foreground shrink-0 min-h-[44px] min-w-[44px]"
             aria-label="Cerrar modal"
           >
             <X className="w-5 h-5" />
@@ -158,7 +158,7 @@ export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 flex flex-col gap-5">
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-4 sm:p-6 flex flex-col gap-5">
           {error && (
             <div className="p-3.5 bg-danger/10 border border-rose-500/40 rounded-2xl text-danger text-sm font-medium">
               {error}
@@ -259,16 +259,16 @@ export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
               </div>
 
               {/* Tab selector and placeholder insert button */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <Button
                   type="button"
                   variant="outline"
                   size="sm"
                   onClick={() => insertVariablePlaceholder()}
-                  className="rounded-xl text-sm text-accent hover:text-foreground border-accent/30"
+                  className="rounded-xl text-xs sm:text-sm text-accent hover:text-foreground border-accent/30"
                   aria-label="Insertar variable"
                 >
-                  <Plus className="w-3.5 h-3.5 mr-1" />
+                  <Plus className="w-3.5 h-3.5 mr-1 shrink-0" />
                   <span>Insertar {"{{variable}}"}</span>
                 </Button>
 
@@ -278,9 +278,9 @@ export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
                     variant={activeTab === "edit" ? "primary" : "ghost"}
                     size="sm"
                     onClick={() => setActiveTab("edit")}
-                    className="rounded-lg text-sm"
+                    className="rounded-lg text-xs sm:text-sm"
                   >
-                    <Code2 className="w-3.5 h-3.5 mr-1" />
+                    <Code2 className="w-3.5 h-3.5 mr-1 shrink-0" />
                     <span>Editor</span>
                   </Button>
                   <Button
@@ -288,9 +288,9 @@ export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
                     variant={activeTab === "preview" ? "primary" : "ghost"}
                     size="sm"
                     onClick={() => setActiveTab("preview")}
-                    className="rounded-lg text-sm"
+                    className="rounded-lg text-xs sm:text-sm"
                   >
-                    <Eye className="w-3.5 h-3.5 mr-1" />
+                    <Eye className="w-3.5 h-3.5 mr-1 shrink-0" />
                     <span>Vista Previa</span>
                   </Button>
                 </div>
@@ -349,14 +349,14 @@ Código:
                     }
                   }}
                   placeholder="Escribe un tag y presiona Enter..."
-                  className="flex-1 bg-field text-foreground placeholder:text-muted text-sm rounded-xl px-3.5 py-2.5 border border-border focus:outline-none focus:border-accent transition "
+                  className="flex-1 min-w-0 bg-field text-foreground placeholder:text-muted text-sm rounded-xl px-3.5 py-2.5 border border-border focus:outline-none focus:border-accent transition"
                 />
                 <Button
                   type="button"
                   variant="secondary"
                   size="sm"
                   onClick={handleAddTag}
-                  className="rounded-xl text-sm"
+                  className="rounded-xl text-sm shrink-0"
                 >
                   Agregar
                 </Button>
@@ -387,16 +387,16 @@ Código:
             </div>
 
             {/* Favorite toggle checkbox */}
-            <div className="flex items-center gap-3 bg-surface-secondary/70 border border-border rounded-2xl p-4 self-start ">
+            <div className="flex items-start sm:items-center gap-3 bg-surface-secondary/70 border border-border rounded-2xl p-3.5 sm:p-4 self-start">
               <input
                 id="is-fav"
                 type="checkbox"
                 checked={isFavorite}
                 onChange={(e) => setIsFavorite(e.target.checked)}
-                className="w-4 h-4 rounded text-amber-500 focus:ring-amber-400 cursor-pointer accent-amber-500"
+                className="w-4 h-4 mt-0.5 sm:mt-0 rounded text-amber-500 focus:ring-amber-400 cursor-pointer accent-amber-500 shrink-0"
               />
-              <label htmlFor="is-fav" className="text-sm text-foreground cursor-pointer flex items-center gap-1.5 font-medium">
-                <Star className={`w-4 h-4 ${isFavorite ? "text-amber-400 fill-amber-400" : "text-muted"}`} />
+              <label htmlFor="is-fav" className="text-xs sm:text-sm text-foreground cursor-pointer flex items-center flex-wrap gap-1.5 font-medium">
+                <Star className={`w-4 h-4 shrink-0 ${isFavorite ? "text-amber-400 fill-amber-400" : "text-muted"}`} />
                 <span>Marcar como <strong>Célebre / Favorito ⭐</strong> (Fijar arriba)</span>
               </label>
             </div>
@@ -404,15 +404,15 @@ Código:
         </form>
 
         {/* Footer */}
-        <div className="px-6 py-4 bg-surface-secondary/50 border-t border-border flex items-center justify-between">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4 bg-surface-secondary/50 border-t border-border flex items-center justify-between">
           <Button
             type="button"
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="rounded-xl text-sm text-muted hover:text-foreground"
+            className="rounded-xl text-xs sm:text-sm text-muted hover:text-foreground"
           >
-            Cancelar <Kbd className="ml-1 text-xs">Esc</Kbd>
+            Cancelar <Kbd className="ml-1 text-xs hidden sm:inline-flex">Esc</Kbd>
           </Button>
 
           <Button
@@ -420,9 +420,9 @@ Código:
             size="sm"
             onClick={handleSubmit}
             isDisabled={saving}
-            className="rounded-xl text-sm font-semibold shadow-lg shadow-accent/25"
+            className="rounded-xl text-xs sm:text-sm font-semibold shadow-lg shadow-accent/25"
           >
-            <Save className="w-4 h-4 mr-1" />
+            <Save className="w-4 h-4 mr-1 shrink-0" />
             <span>{saving ? "Guardando..." : "Guardar Prompt"}</span>
           </Button>
         </div>
