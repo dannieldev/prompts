@@ -1,3 +1,4 @@
+import { useDialogFocus } from "../hooks/useDialogFocus";
 import React, { useState, useEffect } from "react";
 import { X, Copy, Check, Zap, RotateCcw, Eye, Sparkles } from "lucide-react";
 import { Button, Chip, Kbd } from "@heroui/react";
@@ -17,6 +18,7 @@ export const VariableModal: React.FC<VariableModalProps> = ({
   onClose,
   onCopied,
 }) => {
+  const dialogRef = useDialogFocus(isOpen);
   const [values, setValues] = useState<Record<string, string>>({});
   const [copied, setCopied] = useState(false);
   const [showPreview, setShowPreview] = useState(true);
@@ -77,8 +79,8 @@ export const VariableModal: React.FC<VariableModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md">
-      <div className="relative w-full max-w-4xl max-h-[90vh] bg-surface border border-border rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-modal-enter">
+    <div className="dialog-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/30">
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-label="Adaptar prompt" tabIndex={-1} className="app-dialog relative w-full max-w-4xl max-h-[90vh] bg-surface border border-border rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-modal-enter">
         {/* Header */}
         <div className="px-6 py-4.5 border-b border-border flex items-center justify-between bg-surface-secondary/50">
           <div className="flex items-center gap-3">
@@ -87,17 +89,17 @@ export const VariableModal: React.FC<VariableModalProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold text-foreground">Rellenar Variables Dinámicas</h2>
+                <h2 className="text-base font-bold text-foreground">Adaptar prompt</h2>
                 <Chip
                   color="accent"
                   variant="soft"
                   size="sm"
-                  className="font-mono text-[10px]"
+                  className="font-mono text-xs"
                 >
                   {variables.length} {variables.length === 1 ? "campo" : "campos"}
                 </Chip>
               </div>
-              <p className="text-xs text-muted line-clamp-1">{prompt.title}</p>
+              <p className="text-sm text-muted line-clamp-1">{prompt.title}</p>
             </div>
           </div>
 
@@ -106,7 +108,7 @@ export const VariableModal: React.FC<VariableModalProps> = ({
               variant={showPreview ? "primary" : "outline"}
               size="sm"
               onClick={() => setShowPreview(!showPreview)}
-              className="rounded-xl text-xs flex items-center gap-1.5"
+              className="rounded-xl text-sm flex items-center gap-1.5"
               aria-label="Alternar vista previa en vivo"
             >
               <Eye className="w-3.5 h-3.5" />
@@ -142,11 +144,11 @@ export const VariableModal: React.FC<VariableModalProps> = ({
           {/* Form column */}
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between pb-1">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted flex items-center gap-1.5">
+              <span className="text-sm font-semibold uppercase tracking-wider text-muted flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-accent" />
                 Variables del Prompt
               </span>
-              <span className="text-[11px] text-muted">
+              <span className="text-sm text-muted">
                 Escribe los datos para insertarlos automáticamente
               </span>
             </div>
@@ -162,17 +164,17 @@ export const VariableModal: React.FC<VariableModalProps> = ({
               return (
                 <div
                   key={v.key}
-                  className="bg-default/20 border border-border/80 rounded-2xl p-4 focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/25 transition-all shadow-inner"
+                  className="bg-default/20 border border-border/80 rounded-2xl p-4 focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/25 transition-all "
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <label className="text-xs font-bold text-foreground">
+                    <label htmlFor={`variable-${v.key}`} className="text-sm font-bold text-foreground">
                       {v.label}
                     </label>
                     <Chip
                       color="accent"
                       variant="soft"
                       size="sm"
-                      className="font-mono text-[10px] px-2 py-0.5"
+                      className="font-mono text-xs px-2 py-0.5"
                     >
                       {`{{${v.key}}}`}
                     </Chip>
@@ -180,19 +182,21 @@ export const VariableModal: React.FC<VariableModalProps> = ({
 
                   {isLong ? (
                     <textarea
+                      id={`variable-${v.key}`}
                       rows={3}
                       value={values[v.key] || ""}
                       onChange={(e) => handleInputChange(v.key, e.target.value)}
                       placeholder={`Escribe o pega el contenido para ${v.label.toLowerCase()}...`}
-                      className="w-full bg-field text-foreground placeholder:text-muted text-xs rounded-xl p-3 border border-border focus:outline-none focus:border-focus font-mono-code transition"
+                      className="w-full bg-field text-foreground placeholder:text-muted text-sm rounded-xl p-3 border border-border focus:outline-none focus:border-focus font-mono-code transition"
                     />
                   ) : (
                     <input
+                      id={`variable-${v.key}`}
                       type="text"
                       value={values[v.key] || ""}
                       onChange={(e) => handleInputChange(v.key, e.target.value)}
                       placeholder={`Ej: ${v.label}...`}
-                      className="w-full bg-field text-foreground placeholder:text-muted text-xs rounded-xl px-3 py-2.5 border border-border focus:outline-none focus:border-focus transition"
+                      className="w-full bg-field text-foreground placeholder:text-muted text-sm rounded-xl px-3 py-2.5 border border-border focus:outline-none focus:border-focus transition"
                     />
                   )}
                 </div>
@@ -203,21 +207,21 @@ export const VariableModal: React.FC<VariableModalProps> = ({
           {/* Preview column */}
           {showPreview && (
             <div className="flex flex-col gap-2.5 h-full">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold uppercase tracking-wider text-muted">
+              <div className="flex items-center justify-between flex-wrap gap-3">
+                <span className="text-sm font-semibold uppercase tracking-wider text-muted">
                   Resultado en Tiempo Real
                 </span>
                 <Chip
                   color="accent"
                   variant="soft"
                   size="sm"
-                  className="font-semibold text-[11px]"
+                  className="font-semibold text-sm"
                 >
                   {Object.values(values).filter(Boolean).length}/{variables.length} completadas
                 </Chip>
               </div>
 
-              <div className="flex-1 bg-default/30 border border-border rounded-2xl p-5 font-mono-code text-xs text-foreground leading-relaxed overflow-y-auto max-h-[460px] whitespace-pre-wrap select-text shadow-inner">
+              <div className="flex-1 bg-default/30 border border-border rounded-2xl p-5 font-mono-code text-base text-foreground leading-relaxed overflow-y-auto max-h-[460px] whitespace-pre-wrap select-text ">
                 {generatedContent}
               </div>
             </div>
@@ -226,7 +230,7 @@ export const VariableModal: React.FC<VariableModalProps> = ({
 
         {/* Footer */}
         <div className="px-6 py-4 bg-surface-secondary/40 border-t border-border flex items-center justify-between flex-wrap gap-3">
-          <div className="text-xs text-muted">
+          <div className="text-sm text-muted">
             Listo para usar en <strong className="text-foreground">ChatGPT</strong>,{" "}
             <strong className="text-foreground">Claude</strong> o <strong className="text-foreground">Codex</strong>.
           </div>
@@ -236,16 +240,16 @@ export const VariableModal: React.FC<VariableModalProps> = ({
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="rounded-xl text-xs text-muted hover:text-foreground"
+              className="rounded-xl text-sm text-muted hover:text-foreground"
             >
-              Cancelar <Kbd className="ml-1 text-[9px]">Esc</Kbd>
+              Cancelar <Kbd className="ml-1 text-xs">Esc</Kbd>
             </Button>
 
             <Button
               variant={copied ? "primary" : "secondary"}
               size="sm"
               onClick={() => handleCopy(false)}
-              className="rounded-xl text-xs font-medium transition-all"
+              className="rounded-xl text-sm font-medium transition-all"
             >
               {copied ? (
                 <>
@@ -264,7 +268,7 @@ export const VariableModal: React.FC<VariableModalProps> = ({
               variant="primary"
               size="sm"
               onClick={() => handleCopy(true)}
-              className="rounded-xl text-xs font-semibold shadow-xs"
+              className="rounded-xl text-sm font-semibold shadow-xs"
             >
               <Zap className="w-4 h-4 mr-1" />
               <span>Copiar y Cerrar</span>

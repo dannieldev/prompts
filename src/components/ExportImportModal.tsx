@@ -1,3 +1,4 @@
+import { useDialogFocus } from "../hooks/useDialogFocus";
 import React, { useState, useRef } from "react";
 import {
   X,
@@ -27,6 +28,7 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
   onResetSeed,
   onToast,
 }) => {
+  const dialogRef = useDialogFocus(isOpen);
   const [importing, setImporting] = useState(false);
   const [resetting, setResetting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -52,7 +54,7 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
       downloadAnchor.setAttribute("href", dataStr);
       downloadAnchor.setAttribute(
         "download",
-        `dannieldev-prompts-backup-${new Date().toISOString().slice(0, 10)}.json`
+        `prompts-celebres-backup-${new Date().toISOString().slice(0, 10)}.json`
       );
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
@@ -91,7 +93,7 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
   const handleRestoreDefaults = async () => {
     if (
       !window.confirm(
-        "¿Deseas restaurar la lista con los 16 Prompts Célebres iniciales? Tus prompts existentes no se perderán si tienen IDs distintos."
+        "¿Deseas restaurar el catálogo inicial? Se reemplazarán los prompts con el mismo ID; los demás se conservarán en este navegador."
       )
     ) {
       return;
@@ -110,8 +112,8 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md">
-      <div className="relative w-full max-w-lg bg-surface border border-border rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-modal-enter">
+    <div className="dialog-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/30">
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-label="Respaldar e importar" tabIndex={-1} className="app-dialog relative w-full max-w-lg bg-surface border border-border rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-modal-enter">
         {/* Header */}
         <div className="px-6 py-4.5 border-b border-border flex items-center justify-between bg-surface-secondary/50">
           <div className="flex items-center gap-3">
@@ -125,7 +127,7 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
                   {prompts.length} prompts
                 </Chip>
               </div>
-              <p className="text-xs text-muted">Exporta o sincroniza tu colección en formato JSON</p>
+              <p className="text-sm text-muted">Respalda tu colección local en formato JSON</p>
             </div>
           </div>
 
@@ -142,14 +144,15 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
 
         {/* Body */}
         <div className="p-6 flex flex-col gap-4">
+          <p className="text-sm text-muted">Tus cambios e importaciones se guardan en este navegador y no se publican en el catálogo. El respaldo incluye tu colección completa: revísalo antes de compartirlo.</p>
           {/* Export card */}
-          <div className="bg-surface-secondary/60 border border-border rounded-2xl p-4 flex items-center justify-between gap-4 shadow-inner">
+          <div className="bg-surface-secondary/60 border border-border rounded-2xl p-4 flex items-center justify-between gap-4 ">
             <div>
               <h3 className="text-sm font-bold text-foreground flex items-center gap-1.5">
                 <Download className="w-4 h-4 text-accent" />
                 <span>Exportar Respaldo</span>
               </h3>
-              <p className="text-xs text-muted mt-1">
+              <p className="text-sm text-muted mt-1">
                 Descarga un archivo JSON con tus {prompts.length} prompts para guardarlo en local o moverlo de equipo.
               </p>
             </div>
@@ -157,7 +160,7 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
               variant="primary"
               size="sm"
               onClick={handleExportJson}
-              className="rounded-xl text-xs font-semibold shadow-md shadow-accent/25 shrink-0"
+              className="rounded-xl text-sm font-semibold shadow-md shadow-accent/25 shrink-0"
             >
               <Download className="w-4 h-4 mr-1" />
               <span>Descargar</span>
@@ -165,14 +168,14 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
           </div>
 
           {/* Import card */}
-          <div className="bg-surface-secondary/60 border border-border rounded-2xl p-4 flex items-center justify-between gap-4 shadow-inner">
+          <div className="bg-surface-secondary/60 border border-border rounded-2xl p-4 flex items-center justify-between gap-4 ">
             <div>
               <h3 className="text-sm font-bold text-foreground flex items-center gap-1.5">
                 <Upload className="w-4 h-4 text-violet-400" />
                 <span>Importar JSON</span>
               </h3>
-              <p className="text-xs text-muted mt-1">
-                Sube un respaldo previo para combinar o restaurar tus prompts célebres.
+              <p className="text-sm text-muted mt-1">
+                Abre un respaldo para combinar o restaurar tus prompts en este navegador.
               </p>
             </div>
             <div>
@@ -188,22 +191,22 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
                 size="sm"
                 onClick={() => fileInputRef.current?.click()}
                 isDisabled={importing}
-                className="rounded-xl text-xs shrink-0"
+                className="rounded-xl text-sm shrink-0"
               >
                 <Upload className="w-4 h-4 mr-1" />
-                <span>{importing ? "Cargando..." : "Subir Archivo"}</span>
+                <span>{importing ? "Cargando..." : "Abrir archivo"}</span>
               </Button>
             </div>
           </div>
 
           {/* Seed reset card */}
-          <div className="bg-surface-secondary/60 border border-border rounded-2xl p-4 flex items-center justify-between gap-4 shadow-inner">
+          <div className="bg-surface-secondary/60 border border-border rounded-2xl p-4 flex items-center justify-between gap-4 ">
             <div>
               <h3 className="text-sm font-bold text-foreground flex items-center gap-1.5">
                 <Sparkles className="w-4 h-4 text-amber-400" />
                 <span>Restaurar Seeds Maestros</span>
               </h3>
-              <p className="text-xs text-muted mt-1">
+              <p className="text-sm text-muted mt-1">
                 Recarga los prompts semilla iniciales de desarrollo web, marketing y arquitectura.
               </p>
             </div>
@@ -212,7 +215,7 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
               size="sm"
               onClick={handleRestoreDefaults}
               isDisabled={resetting}
-              className="rounded-xl text-xs text-muted hover:text-foreground shrink-0"
+              className="rounded-xl text-sm text-muted hover:text-foreground shrink-0"
             >
               <RotateCcw className="w-3.5 h-3.5 mr-1" />
               <span>{resetting ? "Cargando..." : "Cargar Seeds"}</span>
@@ -226,9 +229,9 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="rounded-xl text-xs text-slate-400 hover:text-white"
+            className="rounded-xl text-sm text-muted hover:text-foreground"
           >
-            Cerrar <Kbd className="ml-1 text-[9px]">Esc</Kbd>
+            Cerrar <Kbd className="ml-1 text-xs">Esc</Kbd>
           </Button>
         </div>
       </div>

@@ -5,7 +5,7 @@ import {
   PromptCategory,
   AIModelTag,
 } from "./types";
-import { promptApi, StorageMode } from "./lib/api";
+import { promptApi } from "./lib/api";
 import { Header } from "./components/Header";
 import { CategoryFilter } from "./components/CategoryFilter";
 import { PromptCard } from "./components/PromptCard";
@@ -17,7 +17,7 @@ import { ManualPage } from "./components/ManualPage";
 import { ToastContainer, ToastMessage } from "./components/Toast";
 import { SEED_PROMPTS } from "./lib/seedData";
 import { SearchX, Plus, RefreshCw } from "lucide-react";
-import { Button, Chip, Kbd } from "@heroui/react";
+import { Button } from "@heroui/react";
 
 function getInitialView(): "prompts" | "manual" {
   if (typeof window === "undefined") return "prompts";
@@ -37,7 +37,6 @@ function getInitialView(): "prompts" | "manual" {
 export function App() {
   const [prompts, setPrompts] = useState<PromptItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [storageMode, setStorageMode] = useState<StorageMode>("local");
   const [currentView, setCurrentView] = useState<"prompts" | "manual">(getInitialView);
 
   // Filter & Search states
@@ -72,11 +71,12 @@ export function App() {
   // Sync current view with URL history
   const handleViewChange = (view: "prompts" | "manual") => {
     setCurrentView(view);
+    document.title = view === "manual" ? "Manual web | Prompts Célebres" : "Prompts Célebres — dannieldev";
     const targetPath = view === "manual" ? "/manual" : "/";
     if (window.location.pathname !== targetPath) {
       window.history.pushState(null, "", targetPath);
     }
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "instant" });
   };
 
   useEffect(() => {
@@ -97,7 +97,6 @@ export function App() {
     try {
       const items = await promptApi.getAllPrompts();
       setPrompts(items);
-      setStorageMode(promptApi.getMode());
     } catch (err: any) {
       addToast("Error al cargar los prompts: " + err.message, "error");
     } finally {
@@ -106,7 +105,6 @@ export function App() {
   };
 
   useEffect(() => {
-    promptApi.setOnModeChange((mode) => setStorageMode(mode));
     loadPrompts();
   }, []);
 
@@ -189,9 +187,13 @@ export function App() {
     }
   };
 
-  const handleCopyDirect = (content: string, title: string) => {
-    navigator.clipboard.writeText(content);
-    addToast(`¡Prompt "${title}" copiado al portapapeles!`, "success");
+  const handleCopyDirect = async (content: string, title: string) => {
+    try {
+      await navigator.clipboard.writeText(content);
+      addToast(`Prompt "${title}" copiado`, "success");
+    } catch {
+      addToast("No se pudo copiar. Abre el prompt para seleccionar el texto.", "error");
+    }
   };
 
   const handleSavePrompt = async (data: PromptInput, existingId?: string) => {
@@ -250,7 +252,6 @@ export function App() {
         onViewChange={handleViewChange}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        storageMode={storageMode}
         totalCount={prompts.length}
         filteredCount={filteredPrompts.length}
         onNewPrompt={() => {
@@ -285,20 +286,21 @@ export function App() {
           />
 
           {/* Main Grid View */}
-          <main className="flex-1 max-w-7xl mx-auto px-4 lg:px-8 py-4 w-full">
+          <main id="main-content" tabIndex={-1} className="library-main page-width">
+            <p className="results-count" role="status">{loading ? "Cargando tu biblioteca…" : `${filteredPrompts.length} ${filteredPrompts.length === 1 ? "prompt" : "prompts"}${searchQuery ? ` para “${searchQuery}”` : filteredPrompts.length === 1 ? " disponible" : " disponibles"}`}</p>
             {loading ? (
               <div className="flex flex-col items-center justify-center py-24 text-muted gap-3">
                 <RefreshCw className="w-8 h-8 text-accent animate-spin" />
                 <p className="text-sm font-medium">Cargando prompts célebres...</p>
               </div>
             ) : filteredPrompts.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              <div className="prompt-grid">
                 {filteredPrompts.map((prompt) => (
                   <PromptCard
                     key={prompt.id}
                     prompt={prompt}
                     onCopyDirect={handleCopyDirect}
-                    onUseVariables={(p) => setVariablePrompt(p)}
+                    onUseVariables={(p) => { setDetailPrompt(null); setVariablePrompt(p); }}
                     onViewDetail={(p) => setDetailPrompt(p)}
                     onEdit={(p) => {
                       setEditorPrompt(p);
@@ -354,28 +356,9 @@ export function App() {
             )}
           </main>
 
-          {/* Prompts Footer with HeroUI components */}
-          <footer className="border-t border-border/60 py-6 px-4 text-center text-xs text-muted mt-auto bg-surface/40 backdrop-blur-md">
-            <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-foreground">⚡ Prompts Célebres</span>
-                <span>·</span>
-                <span>Colección personal de @dannieldev</span>
-              </div>
-              <div className="flex items-center gap-3 text-muted text-[11px]">
-                <Chip color="success" variant="soft" size="sm" className="text-[10px]">
-                  Cloudflare Workers + D1
-                </Chip>
-                <span>·</span>
-                <span className="flex items-center gap-1.5">
-                  <span>Atajo:</span>
-                  <Kbd className="text-[10px]">/</Kbd>
-                  <span>o</span>
-                  <Kbd className="text-[10px]">⌘K</Kbd>
-                  <span>para buscar</span>
-                </span>
-              </div>
-            </div>
+          <footer className="site-footer page-width">
+            <span>Prompts Célebres · Colección de @dannieldev</span>
+            <span>Tus cambios se guardan solo en este navegador</span>
           </footer>
         </>
       )}
@@ -395,10 +378,11 @@ export function App() {
         isOpen={Boolean(detailPrompt)}
         onClose={() => setDetailPrompt(null)}
         onEdit={(p) => {
+          setDetailPrompt(null);
           setEditorPrompt(p);
           setIsEditorOpen(true);
         }}
-        onUseVariables={(p) => setVariablePrompt(p)}
+        onUseVariables={(p) => { setDetailPrompt(null); setVariablePrompt(p); }}
         onToggleFavorite={handleToggleFavorite}
         onCopied={(msg) => addToast(msg, "success")}
       />

@@ -1,0 +1,303 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-08T01:34:33.032693+00:00",
+  "title": "Design System: Prompts Célebres",
+  "extensions": {
+    "colorMeta": {
+      "background": {
+        "role": "neutral",
+        "displayName": "Background"
+      },
+      "foreground": {
+        "role": "neutral",
+        "displayName": "Foreground",
+        "tonalRamp": [
+          "oklch(15% 0.0284 162.56)",
+          "oklch(27% 0.0284 162.56)",
+          "oklch(38% 0.0284 162.56)",
+          "oklch(50% 0.0284 162.56)",
+          "oklch(61% 0.0284 162.56)",
+          "oklch(73% 0.0284 162.56)",
+          "oklch(84% 0.0284 162.56)",
+          "oklch(95% 0.0284 162.56)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface"
+      },
+      "surface-secondary": {
+        "role": "neutral",
+        "displayName": "Surface secondary"
+      },
+      "surface-tertiary": {
+        "role": "neutral",
+        "displayName": "Surface tertiary"
+      },
+      "surface-hover": {
+        "role": "neutral",
+        "displayName": "Surface hover"
+      },
+      "secondary-foreground": {
+        "role": "neutral",
+        "displayName": "Secondary foreground",
+        "tonalRamp": [
+          "oklch(15% 0.0335 155.97)",
+          "oklch(27% 0.0335 155.97)",
+          "oklch(38% 0.0335 155.97)",
+          "oklch(50% 0.0335 155.97)",
+          "oklch(61% 0.0335 155.97)",
+          "oklch(73% 0.0335 155.97)",
+          "oklch(84% 0.0335 155.97)",
+          "oklch(95% 0.0335 155.97)"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Accent",
+        "tonalRamp": [
+          "oklch(15% 0.0585 158.77)",
+          "oklch(27% 0.0585 158.77)",
+          "oklch(38% 0.0585 158.77)",
+          "oklch(50% 0.0585 158.77)",
+          "oklch(61% 0.0585 158.77)",
+          "oklch(73% 0.0585 158.77)",
+          "oklch(84% 0.0585 158.77)",
+          "oklch(95% 0.0585 158.77)"
+        ]
+      },
+      "accent-hover": {
+        "role": "primary",
+        "displayName": "Accent hover",
+        "tonalRamp": [
+          "oklch(15% 0.0519 158.16)",
+          "oklch(27% 0.0519 158.16)",
+          "oklch(38% 0.0519 158.16)",
+          "oklch(50% 0.0519 158.16)",
+          "oklch(61% 0.0519 158.16)",
+          "oklch(73% 0.0519 158.16)",
+          "oklch(84% 0.0519 158.16)",
+          "oklch(95% 0.0519 158.16)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted"
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Border"
+      },
+      "default": {
+        "role": "neutral",
+        "displayName": "Default"
+      },
+      "category": {
+        "role": "neutral",
+        "displayName": "Category",
+        "tonalRamp": [
+          "oklch(15% 0.0143 128.63)",
+          "oklch(27% 0.0143 128.63)",
+          "oklch(38% 0.0143 128.63)",
+          "oklch(50% 0.0143 128.63)",
+          "oklch(61% 0.0143 128.63)",
+          "oklch(73% 0.0143 128.63)",
+          "oklch(84% 0.0143 128.63)",
+          "oklch(95% 0.0143 128.63)"
+        ]
+      },
+      "reading": {
+        "role": "neutral",
+        "displayName": "Reading",
+        "tonalRamp": [
+          "oklch(15% 0.0243 149.60)",
+          "oklch(27% 0.0243 149.60)",
+          "oklch(38% 0.0243 149.60)",
+          "oklch(50% 0.0243 149.60)",
+          "oklch(61% 0.0243 149.60)",
+          "oklch(73% 0.0243 149.60)",
+          "oklch(84% 0.0243 149.60)",
+          "oklch(95% 0.0243 149.60)"
+        ]
+      },
+      "success": {
+        "role": "neutral",
+        "displayName": "Success",
+        "tonalRamp": [
+          "oklch(15% 0.0722 154.94)",
+          "oklch(27% 0.0722 154.94)",
+          "oklch(38% 0.0722 154.94)",
+          "oklch(50% 0.0722 154.94)",
+          "oklch(61% 0.0722 154.94)",
+          "oklch(73% 0.0722 154.94)",
+          "oklch(84% 0.0722 154.94)",
+          "oklch(95% 0.0722 154.94)"
+        ]
+      },
+      "warning": {
+        "role": "neutral",
+        "displayName": "Warning",
+        "tonalRamp": [
+          "oklch(15% 0.0932 71.33)",
+          "oklch(27% 0.0932 71.33)",
+          "oklch(38% 0.0932 71.33)",
+          "oklch(50% 0.0932 71.33)",
+          "oklch(61% 0.0932 71.33)",
+          "oklch(73% 0.0932 71.33)",
+          "oklch(84% 0.0932 71.33)",
+          "oklch(95% 0.0932 71.33)"
+        ]
+      },
+      "danger": {
+        "role": "neutral",
+        "displayName": "Danger",
+        "tonalRamp": [
+          "oklch(15% 0.1356 23.33)",
+          "oklch(27% 0.1356 23.33)",
+          "oklch(38% 0.1356 23.33)",
+          "oklch(50% 0.1356 23.33)",
+          "oklch(61% 0.1356 23.33)",
+          "oklch(73% 0.1356 23.33)",
+          "oklch(84% 0.1356 23.33)",
+          "oklch(95% 0.1356 23.33)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "reading": {
+        "displayName": "Lectura del manual",
+        "purpose": "Párrafos y listas largos; altura de línea móvil de 1.8."
+      }
+    },
+    "shadows": [
+      {
+        "name": "surface",
+        "value": "none",
+        "purpose": "Superficies principales planas; separación por borde y tono."
+      }
+    ],
+    "motion": [
+      {
+        "name": "button-state",
+        "value": "160ms ease-out",
+        "purpose": "Cambios de fondo y color."
+      },
+      {
+        "name": "modal-enter",
+        "value": "220ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Entrada de diálogos."
+      },
+      {
+        "name": "toast-enter",
+        "value": "250ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Entrada de avisos."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "0.01ms",
+        "purpose": "Duración de animación y transición bajo prefers-reduced-motion: reduce."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "tablet-max",
+        "value": "1100px"
+      },
+      {
+        "name": "mobile-max",
+        "value": "760px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botón principal",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Acción de la biblioteca con su tratamiento actual.",
+      "html": "<button class=\"ds-button-primary\">Nuevo prompt</button>",
+      "css": ".ds-button-primary{font-family:'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:14px;font-weight:600;min-height:44px;border:0;border-radius:8px;padding:10px 16px;cursor:pointer;transition:background-color 160ms ease-out,color 160ms ease-out;background:var(--accent,#365e48);color:var(--accent-foreground,#fff)}.ds-button-primary:hover{background:#284a37}.ds-button-primary:focus-visible{outline:2px solid var(--focus,#365e48);outline-offset:4px;}"
+    },
+    {
+      "name": "Botón secundario",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Acción de la biblioteca con su tratamiento actual.",
+      "html": "<button class=\"ds-button-secondary\">Adaptar</button>",
+      "css": ".ds-button-secondary{font-family:'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:14px;font-weight:600;min-height:44px;border:0;border-radius:8px;padding:10px 16px;cursor:pointer;transition:background-color 160ms ease-out,color 160ms ease-out;background:var(--default,#dce4d4);color:var(--accent,#365e48)}.ds-button-secondary:hover{background:#dde7d4}.ds-button-secondary:focus-visible{outline:2px solid var(--focus,#365e48);outline-offset:4px;}"
+    },
+    {
+      "name": "Botón discreto",
+      "kind": "button",
+      "refersTo": "button-quiet",
+      "description": "Acción de la biblioteca con su tratamiento actual.",
+      "html": "<button class=\"ds-button-quiet\">Copiar</button>",
+      "css": ".ds-button-quiet{font-family:'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:14px;font-weight:600;min-height:44px;border:0;border-radius:8px;padding:10px 16px;cursor:pointer;transition:background-color 160ms ease-out,color 160ms ease-out;background:transparent;color:var(--muted,#566157)}.ds-button-quiet:hover{background:var(--surface-secondary,#dce2d4)}.ds-button-quiet:focus-visible{outline:2px solid var(--focus,#365e48);outline-offset:4px;}"
+    },
+    {
+      "name": "Búsqueda",
+      "kind": "input",
+      "refersTo": "search",
+      "description": "Campo amplio para buscar por tema, título o idea.",
+      "html": "<div class=\"ds-search\"><svg aria-hidden=\"true\" width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg><input class=\"ds-search-input\" type=\"search\" aria-label=\"Buscar prompts\" placeholder=\"Busca por tema, título o una idea…\"/></div>",
+      "css": ".ds-search{display:flex;align-items:center;gap:14px;padding:6px 20px;background:var(--surface,#fff);color:var(--muted,#566157);border:1px solid var(--border,#c4ccbd);border-radius:10px}.ds-search:focus-within{border-color:var(--accent,#365e48);outline:2px solid #365e4820}.ds-search-input{font-family:'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:17px;min-height:48px;min-width:0;width:100%;color:var(--foreground,#26382f);border:0;background:transparent;outline:none}.ds-search-input::placeholder{color:var(--muted,#566157)}"
+    },
+    {
+      "name": "Navegación principal",
+      "kind": "nav",
+      "refersTo": "navigation",
+      "description": "Enlaces de Biblioteca y Manual web con estado de página actual.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Navegación principal\"><a href=\"/\" aria-current=\"page\">Biblioteca</a><a href=\"/manual\">Manual web</a></nav>",
+      "css": ".ds-nav{display:flex;gap:28px;font-family:'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif}.ds-nav a{position:relative;display:flex;align-items:center;min-height:48px;font-size:15px;color:var(--muted,#566157);text-decoration:none}.ds-nav a:hover,.ds-nav a[aria-current]{color:var(--accent,#365e48)}.ds-nav a[aria-current]{font-weight:650}.ds-nav a[aria-current]::after{content:\"\";position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--accent,#365e48)}.ds-nav a:focus-visible{outline:2px solid var(--focus,#365e48);outline-offset:4px;}"
+    },
+    {
+      "name": "Etiqueta de categoría",
+      "kind": "chip",
+      "refersTo": "category-tag",
+      "description": "Categoría informativa de una tarjeta; no es un control.",
+      "html": "<span class=\"ds-category\">Desarrollo Web</span>",
+      "css": ".ds-category{display:inline-block;font-family:'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:12px;font-weight:600;background:#edf2e8;color:var(--accent,#365e48);padding:4px 9px;border-radius:5px}"
+    },
+    {
+      "name": "Tarjeta de prompt",
+      "kind": "card",
+      "refersTo": "prompt-card",
+      "description": "Muestra de la jerarquía de una tarjeta; el contenido de ejemplo no es un registro de la colección.",
+      "html": "<article class=\"ds-card\"><span class=\"ds-card-category\">Desarrollo Web</span><h2 class=\"ds-card-title\"><button>Revisar la estructura de una página</button></h2><p class=\"ds-card-description\">Adapta una idea al contexto de tu proyecto.</p><div class=\"ds-card-footer\"><span>Listo para copiar</span><button>Ver prompt</button></div></article>",
+      "css": ".ds-card{font-family:'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;background:var(--surface,#fff);color:var(--foreground,#26382f);border:1px solid var(--border,#c4ccbd);border-radius:12px;padding:20px 24px 16px;max-width:400px}.ds-card-category{display:inline-block;font-size:12px;font-weight:600;padding:4px 9px;border-radius:5px;background:#edf2e8;color:var(--accent,#365e48)}.ds-card-title{font-size:19px;font-weight:650;line-height:1.45;letter-spacing:-.02em;margin:12px 0;overflow-wrap:anywhere}.ds-card button{font:inherit;text-align:left;color:inherit;border:0;background:transparent;cursor:pointer}.ds-card button:hover{color:var(--accent,#365e48);text-decoration:underline;text-underline-offset:4px}.ds-card button:focus-visible{outline:2px solid var(--focus,#365e48);outline-offset:4px;}.ds-card-description{font-size:15px;line-height:1.75;color:var(--muted,#566157);margin:0 0 20px}.ds-card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid var(--border,#c4ccbd);padding-top:8px;font-size:12px;color:var(--muted,#566157)}.ds-card-footer button{font-size:13px;font-weight:600;min-height:44px;color:var(--accent,#365e48)}"
+    },
+    {
+      "name": "Punto de checklist",
+      "kind": "custom",
+      "refersTo": "checklist-item",
+      "description": "Control nativo con categoría y estado marcado visible.",
+      "html": "<label class=\"ds-checklist\"><input type=\"checkbox\"/><span><span class=\"ds-checklist-category\">UX/UI · 1</span>Revisar la navegación por teclado</span></label>",
+      "css": ".ds-checklist{display:flex;align-items:flex-start;gap:16px;padding:20px 4px;border-block:1px solid var(--border,#c4ccbd);font-family:'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-size:16px;line-height:1.75;color:var(--foreground,#26382f);cursor:pointer}.ds-checklist input{appearance:auto;width:20px;height:20px;margin-top:7px;flex-shrink:0;accent-color:var(--accent,#365e48);cursor:pointer}.ds-checklist input:focus-visible{outline:2px solid var(--focus,#365e48);outline-offset:4px;}.ds-checklist:has(input:checked){background:#edf2e8;color:var(--accent,#365e48)}.ds-checklist-category{display:block;font-size:12px;color:var(--muted,#566157);margin-bottom:4px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Una biblioteca clara",
+    "overview": "La interfaz busca claridad, cercanía y espacio para leer. La paleta clara y el verde sobrio pertenecen a la implementación local actual; este documento registra lo construido y no implica una aprobación específica de la paleta ni una preferencia permanente del usuario.\n\nLa biblioteca facilita encontrar, adaptar y reutilizar contenido. El manual mantiene una columna de lectura amplia y un índice visible según el tamaño de pantalla. Ambos comparten tipografía, superficies y estados de interacción sin exigir la misma composición.",
+    "keyCharacteristics": [
+      "Fondo marfil, superficies blancas y acento verde.",
+      "Jerarquía tipográfica clara y párrafos de lectura amplios.",
+      "Bordes discretos para separar contenido; superficies planas.",
+      "Navegación semántica, foco visible y adaptación a pantallas pequeñas."
+    ],
+    "rules": [],
+    "dos": [
+      "Do conservar los tokens del frontmatter al extender los componentes existentes.",
+      "Do mantener los párrafos del manual en 17px y comprobar su lectura en móvil.",
+      "Do conservar los estados aria-current, aria-pressed y focus-visible donde corresponda.",
+      "Do probar los títulos largos, filtros y acciones con el ancho disponible.",
+      "Do conservar la reducción de movimiento y el flujo de lectura por capítulos."
+    ],
+    "donts": [
+      "Don't convertir los párrafos del manual en metadatos pequeños.",
+      "Don't sustituir los enlaces de capítulos por controles sin URL propia.",
+      "Don't añadir sombras a las tarjetas para sustituir su separación actual por bordes.",
+      "Don't confundir los ejemplos de código del manual con tokens de esta interfaz.",
+      "Don't atribuir las decisiones de implementación a preferencias permanentes del usuario."
+    ]
+  }
+}

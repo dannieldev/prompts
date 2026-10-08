@@ -1,44 +1,24 @@
-# Despliegue en Cloudflare — prompts.dannieldev.com
+# Operación de esta instalación
 
-Este proyecto está preparado para funcionar tanto en **local** como en **Cloudflare Workers con Static Assets y Cloudflare D1**.
+Este archivo documenta el alojamiento de esta aplicación. No forma parte del manual público ni se copia a `dist/`.
 
----
+La edición pública sirve archivos estáticos y guarda las personalizaciones en el navegador. No necesita crear, consultar ni migrar D1. Los bindings y datos históricos se conservan; el Worker no accede a ellos.
 
-## 1. Configuración de Cloudflare D1 (Una Sola Vez)
-
-Para crear la base de datos `prompts` en tu cuenta de Cloudflare y aplicar las migraciones:
+## Verificar antes de publicar
 
 ```bash
-npm run cloud:setup
+npm run test:privacy
+npm run build
 ```
 
-Este script automático:
-1. Comprueba si existe la base de datos `prompts` en Cloudflare D1. Si no existe, la crea.
-2. Actualiza `database_id` en [wrangler.jsonc](file:///Users/ava/Documents/dannieldev/proyectos/prompts/wrangler.jsonc).
-3. Aplica la migración [migrations/0001_init.sql](file:///Users/ava/Documents/dannieldev/proyectos/prompts/migrations/0001_init.sql) en el D1 remoto.
-
----
-
-## 2. Publicación a Producción
-
-Una vez configurada la base D1, para compilar y desplegar:
+Comprueba la cuenta y el dominio de la configuración local. Con autorización para publicar:
 
 ```bash
 npm run deploy
 ```
 
-El Worker responderá en el dominio configurado en `wrangler.jsonc`:
-- `https://prompts.dannieldev.com`
+No ejecutes `cloud:setup` ni migraciones como requisito de esta edición. Son herramientas heredadas para la antigua colección compartida.
 
----
+Todas las rutas `/api` y `/api/*` deben responder 404 sin consultar la base, incluidas `/api/prompts` y `/api/export`. `run_worker_first` garantiza que estas rutas pasen por el bloqueo del Worker. Verifica ese comportamiento tras desplegar. Un cambio local no cierra los endpoints de una versión que ya esté publicada.
 
-## 3. Endpoints del Worker
-
-- `GET /api/prompts` — Devuelve todos los prompts ordenados por favoritos y fecha. Auto-inicializa los 10 prompts célebres si la base está vacía.
-- `POST /api/prompts` — Crea un nuevo prompt.
-- `PUT /api/prompts/:id` — Actualiza un prompt existente.
-- `DELETE /api/prompts/:id` — Elimina un prompt.
-- `POST /api/prompts/:id/favorite` — Alterna el estado de célebre / favorito.
-- `GET /api/export` — Exporta toda la colección en JSON.
-- `POST /api/import` — Importa o mezcla prompts en lote.
-- Todo lo demás — Servido de inmediato por los activos estáticos (`assets: ./dist`).
+Los archivos de configuración y el historial de Git requieren una revisión adicional antes de abrir el repositorio al público. El control de compilación revisa los activos de la web, no el historial. `robots.txt` y `noindex` regulan la indexación, no son controles de acceso.

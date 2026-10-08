@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Sparkles,
   Layers,
@@ -12,19 +12,14 @@ import {
   Cloud,
   Copy,
   Check,
-  CheckSquare,
-  Square,
   RotateCcw,
-  ArrowLeft,
   Sliders,
   ChevronRight,
   Code2,
-  BookmarkCheck,
   ArrowUpRight,
   Compass,
   ExternalLink,
 } from "lucide-react";
-import { Button, Chip, Kbd } from "@heroui/react";
 
 interface ManualPageProps {
   onNavigateToPrompts: () => void;
@@ -55,7 +50,7 @@ const INITIAL_CHECKLIST: ChecklistItem[] = [
   { id: 13, category: "SEO", text: "Open Graph Tags completos (og:title, og:description, og:image 1200x630, twitter:card)", checked: false },
   { id: 14, category: "UX/UI", text: "Favicon set completo: favicon.ico, favicon.svg y apple-touch-icon.png", checked: false },
   { id: 15, category: "Seguridad", text: "HTTPS forzado con cabeceras de seguridad activas (HSTS, nosniff)", checked: false },
-  { id: 16, category: "Performance", text: "Telemetría/Analytics ligero (Cloudflare Web Analytics o Plausible) sin ralentizar", checked: false },
+  { id: 16, category: "Performance", text: "Si el proyecto necesita analítica, configurarla sin exponer datos personales ni ralentizar la página", checked: false },
   { id: 17, category: "Performance", text: "Optimización de imágenes en WebP o AVIF con loading='lazy' bajo el pliegue", checked: false },
   { id: 18, category: "UX/UI", text: "Accesibilidad (a11y): Contraste mínimo 4.5:1 y navegación completa por teclado (focus-visible)", checked: false },
   { id: 19, category: "Calidad", text: "Consola de DevTools limpia sin excepciones no controladas de JavaScript ni warnings", checked: false },
@@ -70,18 +65,18 @@ interface NavSection {
 }
 
 const SECTIONS: NavSection[] = [
-  { id: "filosofia", title: "1. Filosofía Anti-Slop", group: "Estrategia & Dirección", icon: <Sparkles className="w-4 h-4 text-amber-400" /> },
-  { id: "fases", title: "2. Flujo en 7 Fases", group: "Estrategia & Dirección", icon: <Layers className="w-4 h-4 text-indigo-400" /> },
-  { id: "inspiracion", title: "3. Inspiración & Galerías UX/UI", group: "Estrategia & Dirección", icon: <Compass className="w-4 h-4 text-purple-400" /> },
-  { id: "herramientas", title: "4. Catálogo de Skills", group: "Herramientas & Tokens", icon: <Terminal className="w-4 h-4 text-emerald-400" /> },
-  { id: "design-spec", title: "5. Tokens & DESIGN.md", group: "Herramientas & Tokens", icon: <Palette className="w-4 h-4 text-pink-400" /> },
-  { id: "emil-motion", title: "6. Motion Emil Kowalski", group: "Físicas, Ergonomía & Código", icon: <Zap className="w-4 h-4 text-sky-400" /> },
-  { id: "apple-hig", title: "7. Ergonomía Apple HIG", group: "Físicas, Ergonomía & Código", icon: <Eye className="w-4 h-4 text-indigo-300" /> },
-  { id: "ponytail", title: "8. Código Ponytail Zero-Bloat", group: "Físicas, Ergonomía & Código", icon: <Scissors className="w-4 h-4 text-amber-300" /> },
-  { id: "impeccable", title: "9. Pulido Impeccable & Vercel", group: "Físicas, Ergonomía & Código", icon: <ShieldCheck className="w-4 h-4 text-rose-400" /> },
-  { id: "playwright", title: "10. Pruebas Playwright E2E", group: "Validación & Despliegue", icon: <Code2 className="w-4 h-4 text-violet-400" /> },
-  { id: "checklist", title: "11. Checklist de 20 Puntos", group: "Validación & Despliegue", icon: <CheckCircle2 className="w-4 h-4 text-emerald-400" /> },
-  { id: "deploy", title: "12. Despliegue Cloudflare", group: "Validación & Despliegue", icon: <Cloud className="w-4 h-4 text-orange-400" /> },
+  { id: "filosofia", title: "1. Diseñar con criterio", group: "Estrategia y dirección", icon: <Sparkles className="w-4 h-4 text-accent" /> },
+  { id: "fases", title: "2. Flujo en 7 fases", group: "Estrategia y dirección", icon: <Layers className="w-4 h-4 text-accent" /> },
+  { id: "inspiracion", title: "3. Referencias visuales", group: "Estrategia y dirección", icon: <Compass className="w-4 h-4 text-accent" /> },
+  { id: "herramientas", title: "4. Catálogo de skills", group: "Herramientas y diseño", icon: <Terminal className="w-4 h-4 text-accent" /> },
+  { id: "design-spec", title: "5. Tokens y DESIGN.md", group: "Herramientas y diseño", icon: <Palette className="w-4 h-4 text-accent" /> },
+  { id: "emil-motion", title: "6. Animación y movimiento", group: "Interacción y código", icon: <Zap className="w-4 h-4 text-accent" /> },
+  { id: "apple-hig", title: "7. Ergonomía y Apple HIG", group: "Interacción y código", icon: <Eye className="w-4 h-4 text-accent" /> },
+  { id: "ponytail", title: "8. Código simple con Ponytail", group: "Interacción y código", icon: <Scissors className="w-4 h-4 text-accent" /> },
+  { id: "impeccable", title: "9. Pulido y accesibilidad", group: "Interacción y código", icon: <ShieldCheck className="w-4 h-4 text-accent" /> },
+  { id: "playwright", title: "10. Pruebas con Playwright", group: "Revisión y publicación", icon: <Code2 className="w-4 h-4 text-accent" /> },
+  { id: "checklist", title: "11. Checklist de 20 puntos", group: "Revisión y publicación", icon: <CheckCircle2 className="w-4 h-4 text-accent" /> },
+  { id: "deploy", title: "12. Entrega y publicación", group: "Revisión y publicación", icon: <Cloud className="w-4 h-4 text-accent" /> },
 ];
 
 export const ManualPage: React.FC<ManualPageProps> = ({
@@ -89,7 +84,11 @@ export const ManualPage: React.FC<ManualPageProps> = ({
   onSelectPrompt,
   onAddToast,
 }) => {
-  const [activeAnchor, setActiveAnchor] = useState<string>("filosofia");
+  const readChapter = () => SECTIONS.find((section) => section.id === window.location.hash.slice(1))?.id || "filosofia";
+  const [activeAnchor, setActiveAnchor] = useState(readChapter);
+  const [readAll, setReadAll] = useState(false);
+  const [indexOpen, setIndexOpen] = useState(false);
+  const readingRef = useRef<HTMLElement>(null);
   const [copiedCodeId, setCopiedCodeId] = useState<string | null>(null);
   const [checklist, setChecklist] = useState<ChecklistItem[]>(INITIAL_CHECKLIST);
   const [checklistFilter, setChecklistFilter] = useState<"todos" | "pendientes" | "completados">("todos");
@@ -99,33 +98,27 @@ export const ManualPage: React.FC<ManualPageProps> = ({
     try {
       const saved = localStorage.getItem("dannieldev_web_checklist_v1");
       if (saved) {
-        setChecklist(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) setChecklist(INITIAL_CHECKLIST.map((item) => ({
+          ...item, checked: parsed.some((entry) => entry?.id === item.id && entry.checked === true),
+        })));
       }
     } catch {}
   }, []);
 
-  // Sync active section based on scroll position
   useEffect(() => {
-    const handleScroll = () => {
-      const sectionElements = SECTIONS.map((s) => ({
-        id: s.id,
-        el: document.getElementById(s.id),
-      }));
-
-      const scrollPosition = window.scrollY + 180;
-
-      for (let i = sectionElements.length - 1; i >= 0; i--) {
-        const item = sectionElements[i];
-        if (item.el && item.el.offsetTop <= scrollPosition) {
-          setActiveAnchor(item.id);
-          break;
-        }
-      }
+    const syncChapter = () => { setActiveAnchor(readChapter()); setIndexOpen(false); };
+    window.addEventListener("hashchange", syncChapter);
+    window.addEventListener("popstate", syncChapter);
+    return () => {
+      window.removeEventListener("hashchange", syncChapter);
+      window.removeEventListener("popstate", syncChapter);
     };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    document.title = `${SECTIONS.find((section) => section.id === activeAnchor)?.title} | Manual web`;
+  }, [activeAnchor]);
 
   const toggleChecklistItem = (id: number) => {
     const updated = checklist.map((item) =>
@@ -147,23 +140,31 @@ export const ManualPage: React.FC<ManualPageProps> = ({
     }
   };
 
-  const handleCopyCode = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
+  const handleCopyCode = async (text: string, id: string) => {
+    try { await navigator.clipboard.writeText(text); }
+    catch { onAddToast("No se pudo copiar. Selecciona el código y cópialo manualmente.", "error"); return; }
     setCopiedCodeId(id);
     onAddToast("Código copiado al portapapeles", "success");
     setTimeout(() => setCopiedCodeId(null), 2000);
   };
 
   const scrollToSection = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      const yOffset = -90;
-      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: y, behavior: "smooth" });
-      setActiveAnchor(id);
-      window.history.replaceState(null, "", `#${id}`);
-    }
+    setActiveAnchor(id);
+    setIndexOpen(false);
+    if (window.location.hash !== `#${id}`) window.history.pushState(null, "", `/manual#${id}`);
+    requestAnimationFrame(() => {
+      const target = document.getElementById(id);
+      target?.scrollIntoView({ block: "start", behavior: "instant" });
+      target?.querySelector<HTMLElement>("h2")?.focus({ preventScroll: true });
+    });
   };
+
+  const chapterLink = (event: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+    event.preventDefault();
+    scrollToSection(id);
+  };
+  const activeIndex = SECTIONS.findIndex((section) => section.id === activeAnchor);
 
   const checkedCount = checklist.filter((i) => i.checked).length;
   const progressPercent = Math.round((checkedCount / checklist.length) * 100);
@@ -175,181 +176,50 @@ export const ManualPage: React.FC<ManualPageProps> = ({
   });
 
   return (
-    <div className="w-full min-h-screen bg-background text-foreground flex flex-col">
-      {/* Subpage Breadcrumb & Top Bar */}
-      <div className="border-b border-border/80 bg-surface/70 backdrop-blur-md px-4 lg:px-8 py-3">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onNavigateToPrompts}
-              className="flex items-center gap-2 rounded-xl text-xs font-semibold"
-              aria-label="Volver a la Bóveda de Prompts"
-            >
-              <ArrowLeft className="w-3.5 h-3.5 text-muted" />
-              <span>Volver a Prompts</span>
-              <Kbd className="text-[9px]">Esc</Kbd>
-            </Button>
-            <span className="text-slate-600 hidden sm:inline">/</span>
-            <span className="text-xs font-semibold text-accent hidden sm:inline flex items-center gap-1.5">
-              <BookmarkCheck className="w-3.5 h-3.5 text-accent" />
-              Manual de Creación Web Anti-Genérica con IA
-            </span>
-          </div>
-
-          <div className="flex items-center gap-3 text-xs">
-            <Chip color="success" variant="soft" size="sm" className="font-semibold text-xs">
-              Checklist: {checkedCount}/20
-            </Chip>
-          </div>
+    <div className="manual-page">
+      <div className="manual-intro page-width">
+        <div>
+          <h1>Manual de creación web con IA</h1>
+          <p>De la idea al lanzamiento. Una guía para diseñar con criterio, construir y revisar tu web.</p>
         </div>
+        <a className="quiet-button" href="/manual#checklist" onClick={(event) => chapterLink(event, "checklist")}>
+          <CheckCircle2 size={18} aria-hidden="true" />Checklist · {checkedCount}/20
+        </a>
       </div>
-
-      {/* Hero Presentation Header */}
-      <div className="relative border-b border-border/80 bg-gradient-to-b from-surface via-surface/90 to-background px-4 lg:px-8 py-12 lg:py-16 overflow-hidden">
-        {/* Subtle radial backdrop glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-64 bg-accent/10 blur-3xl pointer-events-none rounded-full" />
-
-        <div className="max-w-7xl mx-auto relative z-10 flex flex-col gap-6">
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
-            <Chip color="accent" variant="soft" size="sm" className="font-bold uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5 text-accent mr-1 inline" />
-              Estándar de Ingeniería @dannieldev
-            </Chip>
-            <span className="text-slate-600 hidden sm:inline">·</span>
-            <span className="text-muted hidden sm:inline">12 Capítulos Prácticos & 4 Galerías UX/UI</span>
-          </div>
-
-          <div className="max-w-4xl space-y-3">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.15]">
-              Manual de Creación Web{" "}
-              <span className="bg-gradient-to-r from-indigo-300 via-violet-300 to-indigo-100 bg-clip-text text-transparent">
-                Anti-Genérica con IA
-              </span>
-            </h1>
-            <p className="text-sm sm:text-base text-muted leading-relaxed font-normal">
-              De la idea en blanco a producción en Cloudflare con cero código basura, diseño de élite,
-              físicas de interacción de clase mundial y auditoría autónoma en cada pantalla.
-            </p>
-          </div>
-
-          {/* Quick Metrics & Pillars */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4">
-            <div className="p-4 rounded-2xl bg-surface-secondary/80 border border-border/80 flex flex-col gap-1">
-              <span className="text-2xl font-black text-indigo-400 font-mono">12</span>
-              <span className="text-xs font-semibold text-foreground/90">Capítulos Maestros</span>
-              <span className="text-[11px] text-muted">Guía técnica integral</span>
+      <div className="manual-layout page-width">
+        <aside className="manual-sidebar">
+          <button className="chapter-menu-button" aria-expanded={indexOpen} aria-controls="manual-index" onClick={() => setIndexOpen(!indexOpen)}>
+            <span>Capítulos del manual</span><ChevronRight size={18} className={indexOpen ? "rotate-90" : ""} aria-hidden="true" />
+          </button>
+          <nav id="manual-index" className={indexOpen ? "chapter-index is-open" : "chapter-index"} aria-label="Capítulos del manual">
+            <p className="index-title">En este manual <span>{SECTIONS.length} capítulos</span></p>
+            {Array.from(new Set(SECTIONS.map((section) => section.group))).map((group) => <div className="chapter-group" key={group}>
+              <h2>{group}</h2>
+              {SECTIONS.filter((section) => section.group === group).map((section) => <a key={section.id} href={`/manual#${section.id}`} aria-current={activeAnchor === section.id ? "step" : undefined} onClick={(event) => chapterLink(event, section.id)}>{section.title}</a>)}
+            </div>)}
+            <div className="sidebar-progress">
+              <span>Tu checklist <strong>{checkedCount} de 20</strong></span>
+              <progress max="20" value={checkedCount} aria-label="Progreso del checklist" />
+              <a href="/manual#checklist" onClick={(event) => chapterLink(event, "checklist")}>Continuar revisión <ChevronRight size={16} aria-hidden="true" /></a>
             </div>
-
-            <div className="p-4 rounded-2xl bg-surface-secondary/80 border border-border/80 flex flex-col gap-1">
-              <span className="text-2xl font-black text-purple-400 font-mono">4</span>
-              <span className="text-xs font-semibold text-foreground/90">Galerías de Élite</span>
-              <span className="text-[11px] text-muted">Inspiración UX/UI</span>
-            </div>
-
-            <div className="p-4 rounded-2xl bg-surface-secondary/80 border border-border/80 flex flex-col gap-1">
-              <span className="text-2xl font-black text-emerald-400 font-mono">20</span>
-              <span className="text-xs font-semibold text-foreground/90">Puntos Pre-Launch</span>
-              <span className="text-[11px] text-muted">Auditoría no negociable</span>
-            </div>
-
-            <div className="p-4 rounded-2xl bg-surface-secondary/80 border border-border/80 flex flex-col gap-1">
-              <span className="text-2xl font-black text-amber-400 font-mono">8</span>
-              <span className="text-xs font-semibold text-foreground/90">Skills Especializadas</span>
-              <span className="text-[11px] text-muted">En ~/.agents/skills</span>
-            </div>
-
-            <div className="p-4 rounded-2xl bg-surface-secondary/80 border border-border/80 flex flex-col gap-1">
-              <span className="text-2xl font-black text-pink-400 font-mono">100%</span>
-              <span className="text-xs font-semibold text-foreground/90">Anti-Slop Craft</span>
-              <span className="text-[11px] text-muted">Cero plantillas genéricas</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main 2-Column Documentation Container */}
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-8 w-full flex-1 flex flex-col lg:flex-row gap-10">
-        {/* Left Sticky Sidebar Table of Contents */}
-        <aside className="lg:w-72 shrink-0 hidden lg:block self-start sticky top-20">
-          <div className="p-4 rounded-3xl bg-surface border border-border/80 shadow-xl flex flex-col gap-4 max-h-[calc(100vh-6rem)] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-border/60 pb-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-muted flex items-center gap-2">
-                <Layers className="w-3.5 h-3.5 text-indigo-400" />
-                Índice del Manual
-              </span>
-              <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-md bg-white/[0.04] text-muted">
-                11 Secciones
-              </span>
-            </div>
-
-            {/* Navigation links grouped */}
-            <div className="space-y-4">
-              {Array.from(new Set(SECTIONS.map((s) => s.group))).map((groupName) => (
-                <div key={groupName} className="space-y-1">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted px-2 block">
-                    {groupName}
-                  </span>
-                  <div className="space-y-0.5">
-                    {SECTIONS.filter((s) => s.group === groupName).map((section) => {
-                      const isActive = activeAnchor === section.id;
-                      return (
-                        <button
-                          key={section.id}
-                          onClick={() => scrollToSection(section.id)}
-                          className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-medium transition-all text-left active:scale-[0.98] ${
-                            isActive
-                              ? "bg-indigo-600/20 text-indigo-200 border border-indigo-500/35 font-semibold shadow-xs"
-                              : "text-muted hover:text-foreground/90 hover:bg-white/[0.04]"
-                          }`}
-                        >
-                          <span className="shrink-0">{section.icon}</span>
-                          <span className="truncate">{section.title}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Checklist progress mini card inside sidebar */}
-            <div className="mt-2 pt-3 border-t border-border/60 bg-background p-3 rounded-2xl border border-border/60 flex flex-col gap-2">
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-muted font-medium">Auditoría Pre-Launch</span>
-                <span className="font-bold text-emerald-400">{progressPercent}%</span>
-              </div>
-              <div className="w-full h-1.5 bg-white/[0.08] rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-emerald-500 transition-all duration-300"
-                  style={{ width: `${progressPercent}%` }}
-                />
-              </div>
-              <button
-                onClick={() => scrollToSection("checklist")}
-                className="text-[11px] text-indigo-300 hover:text-indigo-200 font-semibold flex items-center justify-between pt-1 group"
-              >
-                <span>Ver los 20 puntos</span>
-                <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-              </button>
-            </div>
-          </div>
+          </nav>
         </aside>
-
-        {/* Right Expansive Content Stream */}
-        <main className="flex-1 max-w-4xl space-y-20 py-2">
+        <main id="main-content" ref={readingRef} className="manual-reading" tabIndex={-1}>
+          <div className="reading-toolbar">
+            <span>{readAll ? "Manual completo" : `Capítulo ${activeIndex + 1} de ${SECTIONS.length}`}</span>
+            <button className="text-button" aria-pressed={readAll} onClick={() => setReadAll(!readAll)}>{readAll ? "Leer por capítulos" : "Ver todo el manual"}</button>
+          </div>
           {/* SECTION 1: FILOSOFÍA ANTI-SLOP */}
-          <section id="filosofia" className="scroll-mt-24 space-y-6">
+          <section hidden={!readAll && activeAnchor !== "filosofia"} id="filosofia" className="scroll-mt-24 space-y-6">
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <div className="flex items-center gap-2 text-amber-400 text-xs font-bold uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-accent text-sm font-semibold">
                 <Sparkles className="w-4 h-4" />
                 <span>Capítulo 1 · Principio Rector</span>
               </div>
               {onSelectPrompt && (
                 <button
                   onClick={() => onSelectPrompt("seed-26-protocolo-arranque-web")}
-                  className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 flex items-center gap-1"
+                  className="text-sm font-semibold text-accent hover:text-accent flex items-center gap-1"
                 >
                   <span>Abrir Prompt de Arranque</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
@@ -358,7 +228,7 @@ export const ManualPage: React.FC<ManualPageProps> = ({
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              <h2 tabIndex={-1} className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
                 Criterio sobre Generación: La Muerte del "AI Slop"
               </h2>
               <p className="text-muted leading-relaxed text-sm sm:text-base">
@@ -370,17 +240,17 @@ export const ManualPage: React.FC<ManualPageProps> = ({
             </div>
 
             {/* Distributed Comparison Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-6 rounded-3xl bg-rose-950/20 border border-rose-500/25 space-y-4">
+            <div className="grid grid-cols-1 gap-4">
+              <div className="p-6 rounded-xl bg-surface-secondary border border-rose-500/25 space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-rose-300 font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+                  <h3 className="text-accent font-semibold text-sm flex items-center gap-2">
                     <span>❌ Lo que hace la IA por defecto</span>
                   </h3>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300">
+                  <span className="text-sm font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-accent">
                     AI Slop
                   </span>
                 </div>
-                <ul className="text-xs text-rose-100/80 space-y-2.5 list-disc pl-4 leading-relaxed">
+                <ul className="text-sm text-accent space-y-2.5 list-disc pl-4 leading-relaxed">
                   <li>Degradados violetas y púrpuras saturados idénticos en todas las páginas.</li>
                   <li>Héroe centrado con texto gigante e ilegible sobre mallas oscuras estándar.</li>
                   <li>Tres tarjetas flotantes de idéntico tamaño sin jerarquía de contenido ni pesos.</li>
@@ -390,16 +260,16 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                 </ul>
               </div>
 
-              <div className="p-6 rounded-3xl bg-emerald-950/20 border border-emerald-500/25 space-y-4">
+              <div className="p-6 rounded-xl bg-surface-secondary border border-emerald-500/25 space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-emerald-300 font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+                  <h3 className="text-accent font-semibold text-sm flex items-center gap-2">
                     <span>✅ El Estándar Senior Anti-Genérico</span>
                   </h3>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300">
+                  <span className="text-sm font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-accent">
                     Clase Mundial
                   </span>
                 </div>
-                <ul className="text-xs text-emerald-100/80 space-y-2.5 list-disc pl-4 leading-relaxed">
+                <ul className="text-sm text-accent space-y-2.5 list-disc pl-4 leading-relaxed">
                   <li>Brief inferido y 3 diales calibrados (Varianza, Movimiento y Densidad).</li>
                   <li>Tokens reales de marcas de élite definidos en un archivo <code>DESIGN.md</code>.</li>
                   <li>Bento Grids asimétricos, jerarquía visual clara y micro-bordes elegantes (<code>border-border/80</code>).</li>
@@ -411,32 +281,32 @@ export const ManualPage: React.FC<ManualPageProps> = ({
             </div>
 
             {/* Protocol Callout Card */}
-            <div className="p-6 rounded-3xl bg-surface border border-border/80 space-y-3 shadow-lg">
-              <div className="flex items-center gap-2 text-indigo-400 text-xs font-bold uppercase tracking-wider">
+            <div className="p-6 rounded-xl bg-surface border border-border/80 space-y-3 ">
+              <div className="flex items-center gap-2 text-accent text-sm font-semibold">
                 <Sliders className="w-4 h-4" />
-                <span>Protocolo de Inicio Obligatorio con Danniel</span>
+                <span>Protocolo de inicio del proyecto</span>
               </div>
-              <p className="text-xs sm:text-sm text-muted leading-relaxed">
+              <p className="text-sm sm:text-sm text-muted leading-relaxed">
                 Al arrancar cualquier sitio web o landing page, el agente <strong>no codifica a ciegas</strong>.
                 Primero saluda, diagnostica el modo de superficie (<em>Persuade, Operate, Read o Experience</em>)
-                y propone activamente a Danniel un combo específico de 2 a 4 herramientas (referencia visual + sistema de componentes + filtro de animación/código)
+                y propone a la persona responsable un combo específico de 2 a 4 herramientas (referencia visual + sistema de componentes + filtro de animación/código)
                 para validar la dirección antes de tocar una sola línea de código.
               </p>
             </div>
           </section>
 
           {/* SECTION 2: FLUJO EN 7 FASES */}
-          <section id="fases" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
+          <section hidden={!readAll && activeAnchor !== "fases"} id="fases" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <div className="flex items-center gap-2 text-indigo-400 text-xs font-bold uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-accent text-sm font-semibold">
                 <Layers className="w-4 h-4" />
                 <span>Capítulo 2 · Metodología de Ejecución</span>
               </div>
-              <span className="text-[11px] font-mono text-muted">Orden Lineal Estricto</span>
+              <span className="text-sm font-mono text-muted">Orden Lineal Estricto</span>
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              <h2 tabIndex={-1} className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
                 El Flujo Maestro de 7 Fases
               </h2>
               <p className="text-muted text-sm sm:text-base leading-relaxed">
@@ -453,7 +323,7 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                   desc: "Definir para quién es la web y cuál es su objetivo. Identificar el modo: 'Persuade' (Landing de conversión), 'Operate' (SaaS/Dashboard), 'Read' (Blog/Docs) o 'Experience' (Showcase inmersivo).",
                   tools: "taste-skill · Protocolo de Inicio",
                   badge: "Estrategia",
-                  color: "border-indigo-500/30 bg-indigo-950/10",
+                  color: "border-border bg-surface",
                 },
                 {
                   idx: "1",
@@ -461,7 +331,7 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                   desc: "Establecer la paleta cromática exacta, pareja tipográfica, espaciados y radios. Si se emula una marca top (Stripe, Linear, Apple), se genera el archivo DESIGN.md en la raíz.",
                   tools: "getdesign.md · brandkit · DESIGN.md",
                   badge: "Tokens",
-                  color: "border-pink-500/30 bg-pink-950/10",
+                  color: "border-border bg-surface",
                 },
                 {
                   idx: "2",
@@ -469,7 +339,7 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                   desc: "Construcción del layout mobile-first. Inyección de Bento Grid, tarjetas con elevación sutil y jerarquía de texto donde el 100% de la información crítica sea legible sin scroll innecesario.",
                   tools: "uipro-cli · 21st.dev · Tailwind v4",
                   badge: "Estructura",
-                  color: "border-sky-500/30 bg-sky-950/10",
+                  color: "border-border bg-surface",
                 },
                 {
                   idx: "3",
@@ -477,7 +347,7 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                   desc: "Añadir retroalimentación táctil inmediata al presionar (:active:scale-[0.98]), transiciones fluidas de 180–250ms con curvas ease-out y soporte estricto a prefers-reduced-motion.",
                   tools: "emil-design-eng · Emil Kowalski Motion",
                   badge: "Física",
-                  color: "border-amber-500/30 bg-amber-950/10",
+                  color: "border-border bg-surface",
                 },
                 {
                   idx: "4",
@@ -485,7 +355,7 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                   desc: "Revisar el código generado bajo la lupa de Ponytail. Eliminar librerías npm innecesarias, wrappers redundantes y reemplazar lógica pesada por APIs nativas de HTML5 y CSS.",
                   tools: "ponytail · ponytail-audit",
                   badge: "Zero-Bloat",
-                  color: "border-emerald-500/30 bg-emerald-950/10",
+                  color: "border-border bg-surface",
                 },
                 {
                   idx: "5",
@@ -493,36 +363,36 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                   desc: "Inspeccionar con 60+ detectores: alinear ópticamente íconos, revisar contrastes WCAG AA (4.5:1), eliminar bordes toscos y verificar áreas táctiles de 44px en móviles.",
                   tools: "impeccable · web-design-guidelines · apple-design",
                   badge: "Auditoría",
-                  color: "border-rose-500/30 bg-rose-950/10",
+                  color: "border-border bg-surface",
                 },
                 {
                   idx: "6",
                   fase: "Verificación en Navegador & Pre-Lanzamiento",
-                  desc: "Correr pruebas autónomas con Playwright para asegurar 0 enlaces rotos, 0 errores en consola JS y verificar el Checklist de 20 Puntos antes de desplegar en Cloudflare.",
-                  tools: "Playwright · Checklist 20 Puntos · Wrangler Deploy",
+                  desc: "Probar los recorridos principales con Playwright, revisar enlaces y errores de consola, comprobar el checklist y retirar información privada antes de entregar una versión para revisión. Publicar en el destino acordado para el proyecto.",
+                  tools: "Playwright · Checklist · Revisión de privacidad · Publicación",
                   badge: "Lanzamiento",
-                  color: "border-violet-500/30 bg-violet-950/10",
+                  color: "border-border bg-surface",
                 },
               ].map((item) => (
                 <div
                   key={item.idx}
-                  className={`p-5 rounded-3xl border ${item.color} transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4`}
+                  className={`p-5 rounded-3xl border ${item.color} transition-colors flex flex-col items-start gap-4`}
                 >
                   <div className="flex items-start gap-4">
-                    <span className="w-9 h-9 rounded-2xl bg-white/[0.08] text-white flex items-center justify-center text-sm font-mono font-black shrink-0 border border-border">
+                    <span className="w-9 h-9 rounded-2xl bg-surface-secondary text-foreground flex items-center justify-center text-sm font-mono font-black shrink-0 border border-border">
                       {item.idx}
                     </span>
                     <div className="space-y-1">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="font-bold text-white text-base">{item.fase}</h3>
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/[0.06] text-muted">
+                        <h3 className="font-bold text-foreground text-base">{item.fase}</h3>
+                        <span className="text-sm font-bold px-2 py-0.5 rounded-full bg-surface-secondary text-muted">
                           {item.badge}
                         </span>
                       </div>
-                      <p className="text-xs text-muted/90 leading-relaxed max-w-2xl">{item.desc}</p>
+                      <p className="text-sm text-muted/90 leading-relaxed max-w-2xl">{item.desc}</p>
                     </div>
                   </div>
-                  <span className="text-[11px] font-mono px-3 py-1 rounded-xl bg-black/40 text-muted border border-border/80 shrink-0 self-end sm:self-center">
+                  <span className="text-sm font-mono px-3 py-1 rounded-xl bg-surface-secondary text-muted border border-border/80 max-w-full self-start">
                     {item.tools}
                   </span>
                 </div>
@@ -531,17 +401,17 @@ export const ManualPage: React.FC<ManualPageProps> = ({
           </section>
 
           {/* SECTION 3: BÓVEDA DE INSPIRACIÓN UX/UI */}
-          <section id="inspiracion" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
+          <section hidden={!readAll && activeAnchor !== "inspiracion"} id="inspiracion" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <div className="flex items-center gap-2 text-purple-400 text-xs font-bold uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-accent text-sm font-semibold">
                 <Compass className="w-4 h-4" />
                 <span>Capítulo 3 · Referencias Visuales</span>
               </div>
-              <span className="text-[11px] font-mono text-muted">4 Fuentes Oficiales</span>
+              <span className="text-sm font-mono text-muted">4 Fuentes Oficiales</span>
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              <h2 tabIndex={-1} className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
                 Bóveda de Inspiración & Galerías UX/UI de Élite
               </h2>
               <p className="text-muted text-sm sm:text-base leading-relaxed">
@@ -551,13 +421,13 @@ export const ManualPage: React.FC<ManualPageProps> = ({
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               {[
                 {
                   title: "Curated Design",
                   url: "https://curated.design/",
                   badge: "Dirección de Arte & Estilo",
-                  badgeColor: "bg-purple-500/15 text-purple-300 border-purple-500/25",
+                  badgeColor: "bg-surface-secondary text-accent border-border",
                   description: "Catálogo editorial y directorio de élite con los mejores sitios web contemporáneos. Filtra por estética (SaaS, editorial, brutalismo refinado, minimalismo, lujo).",
                   usage: "Fase 0: Ideal para definir el 'vibe' visual, combinaciones tipográficas y paletas cromáticas antes de crear DESIGN.md.",
                 },
@@ -565,7 +435,7 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                   title: "Landing Love",
                   url: "https://www.landing.love/",
                   badge: "Animación & Storytelling",
-                  badgeColor: "bg-pink-500/15 text-pink-300 border-pink-500/25",
+                  badgeColor: "bg-surface-secondary text-accent border-border",
                   description: "La mayor vitrina del mundo de landing pages interactivas y animadas. Filtrable por animaciones, categorías de producto y micro-interacciones.",
                   usage: "Fase 2 & 3: Estructuración de narrativa visual, secciones hero inmersivas y efectos de scroll en modo Persuade.",
                 },
@@ -573,7 +443,7 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                   title: "CTA Gallery",
                   url: "https://www.cta.gallery/",
                   badge: "Conversión & Botones",
-                  badgeColor: "bg-amber-500/15 text-amber-300 border-amber-500/25",
+                  badgeColor: "bg-surface-secondary text-accent border-border",
                   description: "Colección curada de los mejores Call To Action (CTAs), botones y bloques de cierre de alta conversión en la web.",
                   usage: "Fase 2 & 5: Diseño de llamadas a la acción irresistibles, formularios compactos y áreas táctiles de 44px con alto contraste.",
                 },
@@ -581,22 +451,22 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                   title: "The Component Gallery",
                   url: "https://component.gallery/",
                   badge: "Design Systems & Anatomía",
-                  badgeColor: "bg-emerald-500/15 text-emerald-300 border-emerald-500/25",
+                  badgeColor: "bg-surface-secondary text-accent border-border",
                   description: "Índice y repositorio exhaustivo de componentes reales de interfaz extraídos de Design Systems de empresas globales (Shopify, Apple, IBM, etc.).",
                   usage: "Fase 2: Verificación de la anatomía, variantes, jerarquía y accesibilidad en modales, acordeones, tablas y menús.",
                 },
               ].map((site, idx) => (
                 <div
                   key={idx}
-                  className="p-5 rounded-3xl bg-surface border border-border/80 hover:border-indigo-500/30 transition-all flex flex-col justify-between gap-4 shadow-sm group"
+                  className="p-5 rounded-xl bg-surface border border-border/80 hover:border-indigo-500/30 transition-colors flex flex-col justify-between gap-4  group"
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between flex-wrap gap-2">
                       <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-indigo-400 group-hover:scale-125 transition-transform" />
-                        <h3 className="font-bold text-white text-base">{site.title}</h3>
+                        <h3 className="font-bold text-foreground text-base">{site.title}</h3>
                       </div>
-                      <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${site.badgeColor}`}>
+                      <span className={`text-sm font-bold px-2.5 py-0.5 rounded-full border ${site.badgeColor}`}>
                         {site.badge}
                       </span>
                     </div>
@@ -605,16 +475,16 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                       href={site.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs text-indigo-400 hover:text-indigo-300 font-mono flex items-center gap-1.5 transition break-all"
+                      className="text-sm text-accent hover:text-accent font-mono flex items-center gap-1.5 transition break-all"
                     >
                       <span>{site.url}</span>
                       <ExternalLink className="w-3.5 h-3.5 shrink-0" />
                     </a>
 
-                    <p className="text-xs text-muted leading-relaxed">{site.description}</p>
+                    <p className="text-sm text-muted leading-relaxed">{site.description}</p>
                   </div>
 
-                  <div className="pt-3 border-t border-border/60 flex items-center justify-between flex-wrap gap-2 text-[11px]">
+                  <div className="pt-3 border-t border-border/60 flex items-center justify-between flex-wrap gap-2 text-sm">
                     <span className="text-muted">
                       <strong className="text-muted">Aplicación:</strong> {site.usage}
                     </span>
@@ -622,7 +492,7 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                       href={site.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] active:scale-95 text-foreground/90 transition font-semibold"
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-surface-secondary hover:bg-surface-secondary active:scale-95 text-foreground/90 transition font-semibold"
                     >
                       <span>Explorar</span>
                       <ArrowUpRight className="w-3.5 h-3.5" />
@@ -634,26 +504,26 @@ export const ManualPage: React.FC<ManualPageProps> = ({
           </section>
 
           {/* SECTION 4: CATÁLOGO DE HERRAMIENTAS */}
-          <section id="herramientas" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
+          <section hidden={!readAll && activeAnchor !== "herramientas"} id="herramientas" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-accent text-sm font-semibold">
                 <Terminal className="w-4 h-4" />
                 <span>Capítulo 4 · Arsenal de Habilidades</span>
               </div>
-              <span className="text-[11px] font-mono text-muted">Instalado en ~/.agents/skills</span>
+              <span className="text-sm font-mono text-muted">Según tu agente y entorno</span>
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              <h2 tabIndex={-1} className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
                 Catálogo de Skills y Comandos Globales
               </h2>
               <p className="text-muted text-sm sm:text-base leading-relaxed">
-                Herramientas instaladas globalmente en el sistema operativo de Danniel para invocar de forma
-                autónoma o mediante prompts específicos:
+                Selección de herramientas que puedes incorporar a tu flujo de trabajo. Comprueba su disponibilidad
+                y sigue las instrucciones de instalación del agente que utilices:
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               {[
                 {
                   name: "Taste Skill",
@@ -705,6 +575,13 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                   when: "Fase 5 de pulido de craft antes de producción.",
                 },
                 {
+                  name: "Anti-Slop Suite (38 Reglas)",
+                  cmd: "miqdadbadjuber/anti-slop (6 sub-skills + contrast-check.py)",
+                  promptId: "seed-27-anti-slop-suite",
+                  desc: "Suite de 6 skills (antislop, ui, copywriting, human, layoutmobile, code) con 38 reglas deterministas (R-01 a R-38), cero emojis decorativos, áreas táctiles de 44px, contraste WCAG AA verificado y Delivery Gate de 4 bloques.",
+                  when: "Auditoría integral de UI, copy, accesibilidad, móvil 375px y código antes de entrega.",
+                },
+                {
                   name: "Web Design Guidelines",
                   cmd: "vercel-labs/agent-skills",
                   promptId: "seed-22-web-design-guidelines-vercel",
@@ -728,15 +605,15 @@ export const ManualPage: React.FC<ManualPageProps> = ({
               ].map((tool, idx) => (
                 <div
                   key={idx}
-                  className="p-5 rounded-3xl bg-surface border border-border/80 hover:border-indigo-500/30 transition-all flex flex-col justify-between gap-4 shadow-sm"
+                  className="p-5 rounded-xl bg-surface border border-border/80 hover:border-indigo-500/30 transition-colors flex flex-col justify-between gap-4 "
                 >
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <h3 className="font-bold text-white text-base">{tool.name}</h3>
+                      <h3 className="font-bold text-foreground text-base">{tool.name}</h3>
                       {onSelectPrompt && (
                         <button
                           onClick={() => onSelectPrompt(tool.promptId)}
-                          className="text-[11px] font-semibold text-indigo-400 hover:text-indigo-300 flex items-center gap-1 active:scale-95"
+                          className="text-sm font-semibold text-accent hover:text-accent flex items-center gap-1 active:scale-95"
                           title="Usar este prompt en la bóveda"
                         >
                           <span>Usar Prompt</span>
@@ -744,12 +621,12 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                         </button>
                       )}
                     </div>
-                    <code className="text-xs text-indigo-300 font-mono block bg-black/40 px-2.5 py-1 rounded-lg border border-border/60">
+                    <code className="text-sm text-accent font-mono block bg-surface-secondary px-2.5 py-1 rounded-lg border border-border/60">
                       {tool.cmd}
                     </code>
-                    <p className="text-xs text-muted leading-relaxed">{tool.desc}</p>
+                    <p className="text-sm text-muted leading-relaxed">{tool.desc}</p>
                   </div>
-                  <div className="pt-3 border-t border-border/60 text-[11px] text-muted">
+                  <div className="pt-3 border-t border-border/60 text-sm text-muted">
                     <strong className="text-muted">Cuándo aplicar:</strong> {tool.when}
                   </div>
                 </div>
@@ -758,17 +635,17 @@ export const ManualPage: React.FC<ManualPageProps> = ({
           </section>
 
           {/* SECTION 5: TOKENS & DESIGN.MD */}
-          <section id="design-spec" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
+          <section hidden={!readAll && activeAnchor !== "design-spec"} id="design-spec" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <div className="flex items-center gap-2 text-pink-400 text-xs font-bold uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-accent text-sm font-semibold">
                 <Palette className="w-4 h-4" />
                 <span>Capítulo 5 · Sistema de Tokens</span>
               </div>
-              <span className="text-[11px] font-mono text-muted">Raíz del Proyecto</span>
+              <span className="text-sm font-mono text-muted">Raíz del Proyecto</span>
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              <h2 tabIndex={-1} className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
                 Estructura Oficial de un `DESIGN.md`
               </h2>
               <p className="text-muted text-sm sm:text-base leading-relaxed">
@@ -777,10 +654,10 @@ export const ManualPage: React.FC<ManualPageProps> = ({
               </p>
             </div>
 
-            <div className="relative bg-surface border border-border/80 rounded-3xl p-5 font-mono-code text-xs text-foreground/90 shadow-xl">
+            <div className="relative bg-surface border border-border/80 rounded-xl p-5 font-mono-code text-sm text-foreground/90 ">
               <div className="flex items-center justify-between border-b border-border/80 pb-3 mb-4">
                 <div className="flex items-center gap-2 text-muted">
-                  <Palette className="w-4 h-4 text-pink-400" />
+                  <Palette className="w-4 h-4 text-accent" />
                   <span className="font-semibold text-muted font-sans">DESIGN.md (Plantilla Maestra)</span>
                 </div>
                 <button
@@ -816,13 +693,13 @@ export const ManualPage: React.FC<ManualPageProps> = ({
                       "design-md-spec"
                     )
                   }
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] active:scale-95 text-foreground/90 transition font-sans text-xs font-semibold"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-secondary hover:bg-surface-secondary active:scale-95 text-foreground/90 transition font-sans text-sm font-semibold"
                   title="Copiar plantilla DESIGN.md"
                 >
                   {copiedCodeId === "design-md-spec" ? (
                     <>
-                      <Check className="w-3.5 h-3.5 text-emerald-400" />
-                      <span className="text-emerald-400">Copiado</span>
+                      <Check className="w-3.5 h-3.5 text-accent" />
+                      <span className="text-accent">Copiado</span>
                     </>
                   ) : (
                     <>
@@ -866,17 +743,17 @@ export const ManualPage: React.FC<ManualPageProps> = ({
           </section>
 
           {/* SECTION 6: EMIL KOWALSKI MOTION */}
-          <section id="emil-motion" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
+          <section hidden={!readAll && activeAnchor !== "emil-motion"} id="emil-motion" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <div className="flex items-center gap-2 text-sky-400 text-xs font-bold uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-accent text-sm font-semibold">
                 <Zap className="w-4 h-4" />
                 <span>Capítulo 6 · Micro-Interacciones</span>
               </div>
-              <span className="text-[11px] font-mono text-muted">180ms – 250ms máx</span>
+              <span className="text-sm font-mono text-muted">180ms – 250ms máx</span>
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              <h2 tabIndex={-1} className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
                 Las 5 Reglas de Oro de Emil Kowalski
               </h2>
               <p className="text-muted text-sm sm:text-base leading-relaxed">
@@ -885,57 +762,57 @@ export const ManualPage: React.FC<ManualPageProps> = ({
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <span className="text-sky-400 font-mono">1.</span>
+            <div className="grid grid-cols-1 gap-4">
+              <div className="p-5 rounded-xl bg-surface border border-border/80 space-y-2">
+                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <span className="text-accent font-mono">1.</span>
                   <span>Curvas: ease-out al entrar, ease-in al salir</span>
                 </h3>
-                <p className="text-xs text-muted leading-relaxed">
+                <p className="text-sm text-muted leading-relaxed">
                   El ojo humano percibe como natural cuando un objeto entra rápido y frena suavemente (<code>ease-out</code>).
                   Usar <code>ease-in</code> al abrir menús o modales se siente pesado y perezoso.
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <span className="text-sky-400 font-mono">2.</span>
+              <div className="p-5 rounded-xl bg-surface border border-border/80 space-y-2">
+                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <span className="text-accent font-mono">2.</span>
                   <span>Nunca escalar desde cero (scale 0)</span>
                 </h3>
-                <p className="text-xs text-muted leading-relaxed">
+                <p className="text-sm text-muted leading-relaxed">
                   En el mundo físico ningún objeto nace de un punto microscópico. Los modales y ventanas deben escalar
                   desde <code>scale(0.96)</code> o <code>scale(0.97)</code> con <code>opacity: 0</code> hacia <code>scale(1)</code>.
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <span className="text-sky-400 font-mono">3.</span>
+              <div className="p-5 rounded-xl bg-surface border border-border/80 space-y-2">
+                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <span className="text-accent font-mono">3.</span>
                   <span>Techo estricto de duración: 180ms – 250ms</span>
                 </h3>
-                <p className="text-xs text-muted leading-relaxed">
+                <p className="text-sm text-muted leading-relaxed">
                   Cualquier animación de más de 300ms en botones, menús o modales provoca fatiga cognitiva y hace sentir
                   lenta la app. Reserva duraciones mayores únicamente para transiciones de pantalla completa.
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <span className="text-sky-400 font-mono">4.</span>
+              <div className="p-5 rounded-xl bg-surface border border-border/80 space-y-2">
+                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <span className="text-accent font-mono">4.</span>
                   <span>Feedback físico inmediato al presionar (:active)</span>
                 </h3>
-                <p className="text-xs text-muted leading-relaxed">
+                <p className="text-sm text-muted leading-relaxed">
                   Todo botón debe responder al toque con <code>active:scale-[0.98]</code> y <code>transition: transform 100ms ease-out</code>.
                   El usuario debe sentir que los componentes tienen masa y resistencia física.
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2 md:col-span-2">
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <span className="text-sky-400 font-mono">5.</span>
+              <div className="p-5 rounded-xl bg-surface border border-border/80 space-y-2">
+                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <span className="text-accent font-mono">5.</span>
                   <span>Respeto inquebrantable a prefers-reduced-motion</span>
                 </h3>
-                <p className="text-xs text-muted leading-relaxed">
+                <p className="text-sm text-muted leading-relaxed">
                   Usuarios con sensibilidad vestibular requieren la anulación de desplazamientos y zooms automáticos mediante
                   la media query estándar de CSS. En su lugar, utiliza fundidos suaves de opacidad (<code>opacity</code>).
                 </p>
@@ -944,17 +821,17 @@ export const ManualPage: React.FC<ManualPageProps> = ({
           </section>
 
           {/* SECTION 7: APPLE HIG */}
-          <section id="apple-hig" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
+          <section hidden={!readAll && activeAnchor !== "apple-hig"} id="apple-hig" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <div className="flex items-center gap-2 text-indigo-300 text-xs font-bold uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-accent text-sm font-semibold">
                 <Eye className="w-4 h-4" />
                 <span>Capítulo 7 · Human Interface Guidelines</span>
               </div>
-              <span className="text-[11px] font-mono text-muted">Apple HIG Ergonomics</span>
+              <span className="text-sm font-mono text-muted">Apple HIG Ergonomics</span>
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              <h2 tabIndex={-1} className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
                 Ergonomía Táctil y Fluidez Nativa (Apple HIG)
               </h2>
               <p className="text-muted text-sm sm:text-base leading-relaxed">
@@ -963,34 +840,34 @@ export const ManualPage: React.FC<ManualPageProps> = ({
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
-                <h3 className="font-bold text-white text-sm">Área Táctil Mínima de 44x44 px</h3>
-                <p className="text-xs text-muted leading-relaxed">
+            <div className="grid grid-cols-1 gap-4">
+              <div className="p-5 rounded-xl bg-surface border border-border/80 space-y-2">
+                <h3 className="font-bold text-foreground text-sm">Área Táctil Mínima de 44x44 px</h3>
+                <p className="text-sm text-muted leading-relaxed">
                   En dispositivos móviles ningún botón, enlace o ícono interactivo debe medir menos de 44x44px de área de contacto real,
                   incluso si el glifo visual mide 16px (usar padding invisible o <code>min-h-[44px] min-w-[44px]</code>).
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
-                <h3 className="font-bold text-white text-sm">Feedback en pointerdown</h3>
-                <p className="text-xs text-muted leading-relaxed">
+              <div className="p-5 rounded-xl bg-surface border border-border/80 space-y-2">
+                <h3 className="font-bold text-foreground text-sm">Feedback en pointerdown</h3>
+                <p className="text-sm text-muted leading-relaxed">
                   La reacción visual debe ocurrir en el microsegundo en que el dedo toca la pantalla, no al soltarlo (<code>click</code>).
                   La latencia percibida debe ser de 0 milisegundos.
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
-                <h3 className="font-bold text-white text-sm">Materiales Translúcidos & Cristal Esmerilado</h3>
-                <p className="text-xs text-muted leading-relaxed">
+              <div className="p-5 rounded-xl bg-surface border border-border/80 space-y-2">
+                <h3 className="font-bold text-foreground text-sm">Materiales Translúcidos & Cristal Esmerilado</h3>
+                <p className="text-sm text-muted leading-relaxed">
                   Uso de fondos con <code>backdrop-blur-xl</code> en barras de navegación fijas y modales, permitiendo
                   intuir la profundidad y el contenido subyacente sin perder legibilidad.
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
-                <h3 className="font-bold text-white text-sm">Manipulación Directa 1:1</h3>
-                <p className="text-xs text-muted leading-relaxed">
+              <div className="p-5 rounded-xl bg-surface border border-border/80 space-y-2">
+                <h3 className="font-bold text-foreground text-sm">Manipulación Directa 1:1</h3>
+                <p className="text-sm text-muted leading-relaxed">
                   Cualquier gesto táctil (deslizamiento, drag & drop o apertura de cajones) debe seguir el dedo 1:1 y permitir
                   ser interrumpido o cancelado a mitad de camino sin bloquear la interfaz.
                 </p>
@@ -999,17 +876,17 @@ export const ManualPage: React.FC<ManualPageProps> = ({
           </section>
 
           {/* SECTION 8: PONYTAIL */}
-          <section id="ponytail" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
+          <section hidden={!readAll && activeAnchor !== "ponytail"} id="ponytail" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <div className="flex items-center gap-2 text-amber-300 text-xs font-bold uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-accent text-sm font-semibold">
                 <Scissors className="w-4 h-4" />
                 <span>Capítulo 8 · The Lazy Senior Dev</span>
               </div>
-              <span className="text-[11px] font-mono text-muted">-50% a -80% Código</span>
+              <span className="text-sm font-mono text-muted">-50% a -80% Código</span>
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              <h2 tabIndex={-1} className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
                 Ponytail: Código Conciso y Zero-Bloat
               </h2>
               <p className="text-muted text-sm sm:text-base leading-relaxed">
@@ -1019,27 +896,27 @@ export const ManualPage: React.FC<ManualPageProps> = ({
             </div>
 
             <div className="space-y-4">
-              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
-                <h3 className="text-sm font-bold text-white">1. Pregunta antes de escribir: ¿Realmente se necesita?</h3>
-                <p className="text-xs text-muted leading-relaxed">
+              <div className="p-5 rounded-xl bg-surface border border-border/80 space-y-2">
+                <h3 className="text-sm font-bold text-foreground">1. Pregunta antes de escribir: ¿Realmente se necesita?</h3>
+                <p className="text-sm text-muted leading-relaxed">
                   Aplica el principio YAGNI (<em>You Aren't Gonna Need It</em>). Elimina abstracciones prematuras y efectos
                   secundarios (<code>useEffect</code>) que solo sincronizan estados que podían calcularse en línea
                   con variables derivadas o <code>useMemo</code>.
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
-                <h3 className="text-sm font-bold text-white">2. Aprovecha las APIs Nativas de la Plataforma Web</h3>
-                <p className="text-xs text-muted leading-relaxed">
+              <div className="p-5 rounded-xl bg-surface border border-border/80 space-y-2">
+                <h3 className="text-sm font-bold text-foreground">2. Aprovecha las APIs Nativas de la Plataforma Web</h3>
+                <p className="text-sm text-muted leading-relaxed">
                   Usa <code>&lt;dialog&gt;</code> nativo con <code>showModal()</code>, <code>&lt;details&gt;</code> para acordeones,
                   <code>Intl.NumberFormat</code> para monedas, y selectores modernos de CSS (<code>:has()</code>, <code>@container</code>)
                   en lugar de dependencias npm pesadas.
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
-                <h3 className="text-sm font-bold text-white">3. Regla del Tamaño de Archivo</h3>
-                <p className="text-xs text-muted leading-relaxed">
+              <div className="p-5 rounded-xl bg-surface border border-border/80 space-y-2">
+                <h3 className="text-sm font-bold text-foreground">3. Regla del Tamaño de Archivo</h3>
+                <p className="text-sm text-muted leading-relaxed">
                   Ningún componente de React debería superar las 250 líneas. Si supera ese límite, divídelo en subcomponentes
                   atómicos con responsabilidades únicas y contratos de tipado estrictos.
                 </p>
@@ -1048,17 +925,17 @@ export const ManualPage: React.FC<ManualPageProps> = ({
           </section>
 
           {/* SECTION 9: IMPECCABLE & VERCEL */}
-          <section id="impeccable" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
+          <section hidden={!readAll && activeAnchor !== "impeccable"} id="impeccable" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <div className="flex items-center gap-2 text-rose-400 text-xs font-bold uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-accent text-sm font-semibold">
                 <ShieldCheck className="w-4 h-4" />
                 <span>Capítulo 9 · Auditoría de Calidad</span>
               </div>
-              <span className="text-[11px] font-mono text-muted">Vercel Labs & Impeccable</span>
+              <span className="text-sm font-mono text-muted">Vercel Labs & Impeccable</span>
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              <h2 tabIndex={-1} className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
                 Pulido Impeccable & Directrices de Vercel Labs
               </h2>
               <p className="text-muted text-sm sm:text-base leading-relaxed">
@@ -1067,45 +944,45 @@ export const ManualPage: React.FC<ManualPageProps> = ({
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
+            <div className="grid grid-cols-1 gap-4">
+              <div className="p-5 rounded-xl bg-surface border border-border/80 space-y-2">
+                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                   <span>📐 Rejilla de 8pt Estricta</span>
                 </h3>
-                <p className="text-xs text-muted leading-relaxed">
+                <p className="text-sm text-muted leading-relaxed">
                   Todos los márgenes, paddings y espaciados entre secciones deben seguir la escala de 4px / 8px:
                   <code>p-2 (8px), p-3 (12px), p-4 (16px), p-6 (24px), p-8 (32px), p-12 (48px)</code>.
                   Cero medidas arbitrarias como 13px o 27px.
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
+              <div className="p-5 rounded-xl bg-surface border border-border/80 space-y-2">
+                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                   <span>👁️ Contraste WCAG AA 4.5:1</span>
                 </h3>
-                <p className="text-xs text-muted leading-relaxed">
+                <p className="text-sm text-muted leading-relaxed">
                   Todo texto debe superar la relación 4.5:1. En fondos oscuros (<code>#07090e</code>),
                   los títulos usan <code>#f8fafc</code> (100% contraste), las descripciones <code>#94a3b8</code> y
                   los metadatos <code>#64748b</code>.
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
+              <div className="p-5 rounded-xl bg-surface border border-border/80 space-y-2">
+                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                   <span>⌨️ Navegación por Teclado</span>
                 </h3>
-                <p className="text-xs text-muted leading-relaxed">
+                <p className="text-sm text-muted leading-relaxed">
                   Nunca elimines el outline sin proveer un anillo accesible: usar{" "}
                   <code>focus-visible:ring-2 focus-visible:ring-indigo-500/50 focus-visible:outline-none</code>{" "}
                   para navegación clara por tabulador.
                 </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
+              <div className="p-5 rounded-xl bg-surface border border-border/80 space-y-2">
+                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                   <span>🚫 Cero Truncamiento Involuntario</span>
                 </h3>
-                <p className="text-xs text-muted leading-relaxed">
+                <p className="text-sm text-muted leading-relaxed">
                   No cortes datos críticos con <code>truncate</code> a menos que proporciones un tooltip
                   o botón de expansión accesible para el usuario.
                 </p>
@@ -1114,17 +991,17 @@ export const ManualPage: React.FC<ManualPageProps> = ({
           </section>
 
           {/* SECTION 10: PLAYWRIGHT */}
-          <section id="playwright" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
+          <section hidden={!readAll && activeAnchor !== "playwright"} id="playwright" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <div className="flex items-center gap-2 text-violet-400 text-xs font-bold uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-accent text-sm font-semibold">
                 <Code2 className="w-4 h-4" />
                 <span>Capítulo 10 · Testing Autónomo E2E</span>
               </div>
-              <span className="text-[11px] font-mono text-muted">Playwright Test Suite</span>
+              <span className="text-sm font-mono text-muted">Playwright Test Suite</span>
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              <h2 tabIndex={-1} className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
                 Pruebas Autónomas de Runtime con Playwright
               </h2>
               <p className="text-muted text-sm sm:text-base leading-relaxed">
@@ -1133,10 +1010,10 @@ export const ManualPage: React.FC<ManualPageProps> = ({
               </p>
             </div>
 
-            <div className="relative bg-surface border border-border/80 rounded-3xl p-5 font-mono-code text-xs text-foreground/90 shadow-xl">
+            <div className="relative bg-surface border border-border/80 rounded-xl p-5 font-mono-code text-sm text-foreground/90 ">
               <div className="flex items-center justify-between border-b border-border/80 pb-3 mb-4">
                 <div className="flex items-center gap-2 text-muted font-sans">
-                  <Terminal className="w-4 h-4 text-violet-400" />
+                  <Terminal className="w-4 h-4 text-accent" />
                   <span className="font-semibold text-muted">tests/e2e-quality.spec.ts</span>
                 </div>
                 <button
@@ -1172,13 +1049,13 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
                       "playwright-script"
                     )
                   }
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] active:scale-95 text-foreground/90 transition font-sans text-xs font-semibold"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-secondary hover:bg-surface-secondary active:scale-95 text-foreground/90 transition font-sans text-sm font-semibold"
                   title="Copiar script Playwright"
                 >
                   {copiedCodeId === "playwright-script" ? (
                     <>
-                      <Check className="w-3.5 h-3.5 text-emerald-400" />
-                      <span className="text-emerald-400">Copiado</span>
+                      <Check className="w-3.5 h-3.5 text-accent" />
+                      <span className="text-accent">Copiado</span>
                     </>
                   ) : (
                     <>
@@ -1222,15 +1099,15 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
           </section>
 
           {/* SECTION 11: CHECKLIST INTERACTIVO */}
-          <section id="checklist" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
+          <section hidden={!readAll && activeAnchor !== "checklist"} id="checklist" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-accent text-sm font-semibold">
                 <CheckCircle2 className="w-4 h-4" />
                 <span>Capítulo 11 · Auditoría de Producción</span>
               </div>
               <button
                 onClick={resetChecklist}
-                className="flex items-center gap-1.5 text-xs text-muted hover:text-rose-400 transition"
+                className="flex items-center gap-1.5 text-sm text-muted hover:text-accent transition"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Reiniciar checklist</span>
@@ -1239,7 +1116,7 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
 
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="space-y-1">
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                <h2 tabIndex={-1} className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
                   Checklist de 20 Puntos Pre-Lanzamiento
                 </h2>
                 <p className="text-muted text-sm leading-relaxed">
@@ -1248,14 +1125,14 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
               </div>
 
               {/* Progress Summary Card */}
-              <div className="flex items-center gap-3 bg-surface border border-border/80 px-5 py-3 rounded-2xl shadow-md">
+              <div className="flex items-center gap-3 bg-surface border border-border/80 px-5 py-3 rounded-2xl ">
                 <div className="text-right">
-                  <span className="text-sm font-bold text-white block">
+                  <span className="text-sm font-bold text-foreground block">
                     {checkedCount} de {checklist.length}
                   </span>
-                  <span className="text-[11px] text-muted">Puntos Aprobados</span>
+                  <span className="text-sm text-muted">Puntos Aprobados</span>
                 </div>
-                <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center font-extrabold text-emerald-400 text-base font-mono">
+                <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center font-extrabold text-accent text-base font-mono">
                   {progressPercent}%
                 </div>
               </div>
@@ -1263,16 +1140,16 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
 
             {/* Visual Progress Bar */}
             <div className="space-y-2">
-              <div className="w-full h-3 bg-white/[0.06] rounded-full overflow-hidden p-0.5 border border-border/60">
+              <div className="w-full h-3 bg-surface-secondary rounded-full overflow-hidden p-0.5 border border-border/60">
                 <div
-                  className="h-full bg-gradient-to-r from-indigo-500 via-violet-500 to-emerald-500 rounded-full transition-all duration-300"
+                  className="h-full     rounded-full transition-colors duration-300"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
-              <div className="flex items-center justify-between text-[11px] text-muted">
+              <div className="flex items-center justify-between text-sm text-muted">
                 <span>0% Sin revisar</span>
                 <span>50% Desarrollo avanzado</span>
-                <span className="text-emerald-400 font-semibold">100% Ready for Production 🚀</span>
+                <span className="text-accent font-semibold">100% Ready for Production 🚀</span>
               </div>
             </div>
 
@@ -1280,171 +1157,132 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
             <div className="flex items-center gap-2 pt-2">
               <button
                 onClick={() => setChecklistFilter("todos")}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition ${
+                className={`px-3 py-1.5 rounded-xl text-sm font-semibold transition ${
                   checklistFilter === "todos"
-                    ? "bg-indigo-600 text-white shadow-xs"
-                    : "bg-white/[0.04] text-muted hover:text-white"
+                    ? "bg-accent text-accent-foreground"
+                    : "bg-surface-secondary text-muted hover:text-foreground"
                 }`}
               >
                 Todos ({checklist.length})
               </button>
               <button
                 onClick={() => setChecklistFilter("pendientes")}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition ${
+                className={`px-3 py-1.5 rounded-xl text-sm font-semibold transition ${
                   checklistFilter === "pendientes"
-                    ? "bg-amber-600/80 text-white shadow-xs"
-                    : "bg-white/[0.04] text-muted hover:text-white"
+                    ? "bg-accent text-accent-foreground"
+                    : "bg-surface-secondary text-muted hover:text-foreground"
                 }`}
               >
                 Pendientes ({checklist.length - checkedCount})
               </button>
               <button
                 onClick={() => setChecklistFilter("completados")}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition ${
+                className={`px-3 py-1.5 rounded-xl text-sm font-semibold transition ${
                   checklistFilter === "completados"
-                    ? "bg-emerald-600 text-white shadow-xs"
-                    : "bg-white/[0.04] text-muted hover:text-white"
+                    ? "bg-accent text-accent-foreground"
+                    : "bg-surface-secondary text-muted hover:text-foreground"
                 }`}
               >
                 Completados ({checkedCount})
               </button>
             </div>
 
-            {/* Interactive Checklist Cards */}
-            <div className="space-y-2.5">
-              {filteredChecklist.map((item) => (
-                <div
-                  key={item.id}
-                  onClick={() => toggleChecklistItem(item.id)}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center gap-3.5 select-none active:scale-[0.99] ${
-                    item.checked
-                      ? "bg-emerald-950/25 border-emerald-500/35 text-emerald-100"
-                      : "bg-surface border-border/70 text-muted hover:border-border"
-                  }`}
-                >
-                  <div className="shrink-0">
-                    {item.checked ? (
-                      <CheckSquare className="w-5 h-5 text-emerald-400" />
-                    ) : (
-                      <Square className="w-5 h-5 text-muted" />
-                    )}
-                  </div>
-                  <div className="flex-1 flex items-center justify-between gap-3">
-                    <span className="text-xs sm:text-sm font-medium leading-relaxed">
-                      <strong className="text-muted font-mono mr-2">#{item.id}</strong>
-                      {item.text}
-                    </span>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-white/[0.06] text-muted shrink-0">
-                      {item.category}
-                    </span>
-                  </div>
-                </div>
-              ))}
+            <div className="checklist-items">
+              {filteredChecklist.map((item) => <label key={item.id} className="checklist-item">
+                <input type="checkbox" checked={item.checked} onChange={() => toggleChecklistItem(item.id)} />
+                <span><span className="checklist-category">{item.category} · {item.id}</span>{item.text}</span>
+              </label>)}
+              {filteredChecklist.length === 0 && <p className="checklist-empty">No hay puntos en este filtro.</p>}
             </div>
           </section>
 
-          {/* SECTION 12: DESPLIEGUE EN CLOUDFLARE */}
-          <section id="deploy" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
+          {/* SECTION 12: ENTREGA Y PUBLICACIÓN */}
+          <section hidden={!readAll && activeAnchor !== "deploy"} id="deploy" className="scroll-mt-24 space-y-6 pt-6 border-t border-border/60">
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <div className="flex items-center gap-2 text-orange-400 text-xs font-bold uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-accent text-sm font-semibold">
                 <Cloud className="w-4 h-4" />
-                <span>Capítulo 12 · Infraestructura & Edge</span>
+                <span>Capítulo 12 · Entrega y publicación</span>
               </div>
-              <span className="text-[11px] font-mono text-muted">Cloudflare Workers Assets</span>
+              <span className="text-sm font-mono text-muted">Adaptado a cada proyecto</span>
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                Despliegue Global en Cloudflare Workers & D1
+              <h2 tabIndex={-1} className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
+                Del proyecto revisado a la publicación
               </h2>
               <p className="text-muted text-sm sm:text-base leading-relaxed">
-                Todo proyecto de Danniel se publica de manera ultra-rápida y con latencia mínima en la red
-                perimetral de Cloudflare utilizando Workers Static Assets y base de datos D1:
+                Una landing estática, una web con contenido y una aplicación con usuarios tienen necesidades distintas.
+                El agente debe preparar la entrega y utilizar el proveedor, la cuenta y el dominio acordados para ese proyecto.
+                Esta guía no presupone un alojamiento ni una infraestructura personal.
               </p>
             </div>
 
             <div className="space-y-4">
-              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <span className="text-orange-400 font-mono">1.</span>
-                  <span>Compilación de TypeScript & Vite</span>
+              <div className="p-5 rounded-xl bg-surface border border-border/80 space-y-2">
+                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <span className="text-accent font-mono">1.</span>
+                  <span>Definir el destino y preparar la entrega</span>
                 </h3>
-                <p className="text-xs text-muted">
-                  Genera los archivos optimizados en la carpeta <code>dist/</code>:
+                <p className="text-sm text-muted">
+                  Identifica si el proyecto necesita solo archivos estáticos o también servidor, base de datos y autenticación.
+                  Revisa los comandos de compilación del repositorio, las variables necesarias y las instrucciones del proveedor elegido.
+                  Entrega una vista previa comprobable antes de publicar.
                 </p>
-                <code className="text-xs font-mono bg-black/40 px-3 py-1.5 rounded-xl text-indigo-300 block border border-border/60">
-                  npm run build
-                </code>
               </div>
 
-              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <span className="text-orange-400 font-mono">2.</span>
-                  <span>Configuración en wrangler.jsonc</span>
+              <div className="p-5 rounded-xl bg-surface border border-border/80 space-y-2">
+                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <span className="text-accent font-mono">2.</span>
+                  <span>Revisar qué información se hará pública</span>
                 </h3>
-                <p className="text-xs text-muted">
-                  Asegúrate de declarar los activos estáticos y el custom domain:
+                <p className="text-sm text-muted">
+                  Revisa contenido, prompts, archivos compilados, imágenes, mapas de código fuente y respuestas de la API.
+                  Retira credenciales, rutas locales, correos privados, identificadores de cuentas y datos de clientes o proyectos internos.
+                  Usa ejemplos ficticios como <code>example.com</code> y variables descriptivas en las plantillas.
                 </p>
-                <pre className="text-xs font-mono bg-black/40 p-3.5 rounded-xl text-muted overflow-x-auto border border-border/60">
-{`"assets": {
-  "directory": "./dist",
-  "not_found_handling": "single-page-application"
-},
-"routes": [
-  { "pattern": "tudominio.dannieldev.com", "custom_domain": true }
-]`}
-                </pre>
+                <p className="text-sm text-muted">
+                  Las claves privadas deben permanecer en el servidor. Ocultar un dato en la interfaz o bloquear su indexación
+                  no impide que se lea desde un archivo público o un endpoint sin control de acceso.
+                </p>
               </div>
 
-              <div className="p-5 rounded-3xl bg-surface border border-border/80 space-y-2">
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <span className="text-orange-400 font-mono">3.</span>
-                  <span>Publicación Instantánea</span>
+              <div className="p-5 rounded-xl bg-surface border border-border/80 space-y-2">
+                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <span className="text-accent font-mono">3.</span>
+                  <span>Publicar y verificar la entrega</span>
                 </h3>
-                <p className="text-xs text-muted">
-                  Ejecuta Wrangler para subir únicamente los archivos modificados a la red mundial en menos de 3 segundos:
+                <p className="text-sm text-muted">
+                  Confirma el destino y la autorización para publicar. Ejecuta el procedimiento del proyecto y comprueba la URL final,
+                  HTTPS, navegación, formularios y permisos de acceso. Documenta cómo actualizar la versión y recuperar la anterior
+                  si algo falla, sin incluir secretos en la documentación compartida.
                 </p>
-                <code className="text-xs font-mono bg-black/40 px-3 py-1.5 rounded-xl text-emerald-300 block border border-border/60">
-                  npx wrangler deploy
-                </code>
               </div>
             </div>
 
             {/* Bottom Call to Action */}
-            <div className="p-6 rounded-3xl bg-gradient-to-r from-indigo-950/30 via-[#0c101d] to-violet-950/30 border border-indigo-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="p-6 rounded-xl     border border-indigo-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div>
-                <h3 className="text-base font-bold text-white">¿Listo para comenzar a construir?</h3>
-                <p className="text-xs text-muted">
+                <h3 className="text-base font-bold text-foreground">¿Listo para comenzar a construir?</h3>
+                <p className="text-sm text-muted">
                   Abre la Bóveda de Prompts y ejecuta el Protocolo de Inicio con tu asistente.
                 </p>
               </div>
               <button
                 onClick={onNavigateToPrompts}
-                className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition active:scale-95 shadow-md shadow-indigo-600/30 shrink-0 flex items-center gap-2"
+                className="px-5 py-2.5 rounded-xl bg-accent hover:bg-accent/90 text-accent-foreground font-semibold text-sm transition active:scale-95   shrink-0 flex items-center gap-2"
               >
                 <span>Ir a la Bóveda de Prompts</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
           </section>
+          {!readAll && <nav className="chapter-pagination" aria-label="Navegar entre capítulos">
+            {activeIndex > 0 ? <a href={`/manual#${SECTIONS[activeIndex - 1].id}`} onClick={(event) => chapterLink(event, SECTIONS[activeIndex - 1].id)}><span>Anterior</span>{SECTIONS[activeIndex - 1].title}</a> : <span />}
+            {activeIndex < SECTIONS.length - 1 && <a href={`/manual#${SECTIONS[activeIndex + 1].id}`} onClick={(event) => chapterLink(event, SECTIONS[activeIndex + 1].id)}><span>Siguiente</span>{SECTIONS[activeIndex + 1].title}<ChevronRight size={18} aria-hidden="true" /></a>}
+          </nav>}
         </main>
       </div>
-
-      {/* Footer */}
-      <footer className="border-t border-border/60 py-6 px-4 text-center text-xs text-muted mt-auto bg-background/60">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-muted">📖 Manual Web Anti-Genérica</span>
-            <span>·</span>
-            <span>Estándar de ingeniería @dannieldev</span>
-          </div>
-          <div className="flex items-center gap-4 text-muted text-[11px]">
-            <span>Cloudflare Workers + D1</span>
-            <span>·</span>
-            <span>11 Capítulos Técnicos</span>
-          </div>
-        </div>
-      </footer>
+      <footer className="site-footer page-width"><span>Manual web · @dannieldev</span><span>{SECTIONS.length} capítulos para consultar a tu ritmo</span></footer>
     </div>
   );
 };

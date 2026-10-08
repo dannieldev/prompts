@@ -1,3 +1,4 @@
+import { useDialogFocus } from "../hooks/useDialogFocus";
 import React, { useState, useEffect } from "react";
 import {
   X,
@@ -14,7 +15,6 @@ import {
 } from "lucide-react";
 import { Button, Chip, Kbd } from "@heroui/react";
 import { PromptItem } from "../types";
-import { CATEGORY_ICONS } from "../lib/constants";
 import { extractVariables } from "../lib/variableUtils";
 
 interface PromptDetailModalProps {
@@ -36,6 +36,7 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
   onToggleFavorite,
   onCopied,
 }) => {
+  const dialogRef = useDialogFocus(isOpen);
   const [copied, setCopied] = useState(false);
 
   // Handle ESC key
@@ -74,8 +75,8 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md">
-      <div className="relative w-full max-w-4xl max-h-[92vh] bg-surface border border-border rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-modal-enter">
+    <div className="dialog-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/30">
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-label="Leer prompt" tabIndex={-1} className="app-dialog relative w-full max-w-4xl max-h-[92vh] bg-surface border border-border rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-modal-enter">
         {/* Header */}
         <div className="px-6 py-4.5 border-b border-border flex items-center justify-between bg-surface-secondary/50">
           <div className="flex items-center gap-3">
@@ -92,16 +93,8 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
 
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <Chip
-                  color="accent"
-                  variant="soft"
-                  size="sm"
-                  className="font-semibold text-[11px]"
-                >
-                  <span className="mr-1">{CATEGORY_ICONS[prompt.category]}</span>
-                  <span>{prompt.category}</span>
-                </Chip>
-                <span className="text-xs text-muted flex items-center gap-1 font-medium">
+                <span className="category-label" data-category={prompt.category}>{prompt.category}</span>
+                <span className="text-sm text-muted flex items-center gap-1 font-medium">
                   <Calendar className="w-3 h-3 text-muted" />
                   <span>{formatDate(prompt.updated_at || prompt.created_at)}</span>
                 </span>
@@ -118,7 +111,7 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
                 onClose();
                 onEdit(prompt);
               }}
-              className="text-muted hover:text-foreground rounded-xl text-xs"
+              className="text-muted hover:text-foreground rounded-xl text-sm"
               aria-label="Editar prompt"
             >
               <Edit2 className="w-3.5 h-3.5 mr-1" />
@@ -142,8 +135,8 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
         <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-5">
           {/* Description */}
           {prompt.description && (
-            <div className="bg-default/20 border border-border/70 rounded-2xl p-4 text-xs text-foreground/90 leading-relaxed font-normal shadow-inner">
-              <strong className="text-muted block mb-1 text-[11px] uppercase tracking-wider font-semibold">
+            <div className="bg-default/20 border border-border/70 rounded-2xl p-4 text-sm text-foreground/90 leading-relaxed font-normal ">
+              <strong className="text-muted block mb-1 text-sm uppercase tracking-wider font-semibold">
                 Propósito & Caso de Uso:
               </strong>
               {prompt.description}
@@ -154,7 +147,7 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
           <div className="flex items-center justify-between flex-wrap gap-3">
             {prompt.models && prompt.models.length > 0 && (
               <div className="flex items-center gap-1.5 flex-wrap">
-                <span className="text-xs text-muted flex items-center gap-1 mr-1">
+                <span className="text-sm text-muted flex items-center gap-1 mr-1">
                   <Bot className="w-3.5 h-3.5 text-accent" />
                   <span>Modelos recomendados:</span>
                 </span>
@@ -163,7 +156,7 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
                     key={m}
                     variant="secondary"
                     size="sm"
-                    className="text-[11px]"
+                    className="text-sm"
                   >
                     {m}
                   </Chip>
@@ -180,7 +173,7 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
                     color="accent"
                     variant="soft"
                     size="sm"
-                    className="text-[10px]"
+                    className="text-xs"
                   >
                     #{t}
                   </Chip>
@@ -197,8 +190,8 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
                   <Zap className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-foreground">Variables Dinámicas Detectadas</h4>
-                  <p className="text-[11px] text-muted">
+                  <h4 className="text-sm font-bold text-foreground">Variables Dinámicas Detectadas</h4>
+                  <p className="text-sm text-muted">
                     Este prompt tiene {variables.length} campos personalizables:{" "}
                     <span className="text-accent font-mono">
                       {variables.map((v) => `{{${v.key}}}`).join(", ")}
@@ -214,27 +207,27 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
                   onClose();
                   onUseVariables(prompt);
                 }}
-                className="rounded-xl text-xs font-semibold shrink-0"
+                className="rounded-xl text-sm font-semibold shrink-0"
               >
                 <Sliders className="w-3.5 h-3.5 mr-1" />
-                <span>Rellenar Ahora</span>
+                <span>Adaptar prompt</span>
               </Button>
             </div>
           )}
 
           {/* Prompt Full Text */}
           <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted flex items-center gap-1.5">
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <span className="text-sm font-semibold uppercase tracking-wider text-muted flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-accent" />
                 Contenido Completo del Prompt
               </span>
-              <span className="text-[11px] font-mono text-muted">
+              <span className="text-sm font-mono text-muted">
                 {prompt.content.length} caracteres
               </span>
             </div>
 
-            <div className="bg-default/30 border border-border rounded-2xl p-5 font-mono-code text-xs text-foreground leading-relaxed overflow-y-auto max-h-[420px] whitespace-pre-wrap select-text shadow-inner">
+            <div className="bg-default/30 border border-border rounded-2xl p-5 font-mono-code text-base text-foreground leading-relaxed overflow-y-auto max-h-[420px] whitespace-pre-wrap select-text ">
               {prompt.content}
             </div>
           </div>
@@ -246,9 +239,9 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="text-xs font-medium text-muted hover:text-foreground rounded-xl"
+            className="text-sm font-medium text-muted hover:text-foreground rounded-xl"
           >
-            Cerrar <Kbd className="ml-1 text-[9px]">Esc</Kbd>
+            Cerrar <Kbd className="ml-1 text-xs">Esc</Kbd>
           </Button>
 
           <div className="flex items-center gap-2">
@@ -256,7 +249,7 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
               variant={copied ? "primary" : "secondary"}
               size="sm"
               onClick={handleCopyDirect}
-              className="rounded-xl text-xs font-medium transition-all"
+              className="rounded-xl text-sm font-medium transition-all"
             >
               {copied ? (
                 <>
@@ -266,7 +259,7 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
               ) : (
                 <>
                   <Copy className="w-4 h-4 mr-1" />
-                  <span>Copiar Texto Crudo</span>
+                  <span>Copiar texto</span>
                 </>
               )}
             </Button>
@@ -279,10 +272,10 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
                   onClose();
                   onUseVariables(prompt);
                 }}
-                className="rounded-xl text-xs font-semibold shadow-xs"
+                className="rounded-xl text-sm font-semibold shadow-xs"
               >
                 <Sliders className="w-4 h-4 mr-1" />
-                <span>Rellenar Variables</span>
+                <span>Adaptar prompt</span>
               </Button>
             )}
           </div>
