@@ -43,7 +43,7 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
       setDraftContent(prompt.content);
       setCopied(false);
     }
-  }, [prompt, isOpen]);
+  }, [prompt?.id, isOpen]);
 
   // Handle ESC key
   useEffect(() => {
@@ -58,7 +58,7 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
 
   if (!isOpen || !prompt) return null;
 
-  const variables = extractVariables(prompt.content);
+  const variables = extractVariables(draftContent || prompt.content);
   const hasVariables = variables.length > 0;
   const isModified = draftContent !== prompt.content;
 
@@ -211,7 +211,7 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
                 size="sm"
                 onClick={() => {
                   onClose();
-                  onUseVariables(prompt);
+                  onUseVariables({ ...prompt, content: draftContent });
                 }}
                 className="rounded-xl text-sm font-semibold shrink-0"
               >
@@ -288,7 +288,7 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
                 size="sm"
                 onClick={() => {
                   onClose();
-                  onUseVariables(prompt);
+                  onUseVariables({ ...prompt, content: draftContent });
                 }}
                 className="rounded-xl text-sm font-semibold shadow-xs"
               >

@@ -68,6 +68,13 @@ test("colección aislada: catálogo base inmutable, favoritos e importación sin
 
     storage.set("prompts_celebres_public_v1", "[]");
     assert.equal((await promptApi.getAllPrompts()).length, 25);
+
+    // Si localStorage contiene JSON corrupto o no-arreglo, recupera automáticamente los 25 prompts base
+    storage.set("prompts_celebres_public_v1", "{json-corrupto");
+    assert.equal((await promptApi.getAllPrompts()).length, 25);
+    storage.set("prompts_celebres_public_v1", "{}");
+    assert.equal((await promptApi.getAllPrompts()).length, 25);
+
     assert.equal(storage.get(legacyKey), legacy);
   } finally {
     globalThis.fetch = originalFetch;
@@ -76,7 +83,7 @@ test("colección aislada: catálogo base inmutable, favoritos e importación sin
   }
 });
 
-test("interfaz sin edición ni borrado persistente ni restaurar seeds; edición solo temporal en pop-up", async () => {
+test("interfaz sin edición ni borrado persistente ni restaurar seeds; edición solo temporal en pop-up y variables preservan estructura", async () => {
   const { readFileSync } = await import("node:fs");
   const exportModal = readFileSync("src/components/ExportImportModal.tsx", "utf8");
   const promptCard = readFileSync("src/components/PromptCard.tsx", "utf8");
@@ -92,4 +99,11 @@ test("interfaz sin edición ni borrado persistente ni restaurar seeds; edición 
   assert.match(detailModal, /<textarea/);
   assert.match(variableModal, /no se guardan cambios/i);
   assert.match(variableModal, /<textarea[\s\S]*id="variable-live-editor"/);
+
+  const varBundle = await build({ entryPoints: ["src/lib/variableUtils.ts"], bundle: true, write: false, format: "esm", platform: "browser" });
+  const { replaceVariables } = await import(`data:text/javascript;base64,${Buffer.from(varBundle.outputFiles[0].text).toString("base64")}`);
+  assert.equal(
+    replaceVariables("Experto en {{lenguaje}} y {{arquitectura}}", { lenguaje: "", arquitectura: "Clean" }),
+    "Experto en {{lenguaje}} y Clean"
+  );
 });

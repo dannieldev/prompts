@@ -8,31 +8,35 @@ const SEED_IDS = new Set(SEED_PROMPTS.map((p) => p.id));
 function getLocalPrompts(): PromptItem[] {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (raw !== null) {
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) throw new Error("El respaldo local no tiene un formato válido.");
+    try {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        const favById = new Map<string, boolean>();
+        const customPrompts: PromptItem[] = [];
 
-    const favById = new Map<string, boolean>();
-    const customPrompts: PromptItem[] = [];
-
-    for (const item of parsed) {
-      if (!item || typeof item !== "object") continue;
-      if (SEED_IDS.has(item.id)) {
-        if (typeof item.is_favorite === "boolean") {
-          favById.set(item.id, item.is_favorite);
+        for (const item of parsed) {
+          if (!item || typeof item !== "object") continue;
+          if (SEED_IDS.has(item.id)) {
+            if (typeof item.is_favorite === "boolean") {
+              favById.set(item.id, item.is_favorite);
+            }
+          } else if (item.id && item.title && item.content) {
+            customPrompts.push(item);
+          }
         }
-      } else if (item.id && item.title && item.content) {
-        customPrompts.push(item);
+
+        const intactSeeds = structuredClone(SEED_PROMPTS).map((seed) => ({
+          ...seed,
+          is_favorite: favById.has(seed.id) ? favById.get(seed.id)! : seed.is_favorite,
+        }));
+
+        const combined = [...customPrompts, ...intactSeeds];
+        saveLocalPrompts(combined);
+        return combined;
       }
+    } catch {
+      // Recuperar catálogo base automáticamente si el almacenamiento local está corrupto
     }
-
-    const intactSeeds = structuredClone(SEED_PROMPTS).map((seed) => ({
-      ...seed,
-      is_favorite: favById.has(seed.id) ? favById.get(seed.id)! : seed.is_favorite,
-    }));
-
-    const combined = [...customPrompts, ...intactSeeds];
-    saveLocalPrompts(combined);
-    return combined;
   }
   const prompts = structuredClone(SEED_PROMPTS);
   saveLocalPrompts(prompts);

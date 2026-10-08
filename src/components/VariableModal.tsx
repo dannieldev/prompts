@@ -20,7 +20,7 @@ export const VariableModal: React.FC<VariableModalProps> = ({
 }) => {
   const dialogRef = useDialogFocus(isOpen);
   const [values, setValues] = useState<Record<string, string>>({});
-  const [customDraft, setCustomDraft] = useState<string | null>(null);
+  const [templateDraft, setTemplateDraft] = useState<string>("");
   const [copied, setCopied] = useState(false);
   const [showPreview, setShowPreview] = useState(true);
 
@@ -35,10 +35,10 @@ export const VariableModal: React.FC<VariableModalProps> = ({
         initial[v.key] = "";
       });
       setValues(initial);
-      setCustomDraft(null);
+      setTemplateDraft(prompt.content);
       setCopied(false);
     }
-  }, [prompt, isOpen]);
+  }, [prompt?.id, prompt?.content, isOpen]);
 
   // Handle ESC key
   useEffect(() => {
@@ -54,11 +54,20 @@ export const VariableModal: React.FC<VariableModalProps> = ({
   if (!isOpen || !prompt) return null;
 
   const handleInputChange = (key: string, value: string) => {
+    const prevVal = values[key] || "";
+    const escapedKey = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const hasPlaceholder = new RegExp(`\\{\\{${escapedKey}\\}\\}|\\{${escapedKey}\\}`).test(
+      templateDraft
+    );
+
+    if (!hasPlaceholder && prevVal && templateDraft.includes(prevVal)) {
+      setTemplateDraft((prev) => prev.split(prevVal).join(`{{${key}}}`));
+    }
+
     setValues((prev) => ({
       ...prev,
       [key]: value,
     }));
-    setCustomDraft(null);
   };
 
   const handleReset = () => {
@@ -67,11 +76,10 @@ export const VariableModal: React.FC<VariableModalProps> = ({
       initial[v.key] = "";
     });
     setValues(initial);
-    setCustomDraft(null);
+    setTemplateDraft(prompt.content);
   };
 
-  const generatedContent = replaceVariables(prompt.content, values);
-  const finalContent = customDraft !== null ? customDraft : generatedContent;
+  const finalContent = replaceVariables(templateDraft || prompt.content, values);
 
   const handleCopy = (closeAfter: boolean = false) => {
     navigator.clipboard.writeText(finalContent);
@@ -236,7 +244,7 @@ export const VariableModal: React.FC<VariableModalProps> = ({
                 id="variable-live-editor"
                 rows={14}
                 value={finalContent}
-                onChange={(e) => setCustomDraft(e.target.value)}
+                onChange={(e) => setTemplateDraft(e.target.value)}
                 className="flex-1 w-full bg-default/30 border border-border focus:border-accent focus:outline-none rounded-2xl p-5 font-mono-code text-base text-foreground leading-relaxed overflow-y-auto min-h-[280px] max-h-[460px] resize-y"
               />
             </div>

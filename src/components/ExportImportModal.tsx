@@ -75,7 +75,12 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
       }
 
       const count = await onImport(items);
-      onToast(`Se importaron ${count} prompts con éxito`, "success");
+      onToast(
+        count > 0
+          ? `Se importaron ${count} prompts con éxito`
+          : "Respaldo aplicado (el catálogo base se mantiene intacto)",
+        "success"
+      );
       onClose();
     } catch (err: any) {
       onToast("Error al importar archivo: " + err.message, "error");

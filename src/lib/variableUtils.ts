@@ -48,15 +48,10 @@ export function replaceVariables(
   let result = content;
 
   for (const [key, val] of Object.entries(values)) {
-    // If val is empty, keep placeholder or empty string? If provided, replace both {{key}} and {key}
-    const safeReplacement = val !== undefined ? val : `{{${key}}}`;
+    if (!val) continue;
     const escapedKey = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-    const doubleBracketRegex = new RegExp(`\\{\\{${escapedKey}\\}\\}`, "g");
-    const singleBracketRegex = new RegExp(`\\{${escapedKey}\\}`, "g");
-
-    result = result.replace(doubleBracketRegex, safeReplacement);
-    result = result.replace(singleBracketRegex, safeReplacement);
+    const bracketRegex = new RegExp(`\\{\\{${escapedKey}\\}\\}|\\{${escapedKey}\\}`, "g");
+    result = result.replace(bracketRegex, () => val);
   }
 
   return result;
