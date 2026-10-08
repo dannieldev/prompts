@@ -5,7 +5,7 @@ const root = process.cwd();
 const rules = [
   ["ruta personal", /\/(?:Users|home)\/[\w.-]+\//i],
   ["correo electrónico", /[\w.+-]+@[\w.-]+\.[a-z]{2,}/i],
-  ["subdominio personal", /(?:[\w-]+\.)+dannieldev\.com/i],
+  ["subdominio privado", /(?<![\w-])(?!prompts\.dannieldev\.com\b)(?:[\w-]+\.)+dannieldev\.com\b/i],
   ["identificador de infraestructura", /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/i],
   ["clave privada", /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/],
   ["token de acceso", /\b(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-(?:proj-)?[A-Za-z0-9_-]{20,}|AKIA[0-9A-Z]{16})\b/],

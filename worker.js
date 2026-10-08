@@ -17,7 +17,7 @@ export default {
     if (!env.ASSETS) return new Response("Not found", { status: 404 });
     const response = await env.ASSETS.fetch(request);
     const headers = new Headers(response.headers);
-    headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
+    headers.set("X-Robots-Tag", "index, follow");
     if (url.pathname === "/" || url.pathname.endsWith(".html") || !url.pathname.includes(".")) {
       headers.set("Cache-Control", "no-cache, no-store, must-revalidate");
     } else if (url.pathname.startsWith("/assets/")) {
