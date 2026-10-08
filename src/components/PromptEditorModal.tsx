@@ -131,16 +131,16 @@ export const PromptEditorModal: React.FC<PromptEditorModalProps> = ({
       <div ref={dialogRef} role="dialog" aria-modal="true" aria-label="Nuevo prompt" tabIndex={-1} className="app-dialog relative w-full max-w-4xl max-h-[92vh] bg-surface border border-border rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-modal-enter">
         {/* Header */}
         <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-border flex items-center justify-between gap-3 bg-surface-secondary/50">
-          <div className="flex items-center gap-3 min-w-0">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
             <div className="w-10 h-10 rounded-2xl bg-accent flex items-center justify-center text-white font-bold shadow-lg shadow-accent/25 shrink-0">
               ✨
             </div>
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <h2 className="text-base font-bold text-foreground truncate">
                 Nuevo Prompt Célebre
               </h2>
               <p className="text-xs sm:text-sm text-muted truncate">
-                Configura variables dinámicas con <code className="text-accent font-mono">{"{{variable}}"}</code>
+                Variables dinámicas con <code className="text-accent font-mono inline-block max-w-[90px] truncate align-bottom">{"{{variable}}"}</code>
               </p>
             </div>
           </div>
@@ -356,7 +356,7 @@ Código:
                   variant="secondary"
                   size="sm"
                   onClick={handleAddTag}
-                  className="rounded-xl text-sm shrink-0"
+                  className="rounded-xl text-sm shrink-0 min-h-[44px] px-3.5"
                 >
                   Agregar
                 </Button>
@@ -370,7 +370,7 @@ Código:
                       color="accent"
                       variant="soft"
                       size="sm"
-                      className="text-sm"
+                      className="text-sm min-h-[32px]"
                     >
                       <span>#{tag}</span>
                       <button
@@ -387,7 +387,7 @@ Código:
             </div>
 
             {/* Favorite toggle checkbox */}
-            <div className="flex items-start sm:items-center gap-3 bg-surface-secondary/70 border border-border rounded-2xl p-3.5 sm:p-4 self-start">
+            <div className="flex items-start sm:items-center gap-3 bg-surface-secondary/70 border border-border rounded-2xl p-3.5 sm:p-4 w-full md:self-start">
               <input
                 id="is-fav"
                 type="checkbox"
@@ -404,13 +404,13 @@ Código:
         </form>
 
         {/* Footer */}
-        <div className="px-4 sm:px-6 py-3.5 sm:py-4 bg-surface-secondary/50 border-t border-border flex items-center justify-between">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4 bg-surface-secondary/50 border-t border-border flex items-center justify-between gap-3">
           <Button
             type="button"
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="rounded-xl text-xs sm:text-sm text-muted hover:text-foreground"
+            className="rounded-xl text-xs sm:text-sm text-muted hover:text-foreground min-h-[44px]"
           >
             Cancelar <Kbd className="ml-1 text-xs hidden sm:inline-flex">Esc</Kbd>
           </Button>
@@ -420,7 +420,7 @@ Código:
             size="sm"
             onClick={handleSubmit}
             isDisabled={saving}
-            className="rounded-xl text-xs sm:text-sm font-semibold shadow-lg shadow-accent/25"
+            className="rounded-xl text-xs sm:text-sm font-semibold shadow-lg shadow-accent/25 min-h-[44px] px-4"
           >
             <Save className="w-4 h-4 mr-1 shrink-0" />
             <span>{saving ? "Guardando..." : "Guardar Prompt"}</span>

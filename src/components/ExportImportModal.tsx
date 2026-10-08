@@ -105,18 +105,18 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
       <div ref={dialogRef} role="dialog" aria-modal="true" aria-label="Respaldar e importar" tabIndex={-1} className="app-dialog relative w-full max-w-lg bg-surface border border-border rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-modal-enter">
         {/* Header */}
         <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-border flex items-center justify-between gap-3 bg-surface-secondary/50">
-          <div className="flex items-center gap-3 min-w-0">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
             <div className="w-10 h-10 rounded-2xl bg-accent/20 border border-accent/30 flex items-center justify-center text-accent shrink-0">
               <FileJson className="w-5 h-5" />
             </div>
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="text-base font-bold text-foreground">Respaldar e Importar</h2>
                 <Chip color="accent" variant="soft" size="sm">
                   {prompts.length} prompts
                 </Chip>
               </div>
-              <p className="text-xs sm:text-sm text-muted">Respalda tu colección local en formato JSON</p>
+              <p className="text-xs sm:text-sm text-muted truncate">Respalda tu colección local en formato JSON</p>
             </div>
           </div>
 
@@ -150,7 +150,7 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
               variant="primary"
               size="sm"
               onClick={handleExportJson}
-              className="rounded-xl text-xs sm:text-sm font-semibold shadow-md shadow-accent/25 shrink-0 self-start sm:self-auto"
+              className="rounded-xl text-xs sm:text-sm font-semibold shadow-md shadow-accent/25 shrink-0 self-start sm:self-auto min-h-[44px] px-4"
             >
               <Download className="w-4 h-4 mr-1 shrink-0" />
               <span>Descargar</span>
@@ -181,7 +181,7 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
                 size="sm"
                 onClick={() => fileInputRef.current?.click()}
                 isDisabled={importing}
-                className="rounded-xl text-xs sm:text-sm shrink-0"
+                className="rounded-xl text-xs sm:text-sm shrink-0 min-h-[44px] px-4"
               >
                 <Upload className="w-4 h-4 mr-1 shrink-0" />
                 <span>{importing ? "Cargando..." : "Abrir archivo"}</span>
@@ -196,7 +196,7 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="rounded-xl text-xs sm:text-sm text-muted hover:text-foreground"
+            className="rounded-xl text-xs sm:text-sm text-muted hover:text-foreground min-h-[44px]"
           >
             Cerrar <Kbd className="ml-1 text-xs hidden sm:inline-flex">Esc</Kbd>
           </Button>

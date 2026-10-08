@@ -106,7 +106,7 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
                   <span>{formatDate(prompt.updated_at || prompt.created_at)}</span>
                 </span>
               </div>
-              <h2 className="text-base sm:text-lg font-bold text-foreground mt-1 leading-tight truncate sm:whitespace-normal">{prompt.title}</h2>
+              <h2 className="text-base sm:text-lg font-bold text-foreground mt-1 leading-tight line-clamp-2 sm:line-clamp-none break-words">{prompt.title}</h2>
             </div>
           </div>
 
@@ -138,7 +138,7 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
         </div>
 
         {/* Content Body */}
-        <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-5">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 flex flex-col gap-5">
           {/* Description */}
           {prompt.description && (
             <div className="bg-default/20 border border-border/70 rounded-2xl p-4 text-sm text-foreground/90 leading-relaxed font-normal ">
@@ -246,23 +246,23 @@ export const PromptDetailModal: React.FC<PromptDetailModalProps> = ({
               rows={12}
               value={draftContent}
               onChange={(e) => setDraftContent(e.target.value)}
-              className="w-full bg-default/30 border border-border focus:border-accent focus:outline-none rounded-2xl p-3.5 sm:p-5 font-mono-code text-sm sm:text-base text-foreground leading-relaxed overflow-y-auto min-h-[200px] sm:min-h-[260px] max-h-[420px] resize-y"
+              className="w-full bg-default/30 border border-border focus:border-accent focus:outline-none rounded-2xl p-3.5 sm:p-5 font-mono-code text-base text-foreground leading-relaxed overflow-y-auto min-h-[200px] sm:min-h-[260px] max-h-[420px] resize-y"
             />
           </div>
         </div>
 
         {/* Footer */}
-        <div className="px-4 py-3 sm:px-6 sm:py-4 bg-surface-secondary/40 border-t border-border flex items-center justify-between flex-wrap gap-2.5 sm:gap-3">
+        <div className="px-4 py-3 sm:px-6 sm:py-4 bg-surface-secondary/40 border-t border-border flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-2.5 sm:gap-3">
           <Button
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="text-sm font-medium text-muted hover:text-foreground rounded-xl min-h-[44px]"
+            className="text-sm font-medium text-muted hover:text-foreground rounded-xl min-h-[44px] w-full sm:w-auto"
           >
             Cerrar <Kbd className="ml-1 text-xs hidden sm:inline-flex">Esc</Kbd>
           </Button>
 
-          <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap w-full sm:w-auto justify-end">
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
             <Button
               variant={copied ? "primary" : "secondary"}
               size="sm"

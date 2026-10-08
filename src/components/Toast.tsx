@@ -51,7 +51,7 @@ export const ToastContainer: React.FC<ToastProps> = ({ toasts, onDismiss }) => {
 
           <button
             onClick={() => onDismiss(toast.id)}
-            className="p-1.5 -mr-1 rounded-lg opacity-70 hover:opacity-100 hover:bg-white/10 active:scale-90 transition-all ml-2 shrink-0 flex items-center justify-center min-w-[36px] min-h-[36px]"
+            className="p-2 -mr-1 rounded-xl opacity-70 hover:opacity-100 hover:bg-white/10 active:scale-90 transition-all ml-2 shrink-0 flex items-center justify-center min-w-[44px] min-h-[44px]"
             aria-label="Cerrar notificación"
           >
             <X className="w-4 h-4" />

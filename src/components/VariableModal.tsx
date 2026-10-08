@@ -206,7 +206,7 @@ export const VariableModal: React.FC<VariableModalProps> = ({
                       value={values[v.key] || ""}
                       onChange={(e) => handleInputChange(v.key, e.target.value)}
                       placeholder={`Escribe o pega el contenido para ${v.label.toLowerCase()}...`}
-                      className="w-full bg-field text-foreground placeholder:text-muted text-sm rounded-xl p-3 border border-border focus:outline-none focus:border-focus font-mono-code transition"
+                      className="w-full bg-field text-foreground placeholder:text-muted text-base sm:text-sm rounded-xl p-3 border border-border focus:outline-none focus:border-focus font-mono-code transition"
                     />
                   ) : (
                     <input
@@ -215,7 +215,7 @@ export const VariableModal: React.FC<VariableModalProps> = ({
                       value={values[v.key] || ""}
                       onChange={(e) => handleInputChange(v.key, e.target.value)}
                       placeholder={`Ej: ${v.label}...`}
-                      className="w-full bg-field text-foreground placeholder:text-muted text-sm rounded-xl px-3 py-2.5 border border-border focus:outline-none focus:border-focus transition"
+                      className="w-full bg-field text-foreground placeholder:text-muted text-base sm:text-sm rounded-xl px-3 py-2.5 border border-border focus:outline-none focus:border-focus transition"
                     />
                   )}
                 </div>
@@ -263,7 +263,7 @@ export const VariableModal: React.FC<VariableModalProps> = ({
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="rounded-xl text-xs sm:text-sm text-muted hover:text-foreground"
+              className="rounded-xl text-xs sm:text-sm text-muted hover:text-foreground min-h-[44px]"
             >
               Cancelar <Kbd className="ml-1 text-xs hidden sm:inline-flex">Esc</Kbd>
             </Button>
@@ -272,7 +272,7 @@ export const VariableModal: React.FC<VariableModalProps> = ({
               variant={copied ? "primary" : "secondary"}
               size="sm"
               onClick={() => handleCopy(false)}
-              className="rounded-xl text-xs sm:text-sm font-medium transition-all"
+              className="rounded-xl text-xs sm:text-sm font-medium transition-all min-h-[44px]"
             >
               {copied ? (
                 <>
@@ -291,7 +291,7 @@ export const VariableModal: React.FC<VariableModalProps> = ({
               variant="primary"
               size="sm"
               onClick={() => handleCopy(true)}
-              className="rounded-xl text-xs sm:text-sm font-semibold shadow-xs"
+              className="rounded-xl text-xs sm:text-sm font-semibold shadow-xs min-h-[44px]"
             >
               <Zap className="w-4 h-4 mr-1 shrink-0" />
               <span>Copiar y Cerrar</span>

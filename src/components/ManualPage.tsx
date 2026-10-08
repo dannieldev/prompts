@@ -1157,7 +1157,7 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
             <div className="flex items-center gap-2 pt-2 flex-wrap">
               <button
                 onClick={() => setChecklistFilter("todos")}
-                className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition ${
+                className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold min-h-[44px] inline-flex items-center justify-center transition ${
                   checklistFilter === "todos"
                     ? "bg-accent text-accent-foreground"
                     : "bg-surface-secondary text-muted hover:text-foreground"
@@ -1167,7 +1167,7 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
               </button>
               <button
                 onClick={() => setChecklistFilter("pendientes")}
-                className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition ${
+                className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold min-h-[44px] inline-flex items-center justify-center transition ${
                   checklistFilter === "pendientes"
                     ? "bg-accent text-accent-foreground"
                     : "bg-surface-secondary text-muted hover:text-foreground"
@@ -1177,7 +1177,7 @@ test('Auditoría Autónoma de Calidad Web', async ({ page }) => {
               </button>
               <button
                 onClick={() => setChecklistFilter("completados")}
-                className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition ${
+                className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold min-h-[44px] inline-flex items-center justify-center transition ${
                   checklistFilter === "completados"
                     ? "bg-accent text-accent-foreground"
                     : "bg-surface-secondary text-muted hover:text-foreground"

@@ -54,7 +54,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onViewChange, searc
         </nav>
         <div className="header-actions">
           <button className="quiet-button backup-button" onClick={onOpenExportImport} aria-label="Respaldar datos"><Download size={18} aria-hidden="true" /><span>Respaldos</span></button>
-          <button className="primary-button" onClick={onNewPrompt}><Plus size={18} aria-hidden="true" /><span>Nuevo prompt</span></button>
+          <button className="primary-button" onClick={onNewPrompt}><Plus size={18} aria-hidden="true" /><span>Nuevo<span className="hidden sm:inline"> prompt</span></span></button>
         </div>
       </div>
     </header>
