@@ -14,14 +14,24 @@ import { PromptEditorModal } from "./components/PromptEditorModal";
 import { PromptDetailModal } from "./components/PromptDetailModal";
 import { ExportImportModal } from "./components/ExportImportModal";
 import { ManualPage } from "./components/ManualPage";
+import { ValuePage } from "./components/ValuePage";
 import { ToastContainer, ToastMessage } from "./components/Toast";
 import { SearchX, Plus, RefreshCw } from "lucide-react";
 import { Button } from "@heroui/react";
 
-function getInitialView(): "prompts" | "manual" {
+function getInitialView(): "prompts" | "manual" | "valor" {
   if (typeof window === "undefined") return "prompts";
   const path = window.location.pathname.toLowerCase();
   const hash = window.location.hash.toLowerCase();
+  if (
+    path.startsWith("/valor") ||
+    path.startsWith("/por-que-no-es-barato") ||
+    path.startsWith("/precio") ||
+    hash.includes("valor") ||
+    hash.includes("por-que-no-es-barato")
+  ) {
+    return "valor";
+  }
   if (
     path.startsWith("/manual") ||
     path.startsWith("/guia") ||
@@ -36,7 +46,7 @@ function getInitialView(): "prompts" | "manual" {
 export function App() {
   const [prompts, setPrompts] = useState<PromptItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [currentView, setCurrentView] = useState<"prompts" | "manual">(getInitialView);
+  const [currentView, setCurrentView] = useState<"prompts" | "manual" | "valor">(getInitialView);
 
   // Filter & Search states
   const [searchQuery, setSearchQuery] = useState("");
@@ -67,10 +77,16 @@ export function App() {
   };
 
   // Sync current view with URL history
-  const handleViewChange = (view: "prompts" | "manual") => {
+  const handleViewChange = (view: "prompts" | "manual" | "valor") => {
     setCurrentView(view);
-    document.title = view === "manual" ? "Manual web | Prompts Célebres" : "Prompts Célebres · dannieldev";
-    const targetPath = view === "manual" ? "/manual" : "/";
+    if (view === "manual") {
+      document.title = "Manual web | Prompts Célebres";
+    } else if (view === "valor") {
+      document.title = "Por qué un sitio web profesional no es barato · Prompts Célebres";
+    } else {
+      document.title = "Prompts Célebres · dannieldev";
+    }
+    const targetPath = view === "manual" ? "/manual" : view === "valor" ? "/valor" : "/";
     if (window.location.pathname !== targetPath) {
       window.history.pushState(null, "", targetPath);
     }
@@ -235,6 +251,13 @@ export function App() {
       {currentView === "manual" ? (
         <ManualPage
           onNavigateToPrompts={() => handleViewChange("prompts")}
+          onSelectPrompt={handleSelectPromptFromManual}
+          onAddToast={addToast}
+        />
+      ) : currentView === "valor" ? (
+        <ValuePage
+          onNavigateToPrompts={() => handleViewChange("prompts")}
+          onNavigateToManual={() => handleViewChange("manual")}
           onSelectPrompt={handleSelectPromptFromManual}
           onAddToast={addToast}
         />

@@ -26,6 +26,14 @@ test("el manual sigue siendo servido como activo estático", async () => {
   assert.match(response.headers.get("Cache-Control"), /no-store/);
 });
 
+test("la subpágina de valor comercial es servida como activo estático", async () => {
+  const response = await worker.fetch(new Request("https://example.com/valor"), {
+    ASSETS: { fetch: async () => new Response("valor público", { headers: { "Content-Type": "text/html" } }) },
+  });
+  assert.equal(await response.text(), "valor público");
+  assert.match(response.headers.get("Cache-Control"), /no-store/);
+});
+
 test("colección aislada: catálogo base inmutable, favoritos e importación sin red ni datos heredados", async () => {
   const originalFetch = globalThis.fetch;
   const originalStorage = Object.getOwnPropertyDescriptor(globalThis, "localStorage");

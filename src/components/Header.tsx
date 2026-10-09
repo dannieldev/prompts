@@ -2,8 +2,8 @@ import React, { useRef, useEffect } from "react";
 import { Plus, Download, Search, X } from "lucide-react";
 
 interface HeaderProps {
-  currentView: "prompts" | "manual";
-  onViewChange: (view: "prompts" | "manual") => void;
+  currentView: "prompts" | "manual" | "valor";
+  onViewChange: (view: "prompts" | "manual" | "valor") => void;
   searchQuery: string;
   onSearchChange: (q: string) => void;
   totalCount: number;
@@ -27,14 +27,16 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onViewChange, searc
         e.preventDefault();
         onNewPrompt();
       } else if (!command && !e.altKey && e.key.toLowerCase() === "g") {
-        onViewChange(currentView === "manual" ? "prompts" : "manual");
+        const order: Array<"prompts" | "manual" | "valor"> = ["prompts", "manual", "valor"];
+        const nextIdx = (order.indexOf(currentView) + 1) % order.length;
+        onViewChange(order[nextIdx]);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [currentView, onViewChange, onNewPrompt]);
 
-  const navigate = (event: React.MouseEvent<HTMLAnchorElement>, view: "prompts" | "manual") => {
+  const navigate = (event: React.MouseEvent<HTMLAnchorElement>, view: "prompts" | "manual" | "valor") => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
     event.preventDefault();
     onViewChange(view);
@@ -51,6 +53,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onViewChange, searc
         <nav className="primary-nav" aria-label="Navegación principal">
           <a href="/" aria-current={currentView === "prompts" ? "page" : undefined} onClick={(e) => navigate(e, "prompts")}>Biblioteca</a>
           <a href="/manual" aria-current={currentView === "manual" ? "page" : undefined} onClick={(e) => navigate(e, "manual")}>Manual web</a>
+          <a href="/valor" aria-current={currentView === "valor" ? "page" : undefined} onClick={(e) => navigate(e, "valor")}>Por qué $1k+</a>
         </nav>
         <div className="header-actions">
           <button className="quiet-button backup-button" onClick={onOpenExportImport} aria-label="Respaldar datos"><Download size={18} aria-hidden="true" /><span>Respaldos</span></button>
