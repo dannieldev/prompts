@@ -19,24 +19,44 @@ import { ToastContainer, ToastMessage } from "./components/Toast";
 import { SearchX, Plus, RefreshCw } from "lucide-react";
 import { Button } from "@heroui/react";
 
+const VALUE_HASHES = [
+  "valor",
+  "por-que-no-es-barato",
+  "precio",
+  "pricing",
+  "propuesta",
+  "la-falacia",
+  "pilar-ux",
+  "pilar-docs",
+  "pilar-capacitacion",
+  "pilar-git",
+  "pilar-seo",
+  "pilar-cwv",
+  "pilar-retainer",
+  "comparativa",
+  "argumentario-roi",
+  "checklist-valor",
+];
+
 function getInitialView(): "prompts" | "manual" | "valor" {
   if (typeof window === "undefined") return "prompts";
   const path = window.location.pathname.toLowerCase();
-  const hash = window.location.hash.toLowerCase();
+  const rawHash = window.location.hash.toLowerCase().replace(/^#/, "");
   if (
     path.startsWith("/valor") ||
     path.startsWith("/por-que-no-es-barato") ||
     path.startsWith("/precio") ||
-    hash.includes("valor") ||
-    hash.includes("por-que-no-es-barato")
+    path.startsWith("/pricing") ||
+    path.startsWith("/propuesta") ||
+    VALUE_HASHES.some((h) => rawHash === h || rawHash.startsWith(h) || path.includes(h))
   ) {
     return "valor";
   }
   if (
     path.startsWith("/manual") ||
     path.startsWith("/guia") ||
-    hash.includes("manual") ||
-    hash.includes("guia")
+    rawHash.includes("manual") ||
+    rawHash.includes("guia")
   ) {
     return "manual";
   }
@@ -47,6 +67,17 @@ export function App() {
   const [prompts, setPrompts] = useState<PromptItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentView, setCurrentView] = useState<"prompts" | "manual" | "valor">(getInitialView);
+
+  // Synchronize document.title whenever currentView updates (direct visit, popstate, or switcher click)
+  useEffect(() => {
+    if (currentView === "manual") {
+      document.title = "Manual web | Prompts Célebres";
+    } else if (currentView === "valor") {
+      document.title = "Por qué un sitio web profesional no es barato · Prompts Célebres";
+    } else {
+      document.title = "Prompts Célebres · Biblioteca de Prompts y Manual Web con IA por Dannieldev";
+    }
+  }, [currentView]);
 
   // Filter & Search states
   const [searchQuery, setSearchQuery] = useState("");
@@ -79,15 +110,8 @@ export function App() {
   // Sync current view with URL history
   const handleViewChange = (view: "prompts" | "manual" | "valor") => {
     setCurrentView(view);
-    if (view === "manual") {
-      document.title = "Manual web | Prompts Célebres";
-    } else if (view === "valor") {
-      document.title = "Por qué un sitio web profesional no es barato · Prompts Célebres";
-    } else {
-      document.title = "Prompts Célebres · dannieldev";
-    }
     const targetPath = view === "manual" ? "/manual" : view === "valor" ? "/valor" : "/";
-    if (window.location.pathname !== targetPath) {
+    if (window.location.pathname !== targetPath || window.location.hash) {
       window.history.pushState(null, "", targetPath);
     }
     window.scrollTo({ top: 0, behavior: "instant" });

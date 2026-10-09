@@ -27,11 +27,21 @@ test("el manual sigue siendo servido como activo estático", async () => {
 });
 
 test("la subpágina de valor comercial es servida como activo estático", async () => {
-  const response = await worker.fetch(new Request("https://example.com/valor"), {
-    ASSETS: { fetch: async () => new Response("valor público", { headers: { "Content-Type": "text/html" } }) },
-  });
-  assert.equal(await response.text(), "valor público");
-  assert.match(response.headers.get("Cache-Control"), /no-store/);
+  for (const path of ["/valor", "/por-que-no-es-barato"]) {
+    const response = await worker.fetch(new Request(`https://example.com${path}`), {
+      ASSETS: { fetch: async () => new Response("valor público", { headers: { "Content-Type": "text/html" } }) },
+    });
+    assert.equal(await response.text(), "valor público");
+    assert.match(response.headers.get("Cache-Control"), /no-store/);
+  }
+});
+
+test("el sitemap.xml incluye todas las páginas públicas (inicio, manual y valor)", async () => {
+  const { readFileSync } = await import("node:fs");
+  const sitemap = readFileSync("public/sitemap.xml", "utf8");
+  assert.ok(sitemap.includes("https://prompts.dannieldev.com/"));
+  assert.ok(sitemap.includes("https://prompts.dannieldev.com/manual"));
+  assert.ok(sitemap.includes("https://prompts.dannieldev.com/valor"));
 });
 
 test("colección aislada: catálogo base inmutable, favoritos e importación sin red ni datos heredados", async () => {

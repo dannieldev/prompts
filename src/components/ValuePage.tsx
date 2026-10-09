@@ -245,13 +245,15 @@ export const ValuePage: React.FC<ValuePageProps> = ({
   };
 
   const resetChecklist = () => {
-    setChecklist(INITIAL_VALUE_CHECKLIST);
-    try {
-      localStorage.removeItem("dannieldev_web_value_checklist_v1");
-    } catch {
-      // storage
+    if (window.confirm("¿Deseas reiniciar todas las casillas del checklist de entregables web?")) {
+      setChecklist(INITIAL_VALUE_CHECKLIST);
+      try {
+        localStorage.removeItem("dannieldev_web_value_checklist_v1");
+      } catch {
+        // storage
+      }
+      onAddToast("Checklist de valor restablecido al estado inicial", "info");
     }
-    onAddToast("Checklist de valor restablecido al estado inicial", "info");
   };
 
   const copyChecklistAsText = async () => {
@@ -282,16 +284,24 @@ export const ValuePage: React.FC<ValuePageProps> = ({
     }
   };
 
-  // Sync anchor with URL hash
+  // Sync anchor with URL hash and scroll accurately to section in both single-chapter and readAll mode
   const sectionLink = (event: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
     event.preventDefault();
     setActiveAnchor(sectionId);
     setMenuOpen(false);
-    window.history.pushState(null, "", `#${sectionId}`);
+    if (window.location.hash !== `#${sectionId}`) {
+      window.history.pushState(null, "", `/valor#${sectionId}`);
+    }
     requestAnimationFrame(() => {
-      readingRef.current?.focus();
-      readingRef.current?.scrollIntoView({ behavior: "smooth" });
+      const target = document.getElementById(sectionId);
+      if (target) {
+        target.scrollIntoView({ block: "start", behavior: "smooth" });
+        target.querySelector<HTMLElement>("h2")?.focus({ preventScroll: true });
+      } else {
+        readingRef.current?.focus();
+        readingRef.current?.scrollIntoView({ behavior: "smooth" });
+      }
     });
   };
 
@@ -300,10 +310,15 @@ export const ValuePage: React.FC<ValuePageProps> = ({
       const current = window.location.hash.slice(1);
       if (current && VALUE_SECTIONS.some((s) => s.id === current)) {
         setActiveAnchor(current);
+        setMenuOpen(false);
       }
     };
     window.addEventListener("hashchange", handleHash);
-    return () => window.removeEventListener("hashchange", handleHash);
+    window.addEventListener("popstate", handleHash);
+    return () => {
+      window.removeEventListener("hashchange", handleHash);
+      window.removeEventListener("popstate", handleHash);
+    };
   }, []);
 
   const checkedCount = checklist.filter((i) => i.checked).length;
@@ -317,6 +332,10 @@ export const ValuePage: React.FC<ValuePageProps> = ({
   const currentSection = VALUE_SECTIONS[activeIndex] || VALUE_SECTIONS[0];
   const prevSection = activeIndex > 0 ? VALUE_SECTIONS[activeIndex - 1] : null;
   const nextSection = activeIndex < VALUE_SECTIONS.length - 1 ? VALUE_SECTIONS[activeIndex + 1] : null;
+
+  useEffect(() => {
+    document.title = `${currentSection.title} · Por qué un sitio web profesional no es barato · Prompts Célebres`;
+  }, [currentSection]);
 
   const groupedSections = VALUE_SECTIONS.reduce((acc, section) => {
     if (!acc[section.group]) acc[section.group] = [];
@@ -513,6 +532,55 @@ Si tu cliente promedio representa un beneficio de $200 USD, basta con que el nue
                 Un sitio profesional sobre $1,000 USD se justifica porque resuelve el problema completo:
                 diseño, ingeniería, autonomía del cliente, velocidad extrema, seguridad y respaldo legal de código.
               </p>
+            </div>
+
+            {/* The 7 Pillars Ecosystem Architecture Overview (Interactive Flowchart Counterpart) */}
+            <div className="p-6 rounded-2xl bg-surface border border-border space-y-4">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div className="flex items-center gap-2 text-accent text-sm font-semibold">
+                  <Award className="w-4 h-4" />
+                  <span>El Ecosistema Completo: Los 7 Pilares (&gt; $1,000 USD)</span>
+                </div>
+                <span className="text-xs font-mono text-muted bg-surface-secondary px-2.5 py-1 rounded-md">
+                  7 activos tangibles
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-muted leading-relaxed">
+                Para justificar presupuestos sobre <strong>$1,000 USD</strong> y diferenciarse radicalmente de la competencia amateur, un proyecto web profesional no se entrega como un simple link; se entrega como un <strong>ecosistema de ingeniería completo</strong>:
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
+                {[
+                  { id: "pilar-ux", num: "1", title: "Estrategia UX/UI", detail: "Arquitectura, jerarquía y diseño enfocado a conversión" },
+                  { id: "pilar-docs", num: "2", title: "Documentación Modular", detail: "Especificación técnica clara, cero cajas negras" },
+                  { id: "pilar-capacitacion", num: "3", title: "Capacitación en Video", detail: "Loom y cheatsheets para autogestión sin dependencia" },
+                  { id: "pilar-git", num: "4", title: "Repositorio GitHub", detail: "Control de versiones, Conventional Commits y soberanía" },
+                  { id: "pilar-seo", num: "5", title: "SEO Técnico On-Page", detail: "Semántica HTML5, OpenGraph, sitemap.xml y robots.txt" },
+                  { id: "pilar-cwv", num: "6", title: "Rendimiento & Seguridad", detail: "Core Web Vitals verdes, WebP/AVIF y SSL Cloudflare" },
+                  { id: "pilar-retainer", num: "7", title: "Soporte & Retainer", detail: "Fee mensual recurrente, backups y monitoreo 24/7" },
+                ].map((p) => (
+                  <a
+                    key={p.id}
+                    href={`/valor#${p.id}`}
+                    onClick={(e) => sectionLink(e, p.id)}
+                    className="p-3.5 rounded-xl bg-surface-secondary hover:bg-surface border border-border transition-all flex flex-col justify-between group"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-[11px] font-bold text-accent uppercase tracking-wider">
+                          Pilar {p.num}
+                        </span>
+                        <ChevronRight className="w-3.5 h-3.5 text-muted group-hover:text-accent group-hover:translate-x-0.5 transition-all" />
+                      </div>
+                      <div className="text-sm font-semibold text-foreground group-hover:text-accent transition-colors">
+                        {p.title}
+                      </div>
+                      <p className="text-xs text-muted mt-1 leading-snug">
+                        {p.detail}
+                      </p>
+                    </div>
+                  </a>
+                ))}
+              </div>
             </div>
           </section>
 
@@ -864,50 +932,50 @@ Si tu cliente promedio representa un beneficio de $200 USD, basta con que el nue
                 <thead>
                   <tr className="border-b border-border bg-surface-secondary text-xs uppercase tracking-wider text-muted">
                     <th className="py-3 px-4 font-semibold w-1/4">Criterio</th>
-                    <th className="py-3 px-4 font-semibold w-3/8 text-rose-700 bg-rose-500/10">Sitio de $50 USD (Amateur / Plantilla IA)</th>
-                    <th className="py-3 px-4 font-semibold w-3/8 text-emerald-800 bg-emerald-500/10">Servicio Web Profesional ($1,000+ USD)</th>
+                    <th className="py-3 px-4 font-bold w-3/8 text-danger bg-danger/10">Sitio de $50 USD (Amateur / Plantilla IA)</th>
+                    <th className="py-3 px-4 font-bold w-3/8 text-accent bg-accent/15">Servicio Web Profesional ($1,000+ USD)</th>
                   </tr>
                 </thead>
-                <tbody className="text-xs sm:text-sm divide-y divide-border/70 text-foreground/90">
+                <tbody className="text-xs sm:text-sm divide-y divide-border/70 text-foreground">
                   <tr>
                     <td className="py-3.5 px-4 font-semibold text-muted">Objetivo Real</td>
-                    <td className="py-3.5 px-4 bg-rose-500/5 text-rose-900">"Tener presencia digital cualquiera"</td>
-                    <td className="py-3.5 px-4 bg-emerald-500/5 text-emerald-950 font-medium">Generar prospectos, autoridad y ventas reales</td>
+                    <td className="py-3.5 px-4 bg-danger/5 text-foreground/80">"Tener presencia digital cualquiera"</td>
+                    <td className="py-3.5 px-4 bg-accent/10 text-foreground font-semibold">Generar prospectos, autoridad y ventas reales</td>
                   </tr>
                   <tr>
                     <td className="py-3.5 px-4 font-semibold text-muted">Diseño & UX</td>
-                    <td className="py-3.5 px-4 bg-rose-500/5 text-rose-900">Plantilla genérica, elementos desalineados, AI slop</td>
-                    <td className="py-3.5 px-4 bg-emerald-500/5 text-emerald-950 font-medium">Diseño UX/UI a medida, jerarquía y microinteracciones</td>
+                    <td className="py-3.5 px-4 bg-danger/5 text-foreground/80">Plantilla genérica, elementos desalineados, AI slop</td>
+                    <td className="py-3.5 px-4 bg-accent/10 text-foreground font-semibold">Diseño UX/UI a medida, jerarquía y microinteracciones</td>
                   </tr>
                   <tr>
                     <td className="py-3.5 px-4 font-semibold text-muted">Velocidad</td>
-                    <td className="py-3.5 px-4 bg-rose-500/5 text-rose-900">Lenta (&gt;4s), imágenes sin comprimir, plugins basura</td>
-                    <td className="py-3.5 px-4 bg-emerald-500/5 text-emerald-950 font-medium">Carga sub-segundo, Core Web Vitals en verde (95-100)</td>
+                    <td className="py-3.5 px-4 bg-danger/5 text-foreground/80">Lenta (&gt;4s), imágenes sin comprimir, plugins basura</td>
+                    <td className="py-3.5 px-4 bg-accent/10 text-foreground font-semibold">Carga sub-segundo, Core Web Vitals en verde (95-100)</td>
                   </tr>
                   <tr>
                     <td className="py-3.5 px-4 font-semibold text-muted">SEO & Social</td>
-                    <td className="py-3.5 px-4 bg-rose-500/5 text-rose-900">Sin metadatos; vista previa rota en WhatsApp</td>
-                    <td className="py-3.5 px-4 bg-emerald-500/5 text-emerald-950 font-medium">Semántica estricta, OpenGraph 1200×630 y sitemap verificado</td>
+                    <td className="py-3.5 px-4 bg-danger/5 text-foreground/80">Sin metadatos; vista previa rota en WhatsApp</td>
+                    <td className="py-3.5 px-4 bg-accent/10 text-foreground font-semibold">Semántica estricta, OpenGraph 1200×630 y sitemap verificado</td>
                   </tr>
                   <tr>
                     <td className="py-3.5 px-4 font-semibold text-muted">Propiedad Código</td>
-                    <td className="py-3.5 px-4 bg-rose-500/5 text-rose-900">Código cautivo o bloqueado en plataformas cerradas</td>
-                    <td className="py-3.5 px-4 bg-emerald-500/5 text-emerald-950 font-medium">Repositorio GitHub propio, versionado y transferido</td>
+                    <td className="py-3.5 px-4 bg-danger/5 text-foreground/80">Código cautivo o bloqueado en plataformas cerradas</td>
+                    <td className="py-3.5 px-4 bg-accent/10 text-foreground font-semibold">Repositorio GitHub propio, versionado y transferido</td>
                   </tr>
                   <tr>
                     <td className="py-3.5 px-4 font-semibold text-muted">Documentación</td>
-                    <td className="py-3.5 px-4 bg-rose-500/5 text-rose-900">Caja negra absoluta; cero tutoriales</td>
-                    <td className="py-3.5 px-4 bg-emerald-500/5 text-emerald-950 font-medium">Documentación técnica modular y videos de capacitación</td>
+                    <td className="py-3.5 px-4 bg-danger/5 text-foreground/80">Caja negra absoluta; cero tutoriales</td>
+                    <td className="py-3.5 px-4 bg-accent/10 text-foreground font-semibold">Documentación técnica modular y videos de capacitación</td>
                   </tr>
                   <tr>
                     <td className="py-3.5 px-4 font-semibold text-muted">Continuidad</td>
-                    <td className="py-3.5 px-4 bg-rose-500/5 text-rose-900">Abandonado tras entrega; se rompe ante updates</td>
-                    <td className="py-3.5 px-4 bg-emerald-500/5 text-emerald-950 font-medium">Plan de mantenimiento preventivo, backups y soporte</td>
+                    <td className="py-3.5 px-4 bg-danger/5 text-foreground/80">Abandonado tras entrega; se rompe ante updates</td>
+                    <td className="py-3.5 px-4 bg-accent/10 text-foreground font-semibold">Plan de mantenimiento preventivo, backups y soporte</td>
                   </tr>
                   <tr>
                     <td className="py-3.5 px-4 font-semibold text-muted">Percepción</td>
-                    <td className="py-3.5 px-4 bg-rose-500/5 text-rose-900">Imagen improvisada o desconfianza en el cliente</td>
-                    <td className="py-3.5 px-4 bg-emerald-500/5 text-emerald-950 font-medium">Activo corporativo sólido que genera confianza y ROI</td>
+                    <td className="py-3.5 px-4 bg-danger/5 text-foreground/80">Imagen improvisada o desconfianza en el cliente</td>
+                    <td className="py-3.5 px-4 bg-accent/10 text-foreground font-semibold">Activo corporativo sólido que genera confianza y ROI</td>
                   </tr>
                 </tbody>
               </table>
@@ -1145,31 +1213,43 @@ Si tu cliente promedio representa un beneficio de $200 USD, basta con que el nue
           </section>
 
           {/* Bottom Pagination */}
-          <nav className="chapter-pagination" aria-label="Navegación entre capítulos de valor">
-            {prevSection && (
-              <a
-                href={`/valor#${prevSection.id}`}
-                className="chapter-prev"
-                onClick={(e) => sectionLink(e, prevSection.id)}
-              >
-                <span>Capítulo anterior</span>
-                <strong>{prevSection.title}</strong>
-              </a>
-            )}
-            {nextSection && (
-              <a
-                href={`/valor#${nextSection.id}`}
-                className="chapter-next"
-                onClick={(e) => sectionLink(e, nextSection.id)}
-              >
-                <span>Siguiente capítulo</span>
-                <strong>{nextSection.title}</strong>
-                <ChevronRight size={18} aria-hidden="true" />
-              </a>
-            )}
-          </nav>
+          {!readAll && (
+            <nav className="chapter-pagination" aria-label="Navegación entre capítulos de valor">
+              {prevSection && (
+                <a
+                  href={`/valor#${prevSection.id}`}
+                  className="chapter-prev"
+                  onClick={(e) => sectionLink(e, prevSection.id)}
+                >
+                  <span>Capítulo anterior</span>
+                  <strong>{prevSection.title}</strong>
+                </a>
+              )}
+              {nextSection && (
+                <a
+                  href={`/valor#${nextSection.id}`}
+                  className="chapter-next"
+                  onClick={(e) => sectionLink(e, nextSection.id)}
+                >
+                  <span>Siguiente capítulo</span>
+                  <strong>{nextSection.title}</strong>
+                  <ChevronRight size={18} aria-hidden="true" />
+                </a>
+              )}
+            </nav>
+          )}
         </main>
       </div>
+
+      <footer className="site-footer page-width">
+        <span>
+          Por qué un sitio web profesional no es barato · Colección de{" "}
+          <a href="https://dannieldev.com" target="_blank" rel="noopener noreferrer">
+            @dannieldev
+          </a>
+        </span>
+        <span>{VALUE_SECTIONS.length} capítulos y checklist de 18 entregables clave</span>
+      </footer>
     </>
   );
 };

@@ -198,9 +198,41 @@ try {
   await sendSession("Page.navigate", { url: `http://127.0.0.1:${PORT}/por-que-no-es-barato` });
   await new Promise((r) => setTimeout(r, 800));
   let aliasHeading = await evaluate("document.querySelector('h1')?.innerText");
+  let aliasTitle = await evaluate("document.title");
   console.log("H1 en /por-que-no-es-barato:", aliasHeading);
+  console.log("Título en /por-que-no-es-barato:", aliasTitle);
   if (!aliasHeading || !aliasHeading.includes("Por qué un sitio web")) {
     throw new Error("Alias /por-que-no-es-barato no renderizó la página de valor");
+  }
+  if (!aliasTitle.includes("Por qué un sitio web profesional no es barato")) {
+    throw new Error(`Título no sincronizado en carga directa: ${aliasTitle}`);
+  }
+
+  // Verify site footer on /valor
+  console.log("\nVerificando presencia de footer institucional en la subpágina...");
+  const footerInfo = await evaluate(`(() => {
+    const footer = document.querySelector('footer.site-footer');
+    if (!footer) return null;
+    const authorLink = footer.querySelector('a[href*="dannieldev.com"]');
+    return {
+      exists: true,
+      text: footer.innerText,
+      authorHref: authorLink ? authorLink.getAttribute('href') : null
+    };
+  })()`);
+  if (!footerInfo || !footerInfo.authorHref) {
+    throw new Error("El pie de página institucional (.site-footer) con enlace a dannieldev.com falta en /valor");
+  }
+  console.log("Footer verificado:", footerInfo.text.slice(0, 60) + "...");
+
+  // Verify 7 Pillars Ecosystem Overview Card in Chapter 1
+  console.log("\nVerificando mapa interactivo del Ecosistema de los 7 Pilares...");
+  const ecosystemPillarsCount = await evaluate(`(() => {
+    return document.querySelectorAll('a[href*="/valor#pilar-"]').length;
+  })()`);
+  console.log(`Enlaces a pilares detectados en la guía: ${ecosystemPillarsCount}`);
+  if (ecosystemPillarsCount < 7) {
+    throw new Error(`Se esperaban al menos 7 enlaces a pilares, pero se encontraron ${ecosystemPillarsCount}`);
   }
 
   // Test interactive checklist toggle
@@ -215,6 +247,16 @@ try {
   console.log("Checklist antes:", checklistResult.wasChecked, "-> después:", checklistResult.isNowChecked);
   if (!checklistResult.isNowChecked) throw new Error("El checklist no respondió al clic");
   if (!checklistResult.savedStorage) throw new Error("El estado del checklist no se guardó en localStorage");
+
+  // Test History Back & Forward Title / View Synchronization
+  console.log("\nProbando sincronización del historial del navegador (Back / Forward)...");
+  await evaluate("window.history.back()");
+  await new Promise((r) => setTimeout(r, 600));
+  const backTitle = await evaluate("document.title");
+  console.log("Título tras history.back():", backTitle);
+  if (!backTitle.includes("Por qué un sitio web") && !backTitle.includes("Prompts Célebres")) {
+    throw new Error(`Título desincronizado tras popstate: ${backTitle}`);
+  }
 
   console.log("\n✅ ¡Todas las verificaciones de Playwright / Headless Chrome pasaron exitosamente!");
 

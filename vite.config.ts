@@ -10,6 +10,16 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          heroui: ["@heroui/react"],
+          lucide: ["lucide-react"],
+        },
+      },
+    },
+  },
   server: {
     port: 3018,
     strictPort: true,
